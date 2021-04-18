@@ -10,7 +10,7 @@ resp="" #Variable que almacena la respuesta del usuario "Menu()"
 #Funcion de iniciacion de la base de datos
 def sql_connection():
     try:
-        con = sqlite3.connect('VaccineDataBase.db')
+        con = sqlite3.connect('ProgamaDeVacunacion.db')
         return con
     except Error:
         print(Error)
@@ -19,7 +19,7 @@ def sql_connection():
 def sql_table(con):
     cursorObj = con.cursor()
     cursorObj.execute("CREATE TABLE Afiliados(Numero_de_identificacion integer PRIMARY KEY, Nombre text, Apellido text, Direccion text, Telefono integer, Correo text, Ciudad text,Fecha_de_nacimiento datetime,Fecha_de_afiliacion datetime,Fecha_de_desafiliacion datetime,Vacunado bool)")
-
+"""
 #Funcion Menu
 def Menu():
     Cases={1:"Afiliar",2:"Consultar",3:"Desafiliar",4:"Salir"} #Diccionario de Casos
@@ -29,7 +29,7 @@ def Menu():
     #Recepcion de la respuesta del Usuario
     resp=int(input())
     #Casos de funcionamiento
-    
+"""
     
 
 def afiliarPaciente():
@@ -39,17 +39,18 @@ def afiliarPaciente():
     direccion=input("Ingrese la dirección de residensia del paciente: ")
     telefono=int(input("Ingrese un número de contacto: "))
     correo=input("Ingrese el correo electrónico del paciente: ")
-    ciudad=input("Ingrese la ciudad en la que reside el paciente")
+    ciudad=input("Ingrese la ciudad en la que reside el paciente: ")
     year=int(input("Ingrese el año de nacimiento:"))
     month=int(input("Ingrese el mes de nacimiento: "))
     day=int(input("Ingrese el día de nacimiento: "))
     fechaNacimiento=datetime.date(year, month, day)
-    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",)
+    datosPaciente=(noIdentificacion,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,date.today(),None,False)
+    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
     con.commit()
-def consultarAfiliado():
+#def consultarAfiliado():
 
     
-def desafiliarPaciente():
+#def desafiliarPaciente():
 
 
 
@@ -58,7 +59,8 @@ con=sql_connection()
 
 #Ejecucion de funciones
 sql_table(con)
-Menu()
+#Menu()
+afiliarPaciente()
 
 
 #Cerrar conexion
