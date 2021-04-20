@@ -1,0 +1,25 @@
+Proyecto POO
+
+Entrega 1
+La EPS SaludUN requiere que su equipo de trabajo diseñe un software que le permita gestionar la aplicación de vacunas contra el Covid19 suministradas por el gobierno nacional.
+
+El levantamiento de información efectuado con los usuarios y dueños de procesos de la EPS dio como resultado que se requieren varios módulos para el manejo de la información asociada:
+
+El sistema debe contar con un módulo que permita gestionar la información básica de los afiliados: número de identificación (identificador único), nombre, apellido, dirección, teléfono, correo electrónico, ciudad, fecha de nacimiento (DD/MM/AAAA), fecha de afiliación (DD/MM/AAAA), fecha de desafiliación (DD/MM/AAAA), indicador de si ya fue vacunado (Si o No) (cuando se crea el usuario el indicador es no). Por defecto cuando se crea un afiliado no está vacunado. Cuando el usuario se aplique la vacuna el indicador debe ser actualizado.  El módulo permitirá crear un nuevo afiliado, consultar la información de un afiliado por número de identificación y desafiliar a un usuario de la EPS.
+
+También debe contar con un módulo que permita crear una base de datos de los lotes de vacunas recibidas:  número de lote (identificador único), Fabricante (Sinovac, Pfizer, Moderna, Sputnik V, AstraZeneca, Sinopharm, Covaxim), tipo de vacuna (Vector viral, ARN/ADN, Virus desactivado, En base a proteínas), cantidad recibida, cantidad de vacunas usadas (se incrementa una vacuna cuando se usa, información que se da en el módulo de afiliados), dosis necesarias, temperatura de almacenamiento, efectividad identificada, tiempo de protección, fecha de vencimiento (DD/MM/AAAA), imagen de una vacuna del lote donde se vea claramente el número de lote y la fecha de vencimiento (a futuro).  Cada vez que un usuario se vacune se debe incrementar el número de vacunas utilizadas.  El módulo permitirá crear un nuevo lote y consultar la información vigente de un lote.
+
+Debe también contar con un módulo para poder incluir un plan de vacunación: identificación del plan (identificador único), edad mínima, edad máxima, fecha de inicio del periodo de vacunación  (DD/MM/AAAA), fecha de fin de vacunación  (DD/MM/AAAA).  El módulo permitirá crear un nuevo plan y consultar la información vigente de un plan de vacunación.
+
+Módulos adicionales:  El sistema creara por pedido del operador la programación de vacunas a partir de la fecha de inicio indicada, en el horario de atención indicado, con separación de citas cada 30 minutos, teniendo en cuenta la edad de los citados de acuerdo con el plan de vacunación.  La programación de citas debe contener la siguiente información:  tipo de identificación del afiliado, número de identificación del afiliado, ciudad de vacunación, Código identificador del lote de vacunas, fecha de programación (DD/MM/AAAA), hora de programación.
+
+Si su desarrollo permite enviar un correo electrónico al usuario informando la programación de la vacuna tendrá 3 decimas mas en su calificación de la evaluación que está presentando.
+
+La programación de vacunas podrá ser consultada de dos formas:
+Una consulta con la información de toda la programación, en la cual se debe identificar plenamente al usuario y su información de contacto, la programación de vacunación y la vacuna que se aplicará, la cual se puede ordenar por cualquiera de los campos de la consulta.
+
+Una segunda consulta individual de la programación de vacunación de un afiliado indicado por el operador por número de identificación.
+
+Puede usar los tipos de datos básicos vistos y crear objetos de ellos, así como usar los métodos que ya existen.  No puede crear clases nuevas. Puede usar librerías gráficas. 
+
+Se debe entregar documentación de usuario y documentación técnica (pueden ser comentarios inteligentes en el código fuente; se debe documentar en todos los programas la instalación de librerías gráficas).
