@@ -18,7 +18,7 @@ def sql_connection():
 #Funcion de creacion primary keys
 def sql_table(con):
     cursorObj = con.cursor()
-    cursorObj.execute("CREATE TABLE Afiliados(Numero_de_identificacion integer PRIMARY KEY, Nombre text, Apellido text, Direccion text, Telefono integer, Correo text, Ciudad text,Fecha_de_nacimiento datetime,Fecha_de_afiliacion datetime,Fecha_de_desafiliacion datetime,Vacunado bool)")
+    cursorObj.execute("CREATE TABLE IF NOT EXISTS Afiliados(Numero_de_identificacion integer PRIMARY KEY, Nombre text, Apellido text, Direccion text, Telefono integer, Correo text, Ciudad text,Fecha_de_nacimiento datetime,Fecha_de_afiliacion datetime,Fecha_de_desafiliacion datetime,Vacunado bool)")
 """
 #Funcion Menu
 def Menu():
@@ -32,7 +32,8 @@ def Menu():
 """
     
 
-def afiliarPaciente():
+def afiliarPaciente(con):
+    cursorObj = con.cursor()
     noIdentificacion=input("Ingrese el número de identificación del paciente: ")
     nombre=input("Ingrese el nombre del paciente: ")
     apellido=input("Ingrese el apellido del paciente: ")
@@ -43,16 +44,31 @@ def afiliarPaciente():
     year=int(input("Ingrese el año de nacimiento:"))
     month=int(input("Ingrese el mes de nacimiento: "))
     day=int(input("Ingrese el día de nacimiento: "))
-    fechaNacimiento=datetime.date(year, month, day)
+    fechaNacimiento=date(year, month, day)
     datosPaciente=(noIdentificacion,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,date.today(),None,False)
-    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
+    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
     con.commit()
-#def consultarAfiliado():
+
+def consultarAfiliado(con):
+    cursorObj = con.cursor()
+    noIdentificacion=int(input("Ingrese el número de identificación del paciente a consultar: "))
+    cursorObj.execute('SELECT * FROM Afiliados WHERE Numero_de_identificacion=?',(noIdentificacion,))
+    consultados=cursorObj.fetchall()
+    for consultados in consultados:
+        print(consultados)
 
     
-#def desafiliarPaciente():
+def desafiliarPaciente(con):
+    cursorObj = con.cursor()
+    noIdentificacion=int(input("Ingrese el número de identificación del paciente a desafiliar: "))
+    cursorObj.execute('UPDATE Afiliados SET Fecha_de_desafiliacion=? WHERE Numero_de_identificacion=?',(date.today(),noIdentificacion))
+    con.commit()
 
-
+def vacunarAfiliado(con):
+    cursorObj = con.cursor()
+    noIdentificacion=int(input("Ingrese el número de identificación del paciente a Vacunar: "))
+    cursorObj.execute('UPDATE Afiliados SET Vacunado=True WHERE Numero_de_identificacion=?',(noIdentificacion,))
+    con.commit()
 
 #Conexion con la base de datos
 con=sql_connection()
@@ -60,8 +76,8 @@ con=sql_connection()
 #Ejecucion de funciones
 sql_table(con)
 #Menu()
-afiliarPaciente()
-
+vacunarAfiliado(con)
+consultarAfiliado(con)
 
 #Cerrar conexion
 con.close()
