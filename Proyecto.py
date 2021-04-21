@@ -16,7 +16,7 @@ def sql_connection():
 def sql_table(con):
     cursorObj = con.cursor()
     cursorObj.execute("CREATE TABLE IF NOT EXISTS Afiliados(Numero_de_identificacion integer PRIMARY KEY, Nombre text, Apellido text, Direccion text, Telefono integer, Correo text, Ciudad text,Fecha_de_nacimiento datetime,Fecha_de_afiliacion datetime,Fecha_de_desafiliacion datetime,Vacunado bool)")
-
+#hola
 #Funcion Menu Principal Para Acceso A Funciones de Datos y Lotes
 def menuPrincipal():
     #Diccionario de casos del menu principal
