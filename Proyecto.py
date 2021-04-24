@@ -19,65 +19,84 @@ def sql_table(con):
     cursorObj.execute("CREATE TABLE IF NOT EXISTS Afiliados(Numero_de_identificacion integer PRIMARY KEY, Nombre text, Apellido text, Direccion text, Telefono integer, Correo text, Ciudad text,Fecha_de_nacimiento text,Fecha_de_afiliacion text,Fecha_de_desafiliacion text,Vacunado bool)")
     #Creacion de la tabla Lotes
     cursorObj.execute("CREATE TABLE IF NOT EXISTS Lotes(Numero_De_Lote integer PRIMARY KEY, Fabricante text, Tipo_De_Vacuna text, Cantidad_Recibida integer, Cantidad_Usada integer, Dosis_Necesarias integer, Temperatura_De_Almacenamiento integer,Efectividad_Identificada integer,Tiempo_De_Proteccion integer,Fecha_de_Vencimiento text,Imagen text)")
-
-#Funcion Menu Principal Para Acceso A Funciones de Datos y Lotes
+    #Creacion de la tabla Planes
+    cursorObj.execute("CREATE TABLE IF NOT EXISTS Planes(id integer PRIMARY KEY, Edad_Min integer, Edad_Max integer,Fecha_Inicio text,Fecha_Fin text)")
 
 #-----DESDE AQUI MODULO DE MENU-------------------------------------------------------------------------------------------------------
-
+#Funcion Menu Principal Para Acceso A Funciones de Datos y Lotes
 def menuPrincipal():
     #Diccionario de casos del menu principal
-    casosPrincipal={1:"Datos",2:"Lotes",3:"Salir"}
+    casosPrincipal={1:"Datos",2:"Lotes",3:"Plan",4:"Salir"}
     #Mensaje de inicio 
     print("Bienvenido\nPorfavor escoja que tarea quiere realizar")
     #Recepcion de la respuesta para el menu
-    resp=int(input("1.Gestionar Datos\n2.Gestionar Lotes\n3.Salir\n"))
+    resp=int(input("1.Gestionar Datos\n2.Gestionar Lotes\n3.Plan\n4.Salir\n"))
     #Condicionales de uso del Menu Principal
     if casosPrincipal[resp]=="Datos":
         menuDatos()
     elif casosPrincipal[resp]=="Lotes":
         menuLotes()
-    else:
+    elif casosPrincipal[resp] == "Plan":
+        menuPlanes()
+    elif casosPrincipal[resp] == "Salir":
         con.close()
         exit()
 
 #Funcion Menu para gestion de datos de los pacientes
 def menuDatos():
     #Diccionario de casos del menu datos
-    cases={1:"Afiliar",2:"Consultar",3:"Desafiliar",4:"Vacunar",5:"Volver",6:"Salir"} #Diccionario de Casos
+    casosDatos={1:"Afiliar",2:"Consultar",3:"Desafiliar",4:"Vacunar",5:"Volver",6:"Salir"} #Diccionario de Casos
     #Mensajes de Inicio del Menu
     print("Bienvenido\nPorfavor escoja que tarea quiere realizar")
-    print("1.Afiliar un Paciente \n2.Consultar un Afiliado\n3.Desafiliar un Paciente\n4.Vacunar\n5.Volver\n6.Salir")
+    print("1.Afiliar un Paciente \n2.Consultar un Afiliado\n3.Desafiliar un Paciente\n4.Vacunar\n5.Volver\n6.Salir\n")
     #Recepcion de la respuesta del Usuario
     resp=int(input())
     #Condicionales de uso del Menu Para Gestion De Datos
-    if cases[resp] == "Afiliar":
+    if casosDatos[resp] == "Afiliar":
         afiliarPaciente(con)
-    elif cases[resp] == "Consultar":
+    elif casosDatos[resp] == "Consultar":
         consultarAfiliado(con)
-    elif cases[resp] == "Desafiliar":
+    elif casosDatos[resp] == "Desafiliar":
         desafiliarPaciente(con)
-    elif cases[resp] == "Vacunar":
+    elif casosDatos[resp] == "Vacunar":
         vacunarAfiliado(con)
-    elif cases[resp]=="Volver":
+    elif casosDatos[resp]=="Volver":
         menuPrincipal()
-    elif cases[resp] == "Salir":
+    elif casosDatos[resp] == "Salir":
         con.close()
         exit()
 
 #Funcion menu de gestion de lotes de vacunas
 def menuLotes():
     #Diccionario de casos del menu Lotes
-    cases={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
+    casosLotes={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
     #Mensajes de Inicio del Menu
-    resp=int(input("1.Crear Lote\n2.Consultar Lote\n3.Regresar\n4.Salir"))
+    resp=int(input("1.Crear Lote\n2.Consultar Lote\n3.Regresar\n4.Salir\n"))
     #Condicionales de uso del Menu Para Gestion De Lotes
-    if cases[resp] == "Crear":
+    if casosLotes[resp] == "Crear":
         crearLote(con)
-    elif cases[resp] == "Consultar":
+    elif casosLotes[resp] == "Consultar":
         consultarLote(con)
-    elif cases[resp] == "Regresar":
+    elif casosLotes[resp] == "Regresar":
         menuPrincipal()
-    elif cases[resp] == "Salir":
+    elif casosLotes[resp] == "Salir":
+        con.close()
+        exit()
+
+#Funcion menu para gestion de planes de vacunacion
+def menuPlanes():
+    #Diccionario de casos del menu Planes
+    casosPlan={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
+    #Mensajes de Inicio del Menu
+    resp=int(input("1.Crear Plan\n2.Consultar Plan por edad\n3.Regresar\n4.Salir\n"))
+    #Condicionales de uso del Menu Para Gestion De Lotes
+    if casosPlan[resp] == "Crear":
+        crearPlan(con)
+    elif casosPlan[resp] == "Consultar":
+        consultarPlan(con)
+    elif casosPlan[resp] == "Regresar":
+        menuPrincipal()
+    elif casosPlan[resp] == "Salir":
         con.close()
         exit()
 
@@ -154,6 +173,8 @@ def desafiliarPaciente(con):
     cursorObj = con.cursor()
     #Recepcion del numero de identificacion
     noIdentificacion=int(input("Ingrese el número de identificación del paciente a desafiliar: "))
+    #Fecha Actual
+    today = date.today()
     #Día actual
     dayActual=today.day
     #Mes actual
@@ -194,7 +215,7 @@ def crearLote(con):
     cantidadRecibida=input("Ingrese la cantidad recibida: ")
     cantidadRecibida=cantidadRecibida.ljust(6)
     #Ingreso de la cantidad de vacunas usadas
-    cantidadUsada=input("Ingrese la cantidad recibida: ")
+    cantidadUsada=input("Ingrese la cantidad a Usar: ")
     cantidadUsada=cantidadUsada.ljust(6)
     #Ingreso de cantidad dosis necesarias
     dosisNecesarias=input("Ingrese el número de dosis necesarias: ")
@@ -203,10 +224,10 @@ def crearLote(con):
     temperatura=input("Ingrese la temperatura de almacenamiento: ")
     temperatura=temperatura.ljust(3)
     #Ingreso de la efectividad conocida de la vacuna
-    efectividad=input("Ingrese la fecha de vencimiento: ")
+    efectividad=input("Ingrese el valor de efectivadad (0-100): ")
     efectividad=efectividad.rjust(2,"0")
     #Ingreso de tiempo de protección conocido de la vacuna
-    tiempoProteccion=input("Ingrese el tiempo de proteccion de que ofrece la vacuna: ")
+    tiempoProteccion=input("Ingrese el tiempo de proteccion de que ofrece la vacuna (Años): ")
     tiempoProteccion=tiempoProteccion.ljust(3)
     #Ingreso de día de vencimiento de la vacuna 
     day=input("Ingrese el día de vencimiento de la vacuna: ")
@@ -239,7 +260,21 @@ def consultarLote(con):
     for consultados in consultados:
         print(consultados)
         
-#-----DESDE AQUI MODULO DE PLAN DE VACUNACION-------------------------------------------------------------------------------------------------------
+#-----DESDE AQUI MODULO DE PLANES DE VACUNACION-------------------------------------------------------------------------------------------------------
+
+def crearPlan(con):
+    cursorObj=con.cursor()
+    cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
+    ids=cursorObj.fetchall()
+    for ids in ids :
+        cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",ids)
+        nacimiento=cursorObj.fetchall()
+        edad=list(nacimiento[0])
+        today = date.today()
+        edad=edad[0]
+        edad=edad[6]+""+edad[7]+""+edad[8]+""+edad[9]
+        edad=today.year-int(edad)
+        print(edad)
 
 #Conexion con la base de datos
 con=sql_connection()
@@ -264,4 +299,5 @@ Deletes// cursorObj.execute('DELETE FROM Nombre_De_Tabla').rowcount
 .rowcount, devuelve el numero de filas borradas
 
 !!!!!Drop!!!!!// DROP TABLE Nombre_De_Tabla
+
 """
