@@ -16,11 +16,53 @@ def sql_connection():
 def sql_table(con):
     cursorObj = con.cursor()
     #Creacion de la tabla Afiliados
-    cursorObj.execute("CREATE TABLE IF NOT EXISTS Afiliados(Numero_de_identificacion integer PRIMARY KEY, Nombre text, Apellido text, Direccion text, Telefono integer, Correo text, Ciudad text,Fecha_de_nacimiento text,Fecha_de_afiliacion text,Fecha_de_desafiliacion text,Vacunado bool)")
+    cursorObj.execute('''CREATE TABLE IF NOT EXISTS 
+    Afiliados(
+        Numero_De_Identificacion integer PRIMARY KEY, 
+        ID_Plan FOREING KEY integer,
+        Nombre text, 
+        Apellido text, 
+        Direccion text, 
+        Telefono integer, 
+        Correo text, 
+        Ciudad text,
+        Fecha_De_Nacimiento text,
+        Fecha_De_Afiliacion text,
+        Fecha_De_Desafiliacion text,
+        Vacunado bool)''')
     #Creacion de la tabla Lotes
-    cursorObj.execute("CREATE TABLE IF NOT EXISTS Lotes(Numero_De_Lote integer PRIMARY KEY, Fabricante text, Tipo_De_Vacuna text, Cantidad_Recibida integer, Cantidad_Usada integer, Dosis_Necesarias integer, Temperatura_De_Almacenamiento integer,Efectividad_Identificada integer,Tiempo_De_Proteccion integer,Fecha_de_Vencimiento text,Imagen text)")
+    cursorObj.execute('''CREATE TABLE IF NOT EXISTS 
+    Lotes(
+        Codigo_De_Lote integer PRIMARY KEY,
+        Fabricante text, 
+        Tipo_De_Vacuna text, 
+        Cantidad_Recibida integer, 
+        Cantidad_Usada integer, 
+        Dosis_Necesarias integer, 
+        Temperatura_De_Almacenamiento integer,
+        Efectividad_Identificada integer,
+        Tiempo_De_Proteccion integer,
+        Fecha_De_Vencimiento text,
+        Imagen text)''')
     #Creacion de la tabla Planes
-    cursorObj.execute("CREATE TABLE IF NOT EXISTS Planes(id integer PRIMARY KEY, Edad_Min integer, Edad_Max integer,Fecha_Inicio text,Fecha_Fin text)")
+    cursorObj.execute('''CREATE TABLE IF NOT EXISTS 
+    Planes(
+        ID integer PRIMARY KEY, 
+        Edad_Min integer, 
+        Edad_Max integer,
+        Fecha_Inicio text,
+        Fecha_Fin text)''')
+    #Creacion de la tabla Citas
+    cursorObj.execute('''CREATE TABLE IF NOT EXISTS
+    Citas(
+        Numero_De_Cita integer PRIMARY KEY,
+        Numero_De_Identificaion integer,
+        Tipo_De_Identificacion text,
+        Ciudad_De_Vacunacion text,
+        Codigo_De_Lote integer,
+        Fecha_De_Cita text,
+        Hora_De_Cita integer)''')
+
 
 #-----DESDE AQUI MODULO DE MENU-------------------------------------------------------------------------------------------------------
 #Funcion Menu Principal Para Acceso A Funciones de Datos y Lotes
