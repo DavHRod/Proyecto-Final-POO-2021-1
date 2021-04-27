@@ -83,6 +83,7 @@ def menuPrincipal():
     elif casosPrincipal[resp] == "Salir":
         con.close()
         exit()
+    
 
 #Funcion Menu para gestion de datos de los pacientes
 def menuDatos():
@@ -128,12 +129,14 @@ def menuLotes():
 #Funcion menu para gestion de planes de vacunacion
 def menuPlanes():
     #Diccionario de casos del menu Planes
-    casosPlan={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
+    casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 3:"Regresar",4:"Salir"}
     #Mensajes de Inicio del Menu
-    resp=int(input("1.Crear Plan\n2.Consultar Plan por edad\n3.Regresar\n4.Salir\n"))
+    resp=int(input("1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Regresar\n5.Salir\n"))
     #Condicionales de uso del Menu Para Gestion De Lotes
     if casosPlan[resp] == "Crear":
         crearPlan(con)
+    elif casosPlan[resp] == "Calcular":
+        consultarPlan(con)
     elif casosPlan[resp] == "Consultar":
         consultarPlan(con)
     elif casosPlan[resp] == "Regresar":
@@ -190,9 +193,10 @@ def afiliarPaciente(con):
     #Concatenación fecha actual
     fechaActual=str(dayActual)+"/"+str(monthActual)+"/"+str(yearActual)
     #Tupla con todos los datos ingresados En la funcion Afiliar
-    datosPaciente=(noIdentificacion,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,None,False)
+    IDPlan=None
+    datosPaciente=(noIdentificacion,IDPlan,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,None,False)
     #Insercion de los datos a la tabla de Afiliados, Nueva Fila
-    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
+    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
     #Envio de la peticion a la base de datos
     con.commit()
 
@@ -203,7 +207,7 @@ def consultarAfiliado(con):
     #Recepcion del numero de identificacion
     noIdentificacion=int(input("Ingrese el número de identificación del paciente a consultar: "))
     #Seleccion de campos basado en la identificacion de pacientes basado en el Numero_de_identificacion
-    cursorObj.execute('SELECT * FROM Afiliados WHERE Numero_de_identificacion=?',(noIdentificacion,))
+    cursorObj.execute('SELECT * FROM Afiliados WHERE Numero_de_identificacion = ? ',(noIdentificacion,))
     #Recoleccion de los datos en la tupla "consultados"
     consultados=cursorObj.fetchall()
     #Impresion de la tupla correspondiente al paciente
@@ -226,7 +230,7 @@ def desafiliarPaciente(con):
     #Concatenación fecha actual
     fechaDesafiliacion=str(dayActual)+"/"+str(monthActual)+"/"+str(yearActual)
     #Insercion de la fecha concatenada en la base de datos basado en el Numero_de_identificacion, columna Fecha_de_desafiliacion
-    cursorObj.execute('UPDATE Afiliados SET Fecha_de_desafiliacion=? WHERE Numero_de_identificacion=?',(fechaDesafiliacion,noIdentificacion))
+    cursorObj.execute('UPDATE Afiliados SET Fecha_De_Desafiliacion = ? WHERE Numero_de_identificacion = ?',(fechaDesafiliacion,noIdentificacion))
     #Envio de la peticion a la base de datos
     con.commit()
 
@@ -305,33 +309,85 @@ def consultarLote(con):
 #-----DESDE AQUI MODULO DE PLANES DE VACUNACION-------------------------------------------------------------------------------------------------------
 
 def crearPlan(con):
+    cursorObj = con.cursor()
+    idPlan=input("Ingrese el consecutivo del plan de vacunación:")
+    idPlan=idPlan.ljust(2)
+    #Ingreso de día de de inicio del plan de vacunación
+    day=input("Ingrese el día de la fecha de inicio del plan de vacunación: ")
+    day=day.rjust(2,"0")
+    #Ingreso de mes de inicio del plan de vacunación
+    month=input("Ingrese el mes de la fecha de inicio del plan de vacunación: ")
+    month=month.rjust(2,"0")
+    #Ingreso de año de inicio del plan de vacunación
+    year=input("Ingrese el año de la fecha de inicio del plan de vacunación: ")
+    year=year.rjust(4)
+    #Concatenación de la fecha de inicio del plan de vacunación
+    fechaInicio=day+"/"+month+"/"+year
+    #Ingreso de día de de fin del plan de vacunación
+    day=input("Ingrese el día de la fecha de fin del plan de vacunación: ")
+    day=day.rjust(2,"0")
+    #Ingreso de mes de fin del plan de vacunación
+    month=input("Ingrese el mes de la fecha de fin del plan de vacunación: ")
+    month=month.rjust(2,"0")
+    #Ingreso de año de fin del plan de vacunación
+    year=input("Ingrese el año de la fecha de fin del plan de vacunación: ")
+    year=year.rjust(4)
+    #Concatenación de la fecha de fin del plan de vacunación
+    fechaFin=day+"/"+month+"/"+year 
+    edadMin=input("Ingrese la edad mínima para clasificar a este plan: ")
+    edadMin=edadMin.ljust(3)
+    edadMax=input("Ingrese la edad máxima para clasificar a este plan: ")
+    edadMax=edadMax.ljust(3)
+    datosPlanes=(idPlan,edadMin,edadMax,fechaInicio,fechaFin)
+    cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
+    con.commit()
+    
+def calcularPlan(con):
     cursorObj=con.cursor()
+    #Seleccion de todos lo numeros de identificacion
     cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
+    #Recopilacion en la tupla "identificaciones"
+    identificaciones=cursorObj.fetchall()
+    #Seleccion de Planes Existentes
+    cursorObj.execute("SELECT ID FROM Planes")
     ids=cursorObj.fetchall()
-    for ids in ids :
-        cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",ids)
+    identificacionesActual=0
+    idActual=0
+    for identificacionesIterando in identificaciones :
+        cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
         nacimiento=cursorObj.fetchall()
         edad=list(nacimiento[0])
-        today = date.today()
         edad=edad[0]
         edad=edad[6]+""+edad[7]+""+edad[8]+""+edad[9]
+        today = date.today()
         edad=today.year-int(edad)
-        print(edad)
-
+        identificacionActual=identificacionesIterando[0]
+        for idIterando in ids:
+            cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
+            restricciones=cursorObj.fetchall()
+            restricciones=restricciones[0]
+            idActual=ids[0]
+            idActual=idActual[0]
+            restricciones=[int(restricciones[0]),int(restricciones[1])]
+            if restricciones[0] >= edad and restricciones[1] <= edad:
+                asignacion=(idActual,identificacionActual)
+                cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
+                con.commit()
+        
 #Conexion con la base de datos
 con=sql_connection()
 
 #Ejecucion de funciones
 sql_table(con)
-menuPrincipal()
-
+#menuPrincipal()
+calcularPlan(con)
 #Cerrar conexion
 con.close()
 """
 Acá dejamos los comandos sqlite3
 Crear// Tabla cursorObj.execute("CREATE TABLE Nombre_De_Tabla(Campo1 Tipo_Dato Situacional(PRIMARY KEY), Campo2 Tipo_Dato, N_Campos Su_Tipo_Dato)")
 Insert// cursorObj.execute("INSERT INTO Nombre_De_Tabla VALUES(Campo1, Campo2, N_Campos_Concordes_Al_#_Campos)")
-Updates// cursorObj.execute('UPDATE Nombre_De_Tabla SET Campo_Modificar = Valor_Nuevo where Campo_de_Identificacion = PRIMARY KEY')
+Updates// cursorObj.execute('UPDATE Nombre_De_Tabla SET Campo_Modificar = Valor_Nuevo WHERE Campo_de_Identificacion = PRIMARY KEY')
 
 Recordar que existen comandos que no funcionan correctamente sin un SELECT
 Select// cursorObj.execute('SELECT Campo1, Campo2, N_campos FROM Nombre_de_tabla')
