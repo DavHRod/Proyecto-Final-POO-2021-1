@@ -129,7 +129,7 @@ def menuLotes():
 #Funcion menu para gestion de planes de vacunacion
 def menuPlanes():
     #Diccionario de casos del menu Planes
-    casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 3:"Regresar",4:"Salir"}
+    casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 4:"Regresar",5:"Salir"}
     #Mensajes de Inicio del Menu
     resp=int(input("1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Regresar\n5.Salir\n"))
     #Condicionales de uso del Menu Para Gestion De Lotes
@@ -287,7 +287,7 @@ def crearLote(con):
     #Concatenación de la fecha de vencimiento de la vacuna 
     fechaVencimiento=day+"/"+month+"/"+year
     #Imagen: proximamente
-    imagen="todavia no prro"
+    imagen="Aún no"
     datosLotes=(noLote,fabricante,tipoVacuna,cantidadRecibida,cantidadUsada,dosisNecesarias,temperatura,efectividad,tiempoProteccion,fechaVencimiento,imagen)
     #Insercion de los datos a la tabla de Lotes, Nueva Fila
     cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
@@ -301,10 +301,10 @@ def consultarLote(con):
     #Seleccion de datos basado en el Numero_De_Lote
     cursorObj.execute('SELECT * FROM Lotes WHERE Numero_De_Lote=?',(noLote,))
     #Recoleccion de los datos en la tupla "consultados"
-    consultados=cursorObj.fetchall()
+    lote=cursorObj.fetchall()
     #Impresion de la tupla correspondiente al lote
-    for consultados in consultados:
-        print(consultados)
+    for lote in lote:
+        print(lote)
         
 #-----DESDE AQUI MODULO DE PLANES DE VACUNACION-------------------------------------------------------------------------------------------------------
 
@@ -341,46 +341,145 @@ def crearPlan(con):
     datosPlanes=(idPlan,edadMin,edadMax,fechaInicio,fechaFin)
     cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
     con.commit()
-    
+#Funcion de consulta de planes
+def consultarPlan(con):
+    cursorObj = con.cursor()
+    #Recepcion del numero de identificacion
+    noId=int(input("Ingrese el ID del plan a consultar: "))
+    #Seleccion de campos basado en el ID suministrado
+    cursorObj.execute('SELECT * FROM Planes WHERE ID = ? ',(noId,))
+    #Recoleccion de los datos en la tupla "consultados"
+    planes=cursorObj.fetchall()
+    #Impresion de la tupla correspondiente al paciente
+    for planes in planes:
+        print(planes)
+
 def calcularPlan(con):
+    confirmacion=input("""Este modulo asignará un numero de plan con respecto a los planes vigentes
+    ¿Desea Ejecutar? Y/N
+    """)
+    confirmacion.upper()
+    if confirmacion == "Y":
+        cursorObj=con.cursor()
+        #Seleccion de todos lo numeros de identificacion
+        cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
+        #Recopilacion en la tupla "identificaciones"
+        identificaciones=cursorObj.fetchall()
+        #Seleccion de Planes Existentes
+        cursorObj.execute("SELECT ID FROM Planes")
+        ids=cursorObj.fetchall()
+        identificacionesActual=0
+        idActual=0
+        for identificacionesIterando in identificaciones :
+            cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
+            nacimiento=cursorObj.fetchall()
+            edad=list(nacimiento[0])
+            edad=edad[0]
+            edad=edad[6]+""+edad[7]+""+edad[8]+""+edad[9]
+            today = date.today()
+            edad=today.year-int(edad)
+            identificacionActual=identificacionesIterando[0]
+            for idIterando in ids:
+                cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
+                restricciones=cursorObj.fetchall()
+                restricciones=restricciones[0]
+                idActual=ids[0]
+                idActual=idActual[0]
+                restricciones=[int(restricciones[0]),int(restricciones[1])]
+                if restricciones[0] >= edad and restricciones[1] <= edad:
+                    asignacion=(idActual,identificacionActual)
+                    cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
+                    con.commit()
+                    break
+    else:
+        menuPlanes()
+
+#-----DESDE AQUI MODULO DE PROGRAMA DE VACUNAS-------------------------------------------------------------------------------------------------------
+def crearProgramacion(con):
     cursorObj=con.cursor()
-    #Seleccion de todos lo numeros de identificacion
-    cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
-    #Recopilacion en la tupla "identificaciones"
-    identificaciones=cursorObj.fetchall()
-    #Seleccion de Planes Existentes
-    cursorObj.execute("SELECT ID FROM Planes")
-    ids=cursorObj.fetchall()
-    identificacionesActual=0
-    idActual=0
-    for identificacionesIterando in identificaciones :
-        cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
-        nacimiento=cursorObj.fetchall()
-        edad=list(nacimiento[0])
-        edad=edad[0]
-        edad=edad[6]+""+edad[7]+""+edad[8]+""+edad[9]
-        today = date.today()
-        edad=today.year-int(edad)
-        identificacionActual=identificacionesIterando[0]
-        for idIterando in ids:
-            cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
-            restricciones=cursorObj.fetchall()
-            restricciones=restricciones[0]
-            idActual=ids[0]
-            idActual=idActual[0]
-            restricciones=[int(restricciones[0]),int(restricciones[1])]
-            if restricciones[0] >= edad and restricciones[1] <= edad:
-                asignacion=(idActual,identificacionActual)
-                cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
-                con.commit()
-        
+    print("""Bienvenido al Creador de progamas de vacunación
+    Una vez ingresados los datos requeridos acontinución, se le asignará una cita a todos los afiliados actuales.
+    Teniendo en cuenta los planes de vacunacion existentes y asignados, asi como los parametros que ingresará acontinuacion
+    Recuerde que debido a la situacion COVID actual, las citas se asignaran 30 minutos una despues de la otra""")
+    print("Ingrese los datos de las fechas dentro de las que quiere asignar las citas")
+    day=input("Día de Inicio de la asignacion de citas: ")
+    day=day.rjust(2,"0")
+    #Ingreso de mes de inicio de la asignacion de citas
+    month=input("Mes de Inicio de la asignacion de citas: ")
+    month=month.rjust(2,"0")
+    #Ingreso de año de inicio de la asignacion de citas
+    year=input("Año de Inicio de la asignacion de citas: ")
+    year=year.rjust(4)
+    #Concatenación de la fecha de inicio de la asignacion de citas
+    fechaInicio= day + "/" + month + "/" + year
+    #Ingreso de día de de fin de la asignacion de citas
+    day=input("Día de Fin de la asignacion de citas: ")
+    day=day.rjust(2,"0")
+    #Ingreso de mes de fin de la asignacion de citas
+    month=input("Mes de Fin de la asignacion de citas: ")
+    month=month.rjust(2,"0")
+    #Ingreso de año de fin de la asignacion de citas
+    year=input("Año de Fin de la asignacion de citas: ")
+    year=year.rjust(4)
+    #Concatenación de la fecha de fin de la asignacion de citas
+    fechaFin= day + "/" + month + "/" + year 
+    fechaFin=input("Fecha de Fin")
+    
+    while True:
+        print("Ingrese los datos de su horario de atencion deseado")
+        horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
+        horaInicio=horaInicio.rjust(5,"0")
+        horaInicio=horaInicio.split(":")
+        try:
+            horaInicio=[int(horaInicio[0]),int(horaInicio[1])]
+            break
+
+        except (ValueError):
+            print("Poné un numero mongolico")
+    if horaInicio[1] < 30:
+        horaInicio[1] = 30
+    elif horaInicio[1] > 30:
+        horaInicio[1] = 00
+        horaInicio[0] = int(horaInicio[0]) + 1
+
+
+    while True:
+        horaFin= input("Hora de Fin del horario de atención (24 hrs)(00:00) : ")
+        horaFin=horaFin.rjust(5,"0")
+        horaFin=horaFin.split(":")
+        try:
+            horaFin=[int(horaFin[0]),int(horaFin[1])]
+            break
+        except (ValueError):
+            print("Poné un numero mongolico")
+    if horaFin[1] < 30:
+        horaFin[1] = 30
+    elif horaFin[1] > 30:
+        horaFin[1] = 00
+        horaFin[0] = int(horaFin[0]) + 1
+    horaCitas=[]
+    horaIterando=horaInicio
+    horaFin=[str(horaFin[0]),str(horaFin[1])]
+    while horaIterando != horaFin:
+        horaCitas.append(horaIterando)
+        horaIterando=[int(horaIterando[0]),int(horaIterando[1])]
+        horaIterando[1] += 30
+        if horaIterando[1] >= 60:
+            horaIterando[0] += 1
+            horaIterando[1] = "00"
+        horaIterando=[str(horaIterando[0]),str(horaIterando[1])]
+    for horaCitas in horaCitas:
+        print(str(horaCitas[0])+":"+str(horaCitas[1]))
+
 #Conexion con la base de datos
 con=sql_connection()
 
 #Ejecucion de funciones
 sql_table(con)
+
 #menuPrincipal()
 calcularPlan(con)
+
 #Cerrar conexion
 con.close()
 """
