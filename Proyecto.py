@@ -19,13 +19,13 @@ def sql_table(con):
     cursorObj.execute('''CREATE TABLE IF NOT EXISTS 
     Afiliados(
         Numero_De_Identificacion integer PRIMARY KEY, 
-        ID_Plan FOREING KEY integer,
+        ID_Plan integer FOREING KEY,
         Nombre text, 
         Apellido text, 
         Direccion text, 
         Telefono integer, 
         Correo text, 
-        Ciudad text,
+        Ciudad_De_Residencia text,
         Fecha_De_Nacimiento text,
         Fecha_De_Afiliacion text,
         Fecha_De_Desafiliacion text,
@@ -56,8 +56,8 @@ def sql_table(con):
     cursorObj.execute('''CREATE TABLE IF NOT EXISTS
     Citas(
         Numero_De_Cita integer PRIMARY KEY,
-        Numero_De_Identificaion integer,
-        Tipo_De_Identificacion text,
+        ID_Plan integer,
+        Numero_De_Identificacion integer,
         Ciudad_De_Vacunacion text,
         Codigo_De_Lote integer,
         Fecha_De_Cita text,
@@ -151,8 +151,14 @@ def menuPlanes():
 def afiliarPaciente(con):
     cursorObj = con.cursor()
     #Ingreso de No. de identificación de un nuevo paciente
-    noIdentificacion=input("Ingrese el número de identificación del paciente: ")
-    noIdentificacion=noIdentificacion.ljust(12)
+    while True:
+        noIdentificacion=input("Ingrese el número de identificación del paciente: ")
+        noIdentificacion=noIdentificacion.ljust(12)
+        try:
+            noIdentificacion = int(noIdentificacion)
+            return noIdentificacion
+        except ValueError:
+            print("Escriba un número entero")
     #Ingreso de nombre de un nuevo paciente
     nombre=input("Ingrese el nombre del paciente: ")
     nombre=nombre.ljust(20)
@@ -163,8 +169,14 @@ def afiliarPaciente(con):
     direccion=input("Ingrese la dirección de residencia del paciente: ")
     direccion=direccion.ljust(20)
     #Ingreso de telefono de un nuevo paciente
-    telefono=input("Ingrese un número de contacto: ")
-    telefono=telefono.ljust(12)
+    while True:
+        telefono=input("Ingrese un número de contacto: ")
+        telefono=telefono.ljust(12)
+        try:
+            telefono = int(telefono)
+            return telefono
+        except ValueError:
+            print("Escriba un número entero")
     #Ingreso de correo de un nuevo paciente
     correo=input("Ingrese el correo electrónico del paciente: ")
     correo=correo.ljust(20)
@@ -172,6 +184,7 @@ def afiliarPaciente(con):
     ciudad=input("Ingrese la ciudad en la que reside el paciente: ")
     ciudad=ciudad.ljust(20)
     #Ingreso de día de nacimiento de un nuevo paciente
+    
     day=input("Ingrese el día de nacimiento: ")
     day=day.rjust(2,"0")
     #Ingreso de mes de nacimiento de un nuevo paciente
@@ -199,6 +212,7 @@ def afiliarPaciente(con):
     cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
     #Envio de la peticion a la base de datos
     con.commit()
+    menuDatos()
 
 #Función consultarAfiliado: Esta función permite al usuario consultar los datos de un paciente,
 #Se debe ingresar el número de identificación del paciente para que la función busque en la tabla los datos
@@ -275,15 +289,40 @@ def crearLote(con):
     #Ingreso de tiempo de protección conocido de la vacuna
     tiempoProteccion=input("Ingrese el tiempo de proteccion de que ofrece la vacuna (Años): ")
     tiempoProteccion=tiempoProteccion.ljust(3)
-    #Ingreso de día de vencimiento de la vacuna 
-    day=input("Ingrese el día de vencimiento de la vacuna: ")
-    day=day.rjust(2,"0")
+    #Ingreso de día de vencimiento de la vacuna
+    while True:
+        day=input("Ingrese el día de vencimiento de la vacuna: ")
+        day=day.rjust(2,"0")
+        try:
+            if int(day) >0 and int(day) < 32:
+                break
+            else:
+                print("El Numero debe estar entre 1 y 31")
+        except:
+            print("La entrada debe ser Digito")
     #Ingreso de mes de vencimiento de la vacuna
-    month=input("Ingrese el mes de vencimiento de la vacuna: ")
-    month=month.rjust(2,"0")
+    while True:
+        month=input("Ingrese el mes de vencimiento de la vacuna: ")
+        month=month.rjust(2,"0")
+        try:
+            if int(month) >0 and int(month) < 13:
+                break
+            else:
+                print("El Numero debe estar entre 1 y 12")
+        except:
+            print("El Numero debe ser Digito")
     #Ingreso de año de vencimiento de la vacuna
-    year=input("Ingrese el año de vencimiento de la vacuna:")
-    year=year.rjust(4)
+    while True:
+        year=input("Ingrese el año de vencimiento de la vacuna:")
+        year=year.rjust(4)
+        try:
+            if int(year) >= 2021:
+                break
+            else:
+                print("El Número debe estar entre 1 y 12")
+        except:
+            print("El Número debe ser Digito")
+
     #Concatenación de la fecha de vencimiento de la vacuna 
     fechaVencimiento=day+"/"+month+"/"+year
     #Imagen: proximamente
@@ -312,25 +351,65 @@ def crearPlan(con):
     cursorObj = con.cursor()
     idPlan=input("Ingrese el consecutivo del plan de vacunación:")
     idPlan=idPlan.ljust(2)
-    #Ingreso de día de de inicio del plan de vacunación
-    day=input("Ingrese el día de la fecha de inicio del plan de vacunación: ")
-    day=day.rjust(2,"0")
+    #Ingreso el día de de inicio del plan de vacunación
+    while True:
+        day=input("Ingrese el día de la fecha de inicio del plan de vacunación: ")
+        day=day.rjust(2,"0")
+        try:
+            if int(day) >0 and int(day) < 32:
+                break
+            else:
+                print("El Numero debe estar entre 1 y 31")
+        except:
+            print("La entrada debe ser Digito")
     #Ingreso de mes de inicio del plan de vacunación
-    month=input("Ingrese el mes de la fecha de inicio del plan de vacunación: ")
-    month=month.rjust(2,"0")
+    while True:
+        month=input("Ingrese el mes de la fecha de inicio del plan de vacunación: ")
+        month=month.rjust(2,"0")
+        try:
+            if int(month) >0 and int(month) < 13:
+                break
+            else:
+                print("El Numero debe estar entre 1 y 12")
+        except:
+            print("El Numero debe ser Digito")
     #Ingreso de año de inicio del plan de vacunación
-    year=input("Ingrese el año de la fecha de inicio del plan de vacunación: ")
-    year=year.rjust(4)
+    while True:
+        year=input("Ingrese el año de la fecha de inicio del plan de vacunación: ")
+        year=year.rjust(4)
+        try:
+            if int(year) > 1950:
+                break
+            else:
+                print("El Número debe estar entre 1 y 12")
+        except:
+            print("El Número debe ser Digito")
     #Concatenación de la fecha de inicio del plan de vacunación
     fechaInicio=day+"/"+month+"/"+year
     #Ingreso de día de de fin del plan de vacunación
-    day=input("Ingrese el día de la fecha de fin del plan de vacunación: ")
-    day=day.rjust(2,"0")
+    while True:
+        day=input("Ingrese el día de la fecha del fin del plan de vacunación: ")
+        day=day.rjust(2,"0")
+        try:
+            if int(day) >0 and int(day) < 32:
+                break
+            else:
+                print("El Numero debe estar entre 1 y 31")
+        except:
+            print("La entrada debe ser Digito")
     #Ingreso de mes de fin del plan de vacunación
-    month=input("Ingrese el mes de la fecha de fin del plan de vacunación: ")
-    month=month.rjust(2,"0")
+    while True:
+        month=input("Ingrese el mes de la fecha del fin del plan de vacunación: ")
+        month=month.rjust(2,"0")
+        try:
+            if int(month) >0 and int(month) < 13:
+                break
+            else:
+                print("El Numero debe estar entre 1 y 12")
+        except:
+            print("El Numero debe ser Digito")
     #Ingreso de año de fin del plan de vacunación
-    year=input("Ingrese el año de la fecha de fin del plan de vacunación: ")
+    year=input("Ingrese el año de la fecha del fin del plan de vacunación: ")
     year=year.rjust(4)
     #Concatenación de la fecha de fin del plan de vacunación
     fechaFin=day+"/"+month+"/"+year 
@@ -356,8 +435,7 @@ def consultarPlan(con):
 
 def calcularPlan(con):
     confirmacion=input("""Este modulo asignará un numero de plan con respecto a los planes vigentes
-    ¿Desea Ejecutar? Y/N
-    """)
+    ¿Desea Ejecutar? Y/N\n""")
     confirmacion.upper()
     if confirmacion == "Y":
         cursorObj=con.cursor()
@@ -423,10 +501,9 @@ def crearProgramacion(con):
     year=year.rjust(4)
     #Concatenación de la fecha de fin de la asignacion de citas
     fechaFin= day + "/" + month + "/" + year 
-    fechaFin=input("Fecha de Fin")
     
     while True:
-        print("Ingrese los datos de su horario de atencion deseado")
+        #print("Ingrese los datos de su horario de atencion deseado")
         horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
         horaInicio=horaInicio.rjust(5,"0")
         horaInicio=horaInicio.split(":")
@@ -444,7 +521,7 @@ def crearProgramacion(con):
 
 
     while True:
-        horaFin= input("Hora de Fin del horario de atención (24 hrs)(00:00) : ")
+        horaFin= "20:00"#input("Hora de Fin del horario de atención (24 hrs)(00:00) : ")
         horaFin=horaFin.rjust(5,"0")
         horaFin=horaFin.split(":")
         try:
@@ -468,8 +545,30 @@ def crearProgramacion(con):
             horaIterando[0] += 1
             horaIterando[1] = "00"
         horaIterando=[str(horaIterando[0]),str(horaIterando[1])]
-    for horaCitas in horaCitas:
-        print(str(horaCitas[0])+":"+str(horaCitas[1]))
+    
+    #Seleccion de los datos de los pacientes
+    cursorObj.execute("SELECT Numero_De_Identificacion, Ciudad_De_Residencia FROM Afiliados")
+    #Recopilacion en la tupla "afiliados"
+    afiliados=cursorObj.fetchall()
+    #Seleccion de los Planes vigentes
+    cursorObj.execute("SELECT ID FROM Planes")
+    #Recopilacion en la tupla "Planes"
+    planes=cursorObj.fetchall()
+    secuencial=1
+    for plan in range(1,len(planes)+1):
+        cursorObj.execute("SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = ?",(plan,))
+        #Recopilacion en la tupla "afiliados"
+        afiliados=cursorObj.fetchall()
+        afiliado=0
+        while afiliado != len(afiliados):
+            horaCitaActual=horaCitas[secuencial]
+            horaCitaActual=str(horaCitaActual[0])+":"+str(horaCitaActual[1])
+            afiliadoActual=afiliados[afiliado]
+            nuevaCita=(secuencial,afiliadoActual[2],afiliadoActual[0],afiliadoActual[1],1,fechaInicio,horaCitaActual)
+            cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
+            con.commit()
+            secuencial += 1
+            afiliado += 1
 
 #Conexion con la base de datos
 con=sql_connection()
@@ -477,8 +576,7 @@ con=sql_connection()
 #Ejecucion de funciones
 sql_table(con)
 
-#menuPrincipal()
-calcularPlan(con)
+menuPrincipal()
 
 #Cerrar conexion
 con.close()
