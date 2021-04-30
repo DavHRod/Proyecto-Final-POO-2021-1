@@ -36,8 +36,9 @@ def sql_table(con):
         Codigo_De_Lote integer PRIMARY KEY,
         Fabricante text, 
         Tipo_De_Vacuna text, 
-        Cantidad_Recibida integer, 
-        Cantidad_Usada integer, 
+        Cantidad_Recibida integer,
+        Cantidad_Asignada integer, 
+        Cantidad_Usada integer,
         Dosis_Necesarias integer, 
         Temperatura_De_Almacenamiento integer,
         Efectividad_Identificada integer,
@@ -255,6 +256,7 @@ def vacunarAfiliado(con):
     noIdentificacion=int(input("Ingrese el número de identificación del paciente a Vacunar: "))
     #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
     cursorObj.execute('UPDATE Afiliados SET Vacunado=True WHERE Numero_de_identificacion=?',(noIdentificacion,))
+    contadorVacunacion(noIdentificacion)
     #Envio de la peticion a la base de datos
     con.commit()
 
@@ -274,8 +276,10 @@ def crearLote(con):
     #Ingreso de la cantidad de vacunas recibidas
     cantidadRecibida=input("Ingrese la cantidad recibida: ")
     cantidadRecibida=cantidadRecibida.ljust(6)
+    #Asignacion de la cantidad Asignada
+    cantidadAsignada=0
     #Ingreso de la cantidad de vacunas usadas
-    cantidadUsada=input("Ingrese la cantidad a Usar: ")
+    cantidadUsada=input("Ingrese la cantidad Usada: ")
     cantidadUsada=cantidadUsada.ljust(6)
     #Ingreso de cantidad dosis necesarias
     dosisNecesarias=input("Ingrese el número de dosis necesarias: ")
@@ -327,10 +331,27 @@ def crearLote(con):
     fechaVencimiento=day+"/"+month+"/"+year
     #Imagen: proximamente
     imagen="Aún no"
-    datosLotes=(noLote,fabricante,tipoVacuna,cantidadRecibida,cantidadUsada,dosisNecesarias,temperatura,efectividad,tiempoProteccion,fechaVencimiento,imagen)
+    datosLotes=(noLote,fabricante,tipoVacuna,cantidadRecibida,cantidadUsada,cantidadAsignada,dosisNecesarias,temperatura,efectividad,tiempoProteccion,fechaVencimiento,imagen)
     #Insercion de los datos a la tabla de Lotes, Nueva Fila
-    cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
+    cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
     #Envio de la peticion a la base de datos
+    con.commit()
+
+#Función contadorVacunacion(noIdentificacion)
+def contadorVacunacion(noIdentificacion):
+    cursorObj = con.cursor()
+    cursorObj.execute('SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion=?',(noIdentificacion,))
+    codLote=cursorObj.fetchall()
+    codLote=codLote[0]
+    codLote1=codLote[0]
+    cursorObj.execute('SELECT Cantidad_Recibida, Cantidad_Usada FROM Lotes WHERE Codigo_De_Lote=?',(codLote1,))
+    cantReUs=cursorObj.fetchall()
+    cantReUs=cantReUs[0]
+    cantReUs1=cantReUs[0]
+    cantReUs2=cantReUs[1]
+    if cantReUs1>0:
+        usado=cantReUs2+1
+        cursorObj.execute('UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?',(usado,codLote1))
     con.commit()
 
 def consultarLote(con):
@@ -504,7 +525,7 @@ def crearProgramacion(con):
     
     while True:
         #print("Ingrese los datos de su horario de atencion deseado")
-        horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
+        horaInicio= "6:00"#input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
         horaInicio=horaInicio.rjust(5,"0")
         horaInicio=horaInicio.split(":")
         try:
@@ -559,16 +580,64 @@ def crearProgramacion(con):
         cursorObj.execute("SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = ?",(plan,))
         #Recopilacion en la tupla "afiliados"
         afiliados=cursorObj.fetchall()
-        afiliado=0
+        #Fecha Inicio Plan
+        cursorObj.execute("SELECT Fecha_Inicio FROM Planes WHERE ID = ? ",(plan,))
+        fechaPlan=cursorObj.fetchall()
+        fechaPlan = fechaPlan[0]
+        fechaPlan = fechaPlan[0]
+        #Codigo de Lote
+        cursorObj.execute("SELECT Codigo_De_Lote, Cantidad_Recibida, Cantidad_Usada FROM Lotes")
+        vacunas = cursorObj.fetchall()
+        afiliado = 0
         while afiliado != len(afiliados):
-            horaCitaActual=horaCitas[secuencial]
+            horaCitaActual=horaCitas[afiliado]
             horaCitaActual=str(horaCitaActual[0])+":"+str(horaCitaActual[1])
             afiliadoActual=afiliados[afiliado]
-            nuevaCita=(secuencial,afiliadoActual[2],afiliadoActual[0],afiliadoActual[1],1,fechaInicio,horaCitaActual)
+            disponible=0
+            while True:
+                cursorObj.execute("SELECT Codigo_De_Lote, Cantidad_Recibida, Cantidad_Asignada, Cantidad_Usada FROM Lotes")
+                vacunas=cursorObj.fetchall()
+                vacunas=vacunas[disponible]
+                disponibles = int(vacunas[2])
+                if int(vacunas[1]) != disponibles:
+                    vacunas=vacunas[0]
+                    break
+                else:
+                    disponible += 1
+            disponibles += 1
+            cursorObj.execute("UPDATE Lotes SET Cantidad_Asignada = ? WHERE Codigo_De_Lote = ?",(disponibles,vacunas))
+            con.commit()
+            nuevaCita=(secuencial,afiliadoActual[2],afiliadoActual[0],afiliadoActual[1],vacunas,fechaPlan,horaCitaActual)
             cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
             con.commit()
             secuencial += 1
             afiliado += 1
+
+def consultarProgramaIndividual():
+    cursorObj = con.cursor()
+    #Recepcion del numero de identificacion
+    noIdentificacion=int(input("Ingrese el número de identificación del paciente a consultar: "))
+    cursorObj.execute('SELECT * FROM Citas WHERE Numero_De_Identificacion=?',(noIdentificacion,))
+    citas=cursorObj.fetchall()
+    citas=citas[0]
+    print(citas)
+    noId=citas[0]
+    idPlan=citas[1]
+    idAfiliado=citas[2]
+    ciudad=citas[3]
+    codLote=citas[4]
+    fechaCita=citas[5]
+    horaCita=citas[6]
+    print(
+        "Número de cita: ", noId,"\n"
+        "Número de plan: ", idPlan, "\n"
+        "Identificación Afiliado: ", idAfiliado,"\n"
+        "Ciudad de Vacunación: ", ciudad,"\n"
+        "Código de lote: ", codLote,"\n"
+        "Fecha y hora de cita: ", fechaCita, "a las ", horaCita,"\n"
+    )
+
+
 
 #Conexion con la base de datos
 con=sql_connection()
@@ -577,6 +646,7 @@ con=sql_connection()
 sql_table(con)
 
 menuPrincipal()
+
 
 #Cerrar conexion
 con.close()

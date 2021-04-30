@@ -1,0 +1,9 @@
+In Queue:
+-El comprobador de si está vacunado
+-Comprobaciones, En especial la de correo
+-Consulta general de programaciones
+-Documentacion Tecnica
+-Documentacion de Usuario
+Done:
+-Aumentar Cantidad de vacunacion, Consulta individual 
+-Avance Calcular Programa, Aumentar Cantidad Asignada
