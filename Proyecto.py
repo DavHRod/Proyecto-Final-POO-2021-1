@@ -1,5 +1,7 @@
 #Importacion de librerias a usar
 import sqlite3
+from validate_email import validate_email
+import re
 from sqlite3 import Error
 from datetime import date
 from datetime import datetime
@@ -182,6 +184,7 @@ def menuPlanes():
     else:
         print("Deber se una respuesta Valida")
         menuPlanes()
+#Funcion menu para gestion de citas de vacunacion
 def menuCitas():
     #Diccionario de casos del menu Citas
     casosCitas={1:"Calcular Citas",2:"Consulta Individual",3:"Consulta General",4:"Regresar",5:"Salir"} 
@@ -191,7 +194,7 @@ def menuCitas():
             break
         except:
             print("Debe ser un Numero")
-    #Condicionales de uso del Menu Para Gestion De Lotes
+    #Condicionales de uso del Menu Para Gestion De Citas
     if resp > 0 and resp < 6:
         if casosCitas[resp] == "Calcular Citas":
             calcularProgramacion(con)
@@ -216,13 +219,20 @@ def afiliarPaciente(con):
     #Ingreso de No. de identificación de un nuevo paciente
     while True:
         noIdentificacion=input("Ingrese el número de identificación del paciente: ")
-        noIdentificacion=noIdentificacion.rjust(12," ")
-        try:
-            noIdentificacion = int(noIdentificacion)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
+        longitudId=12
+        longId=len(noIdentificacion)
+        
+        if longId<=longitudId:
+            noIdentificacion=noIdentificacion.rjust(longitudId," ")
+            try:
+                noIdentificacion = int(noIdentificacion)
+                break
+            except ValueError:
+                #Mensaje en pantalla de un error al digitar
+                print("Escriba un número entero")
+        else:
+            print("Máximo escriba 12 digitos")
+        
     #Ingreso de nombre de un nuevo paciente
     nombre=input("Ingrese el nombre del paciente: ")
     nombre=nombre.ljust(20)
@@ -231,57 +241,77 @@ def afiliarPaciente(con):
     apellido=apellido.ljust(20)
     #Ingreso de dirección de residencia de un nuevo paciente
     direccion=input("Ingrese la dirección de residencia del paciente: ")
-    direccion=direccion.ljust(20)
+    direccion=direccion.ljust(30)
+    direccion=direccion[:30]
     #Ingreso de telefono de un nuevo paciente
     while True:
         telefono=input("Ingrese un número de contacto: ")
-        telefono=telefono.ljust(12)
-        try:
-            telefono = int(telefono)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
+        longitud=10
+        longVariable=len(telefono)
+        if longVariable<=longitud:
+            try:
+                telefono = int(telefono)
+                break
+            except ValueError:
+                #Mensaje en pantalla de un error al digitar
+                print("Escriba un número entero")
+            telefono=telefono.ljust(10)
+        else:
+            print("Máximo escriba 10 digitos")
+
     #Ingreso de correo de un nuevo paciente
-    correo=input("Ingrese el correo electrónico del paciente: ")
-    correo=correo.ljust(20)
+    while True:
+        correo=input("Ingrese el correo electrónico del paciente: ")
+        es_valido = validate_email(correo, verify=True)
+        print(es_valido)
+        if es_valido==False:
+            print("No valido, ingrese un correo valido")
+        else: 
+            break
     #Ingreso de ciudad de origen de un nuevo paciente
     ciudad=input("Ingrese la ciudad en la que reside el paciente: ")
     ciudad=ciudad.ljust(20)
+    ciudad=ciudad[:20]
     #Ingreso de día de nacimiento de un nuevo paciente
     while True:
-        day=input("Ingrese el día de nacimiento: ")
-        day=day.rjust(2,"0")
-        try:
-            if int(day) < 32 and int(day) >0 :
+        while True:
+            day=input("Ingrese el día de nacimiento: ")
+            day=day.rjust(2,"0")
+            try:
+                if int(day) < 32 and int(day) >0 :
+                    break
+            except ValueError:
+                #Mensaje en pantalla de un error al digitar
+                print("Escriba un número entero")
+        #Ingreso de mes de nacimiento de un nuevo paciente
+        while True:
+            month=input("Ingrese el mes de nacimiento: ")
+            month=month.rjust(2,"0")
+            try:
+                if int(month) < 13 and int(month) >0 :
+                    break
+            except ValueError:
+                #Mensaje en pantalla de un error al digitar
+                print("Escriba un número entero")
+        
+        #Ingreso de año de nacimiento de un nuevo paciente
+        while True:
+            year=input("Ingrese el año de nacimiento: ")
+            year=year.rjust(2,"0")
+            try:
+                year = int(year)
                 break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    #Ingreso de mes de nacimiento de un nuevo paciente
-    while True:
-        month=input("Ingrese el mes de nacimiento: ")
-        month=month.rjust(2,"0")
-        try:
-            if int(month) < 13 and int(month) >0 :
-                break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    
-    #Ingreso de año de nacimiento de un nuevo paciente
-    while True:
-        year=input("Ingrese el año de nacimiento: ")
-        year=year.rjust(2,"0")
-        try:
-            year = int(year)
+            except ValueError:
+                #Mensaje en pantalla de un error al digitar
+                print("Escriba un número entero")
+        #Concatenación de la fecha de nacimiento del nuevo paciente
+        fechaNacimiento=str(day)+"/"+str(month)+"/"+str(year)
+        fechaNacimientoComprobacion = datetime.strptime(fechaNacimiento, '%d/%m/%Y')
+        fechaActual = datetime.today()
+        if fechaNacimientoComprobacion <= fechaActual:
             break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    
-    #Concatenación de la fecha de nacimiento del nuevo paciente
-    fechaNacimiento=str(day)+"/"+str(month)+"/"+str(year)
+        else:
+            print("Fecha Invalida")
     #Función para obtener la fecha actual
     today = date.today()
     #Día actual
@@ -293,14 +323,7 @@ def afiliarPaciente(con):
     #Concatenación fecha actual
     fechaActual=str(dayActual)+"/"+str(monthActual)+"/"+str(yearActual)
     #Tupla con todos los datos ingresados En la funcion Afiliar
-    IDPlan=None
-    salir=False
-    while not salir:
-        vacunado=input("¿Fue vacunado?: ")
-        if (vacunado=='No' or vacunado=='no'):
-            salir=True
-    datosPaciente=(noIdentificacion,IDPlan,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,None,vacunado)
-    
+    datosPaciente=(noIdentificacion,None,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,None,"No")
     #Insercion de los datos a la tabla de Afiliados, Nueva Fila
     cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
     #Envio de la peticion a la base de datos
@@ -328,6 +351,7 @@ def consultarAfiliado(con):
     for consultados in consultados:
         print(consultados)
     menuDatos()
+
 #Función desafiliarPaciente: Con esta función se ingresa la fecha de desafiliación de un paciente    
 def desafiliarPaciente(con):
     cursorObj = con.cursor()
@@ -355,6 +379,7 @@ def desafiliarPaciente(con):
     #Envio de la peticion a la base de datos
     con.commit()
     menuDatos()
+
 #Función vacunarAfiliado: Con esta función se actualiza el estado de vacunación de un afiliado en la tabla afiliado 
 def vacunarAfiliado(con):
     cursorObj = con.cursor()
@@ -395,26 +420,27 @@ def contadorVacunacion(noIdentificacion):
         #Actualización de la cantiadad de vacunas usada basada en Cantidad_Usada
         cursorObj.execute('UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?',(usado,codLote1))
     con.commit()
+    
 #-----DESDE AQUI MODULO DE LOTES-------------------------------------------------------------------------------------------------------
 
 def crearLote(con):
     cursorObj = con.cursor()
     #Ingreso de No. de lote
+    noLote=input("Ingrese el número de lote: ")
+    noLote=noLote[:10]
+    #Seleccion Del Fabricante De La Vacuna
     while True:
+        print('''1. Sinovac\n2. Pfizer\n3. Moderna\n4. Sputnik\n5. AstraZeneca\n6. Sinopharm\n7. Covaxim''')
         try:
-            noLote=int(input("Ingrese el número de lote: "))
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    #Ingreso de nombre del fabricante del lote de vacunas
-    fabricante=input("Ingrese el fabricante: ")
-    fabricante=fabricante.ljust(12)
-    #Ingreso de tipo de vacuna
-    tipoVacuna=input("Ingrese el Tipo de Vacuna: ")
-    tipoVacuna=tipoVacuna.ljust(20)
+            fabricante=int(input("\nSeleccione un Fabricante: "))
+            if fabricante > 0 and fabricante < 8:
+                break
+            else:
+                print("Fabricante Invalido")
+        except:
+            ("Debe ser Numero")
+    fabricante=fabricantes(fabricante)
     #Ingreso de la cantidad de vacunas recibidas
-    
     while True:
         cantidadRecibida=input("Ingrese la cantidad recibida: ")
         try:
@@ -425,105 +451,84 @@ def crearLote(con):
             print("Escriba un número entero")
     #Asignacion de la cantidad Asignada
     cantidadAsignada=0
-    #Ingreso de la cantidad de vacunas usadas
-    
-    while True:
-        cantidadUsada=input("Ingrese la cantidad Usada: ")
-        try:
-            cantidadUsada = int(cantidadUsada)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    #Ingreso de cantidad dosis necesarias
-    while True:
-        dosisNecesarias=input("Ingrese el número de dosis necesarias: ")
-        try:
-            dosisNecesarias = int(dosisNecesarias)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    #Ingreso de temperatura a la que debe ser almacenadas las vacunas
-    temperatura=input("Ingrese la temperatura de almacenamiento: ")
-    temperatura=temperatura.ljust(3)
-    #Ingreso de la efectividad conocida de la vacuna
-    while True:
-        efectividad=input("Ingrese el valor de efectivadad (0-100): ")
-        try:
-            efectividad = int(efectividad)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
-    #Ingreso de tiempo de protección conocido de la vacuna
-    
-    while True:
-        tiempoProteccion=input("Ingrese el tiempo de proteccion de que ofrece la vacuna (Años): ")
-        try:
-            tiempoProteccion = int(tiempoProteccion)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")
+    cantidadUsada=0
     #Ingreso de día de vencimiento de la vacuna
     while True:
-        day=input("Ingrese el día de vencimiento de la vacuna: ")
-        day=day.rjust(2,"0")
-        try:
-            if int(day) >0 and int(day) < 32:
-                break
-            else:
-                print("El Numero debe estar entre 1 y 31")
-        except:
-            print("La entrada debe ser Digito")
-    #Ingreso de mes de vencimiento de la vacuna
-    while True:
-        month=input("Ingrese el mes de vencimiento de la vacuna: ")
-        month=month.rjust(2,"0")
-        try:
-            if int(month) >0 and int(month) < 13:
-                break
-            else:
-                print("El Numero debe estar entre 1 y 12")
-        except:
-            print("El Numero debe ser Digito")
-    #Ingreso de año de vencimiento de la vacuna
-    while True:
-        year=input("Ingrese el año de vencimiento de la vacuna:")
-        year=year.rjust(4)
-        try:
-            if int(year) >= 2021:
-                break
-            else:
-                print("El Número debe estar entre 1 y 12")
-        except:
-            print("El Número debe ser Digito")
+        while True:
+            day=input("Ingrese el día de vencimiento de la vacuna: ")
+            day=day.rjust(2,"0")
+            try:
+                if int(day) >0 and int(day) < 32:
+                    break
+                else:
+                    print("El Numero debe estar entre 1 y 31")
+            except:
+                print("La entrada debe ser Digito")
+        #Ingreso de mes de vencimiento de la vacuna
+        while True:
+            month=input("Ingrese el mes de vencimiento de la vacuna: ")
+            month=month.rjust(2,"0")
+            try:
+                if int(month) >0 and int(month) < 13:
+                    break
+                else:
+                    print("El Numero debe estar entre 1 y 12")
+            except:
+                print("El Numero debe ser Digito")
+        #Ingreso de año de vencimiento de la vacuna
+        while True:
+            year=input("Ingrese el año de vencimiento de la vacuna:")
+            year=year.rjust(4)
+            try:
+                if int(year) >= 2021:
+                    break
+                else:
+                    print("Debe ser Mayor o Igual al Año actual")
+            except:
+                print("El Número debe ser Digito")
+        fechaVencimiento=day+"/"+month+"/"+year
+        fechaVencimientoComprobacion = datetime.strptime(fechaVencimiento, '%d/%m/%Y')
+        fechaActual = datetime.today()
+        if fechaVencimientoComprobacion >= fechaActual:
+            break
+        else:
+            print("Fecha Invalida")
 
     #Concatenación de la fecha de vencimiento de la vacuna 
-    fechaVencimiento=day+"/"+month+"/"+year
+    
     #Imagen: proximamente
     imagen="Aún no"
-    datosLotes=(noLote,fabricante,tipoVacuna,cantidadRecibida,cantidadUsada,cantidadAsignada,dosisNecesarias,temperatura,efectividad,tiempoProteccion,fechaVencimiento,imagen)
+    datosLotes=(noLote,fabricante[0],fabricante[1],cantidadRecibida,cantidadUsada,cantidadAsignada,fabricante[2],fabricante[3],fabricante[4],fabricante[5],fechaVencimiento,imagen)
     #Insercion de los datos a la tabla de Lotes, Nueva Fila
     cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
     #Envio de la peticion a la base de datos
     con.commit()
     menuLotes()
-#Función contadorVacunacion(noIdentificacion)
 
+#Función contadorVacunacion(noIdentificacion)
+def fabricantes(fabricante):
+    tiposFabricantes = {1:"Sinovac",2:"Pfizer",3:"Moderna",4:"SputnikV",5:"AstraZeneca",6:"Sinopharm",7:"Covaxim"}
+    if tiposFabricantes[fabricante] == "Sinovac":
+        return ("Sinovac","Virus Desactivado",2,"2°","50%","No se sabe")
+    elif tiposFabricantes[fabricante] == "Pfizer":
+        return ("Pfizer","ARN",2,"-80°","95%","No se sabe")
+    elif tiposFabricantes[fabricante] == "Moderna":
+        return ("Moderna","ARN",2,"-25°","94.5%","90 Dias")
+    elif tiposFabricantes[fabricante] == "SputnikV":
+        return ("SputnikV","Vector Viral",2,"-18°","92%","150 Dias")
+    elif tiposFabricantes[fabricante] == "AstraZeneca":
+        return ("AstraZeneca","Vector Viral",2,"2°","62%","No se sabe")
+    elif tiposFabricantes[fabricante] == "Sinopharm":
+        return ("Sinopharm","Vector Viral",2,"2°","79.3%","No se sabe")
+    elif tiposFabricantes[fabricante] == "Covaxin":
+        return ("Covaxim","Virus Desactivado",2,"2°","78%","No se sabe")
 
 def consultarLote(con):
     cursorObj = con.cursor()
     #Recepcion del Numero del lote a consultar
-    while True:
-        noLote=(input("Ingrese el número de lote a consultar: "))
-        try:
-            noLote = int(noLote)
-            break
-        except ValueError:
-            #Mensaje en pantalla de un error al digitar
-            print("Escriba un número entero")    
+    noLote=(input("Ingrese el número de lote a consultar: "))
+    noLote=noLote.ljust(10)
+    noLote=noLote[:10]
     #Seleccion de datos basado en el Numero_De_Lote
     cursorObj.execute('SELECT * FROM Lotes WHERE Codigo_De_Lote=?',(noLote,))
     #Recoleccion de los datos en la tupla "consultados"
@@ -582,25 +587,67 @@ def crearPlan(con):
     fechaInicio=day+"/"+month+"/"+year
     #Concatenación de la fecha de fin del plan de vacunación
     fechaFin = "24/05/2121"
-    while True:
+    while True:   
+        #Select que obtiene los datos de la tabla de Citas
+        #cursorObj.execute('SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion=?',(noIdentificacion,))
         try:
             edadMin=int(input("Ingrese la edad mínima para clasificar a este plan: "))
-            break
+            
         except:
             #Mensaje en pantalla de un error al digitar
             print("El Número debe ser Digito")
     
+        cursorObj.execute('SELECT Edad_Min, Edad_Max FROM Planes')
+        minMax=cursorObj.fetchall()
+        intervaloActual = 0
+        while intervaloActual != len(minMax):
+            intervalo=minMax[intervaloActual]
+            menor=intervalo[0]
+            mayor=intervalo[1]
+            if edadMin>=menor and edadMin<=mayor:
+                error=True
+                print("Edad Presenta Cruce")
+                break
+            else:
+                error=False
+            intervaloActual += 1
+        if error == False:
+            break
+        
+
     while True:
         try:
             edadMax=int(input("Ingrese la edad máxima para clasificar a este plan: "))
-            break
+            if edadMin < edadMax:
+                break
+            else:
+                print("La edad Maxima debe ser mayor a la Minima")
         except:
             #Mensaje en pantalla de un error al digitar
             print("El Número debe ser Digito")
+        
+        cursorObj.execute('SELECT Edad_Min, Edad_Max FROM Planes')
+        minMax=cursorObj.fetchall()
+        intervaloActual = 0
+        while intervaloActual != len(minMax):
+            intervalo=minMax[intervaloActual]
+            menor=intervalo[0]
+            mayor=intervalo[1]
+            if edadMax<menor-1 and edadMax>mayor+1 :
+                error=True
+                print("Edad Presenta Cruce")
+                break
+            else:
+                error=False
+            intervaloActual += 1
+        if error == False:
+            break
+        
     datosPlanes=(idPlan,edadMin,edadMax,fechaInicio,fechaFin)
     cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
     con.commit()
     menuPlanes()
+    
 #Funcion de consulta de planes
 def consultarPlan(con):
     cursorObj = con.cursor()
@@ -620,6 +667,7 @@ def consultarPlan(con):
     for planes in planes:
         print(planes)
     menuPlanes()
+
 def calcularPlan(con):
     confirmacion=input("""Este modulo asignará un numero de plan con respecto a los planes vigentes
     ¿Desea Ejecutar? Y/N\n""")
@@ -719,26 +767,9 @@ def calcularProgramacion(con):
     elif horaInicio[1] > 30:
         horaInicio[1] = 00
         horaInicio[0] = int(horaInicio[0]) + 1
-
-    while True:
-        horaFin=input("Hora de Fin del horario de atención (24 hrs)(00:00) : ")
-        horaFin=horaFin.rjust(5,"0")
-        horaFin=horaFin.split(":")
-        try:
-            horaFin=[int(horaFin[0]),int(horaFin[1])]
-            break
-        except (ValueError):
-            #Mensaje en pantalla de un error al digitar
-            print("Debe ser formato 00:00")
-    if horaFin[1] < 30:
-        horaFin[1] = 30
-    elif horaFin[1] > 30:
-        horaFin[1] = 00
-        horaFin[0] = int(horaFin[0]) + 1
     horaCitas=[]
     horaIterando=horaInicio
-    horaFin=[str(horaFin[0]),str(horaFin[1])]
-    while horaIterando != horaFin:
+    while horaIterando != "24:00":
         horaCitas.append(horaIterando)
         horaIterando=[int(horaIterando[0]),int(horaIterando[1])]
         horaIterando[1] += 30
@@ -847,10 +878,12 @@ con=sql_connection()
 #Ejecucion de funciones
 sql_table(con)
 
-menuPrincipal()
+#menuPrincipal()
 #calcularPlan(con)
 #crearProgramacion(con)
 #crearPlan(con)
+#afiliarPaciente(con)
+crearPlan(con)
 
 #Cerrar conexion
 con.close()
