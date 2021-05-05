@@ -1,21 +1,2 @@
-Reunion PreParcial 31/04/2021
-
-In Queue:
--Comprobacion tamaño variable
--Slicing a los campos
--Validacion @ . en correo
--Nacimiento NO mayor Año
--Fue Vacunado NO
--Comprobacion Tamaño Numero de lotes
--Menu Para Fabricantes
--Menu Para Tipo de Vacuna
--Meses Para Tiempo de Proteccion
--Vencimiento NO mayor Año
--Verificar Cruce de Planes por edades
--Comprobar Meses Con Sus Dias
--Horas No Antes de la fecha actual
--Horas de Fin no van
--Documentacion Tecnica
--Documentacion de Usuario
-
-
+Reunion PreParcial en paro 4/05/2021
+Por fín xd
