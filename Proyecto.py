@@ -432,13 +432,18 @@ def consultarAfiliado(con):
             print("Escriba un número entero")
     #Selección de campos basado en la identificación de pacientes basado en el Numero_de_identificacion
     cursorObj.execute('SELECT * FROM Afiliados WHERE Numero_de_identificacion = ? ',(noIdentificacion,))
+    consultados="Vacio"
     #Recolección de los datos en la tupla "consultados"
     consultados=cursorObj.fetchall()
-    consultados1=consultados[0]
-    #Impresión de la tupla correspondiente a la información paciente en forma de tabla
-    print("------------------------------------------------------------")
-    print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| Telefono               || {:<30} |\n| Correo                 || {:<30} |\n| Ciudad de Residencia   || {:<30} |\n| Fecha de Nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(consultados1[0],consultados1[1],consultados1[2],consultados1[3],consultados1[4],consultados1[5],consultados1[6],consultados1[7],consultados1[8],consultados1[9],consultados1[10],consultados1[11]))
-    print("------------------------------------------------------------")
+    if len(consultados) <= 0:
+        print("El Paciente No Existe")
+    else:
+        consultados1=consultados[0]
+        #Impresión de la tupla correspondiente a la información paciente en forma de tabla
+        print("------------------------------------------------------------")
+        print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| Telefono               || {:<30} |\n| Correo                 || {:<30} |\n| Ciudad de Residencia   || {:<30} |\n| Fecha de Nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(consultados1[0],consultados1[1],consultados1[2],consultados1[3],consultados1[4],consultados1[5],consultados1[6],consultados1[7],consultados1[8],consultados1[9],consultados1[10],consultados1[11]))
+        print("------------------------------------------------------------")
+    
     menuDatos()
 
 #Función desafiliarPaciente: Con esta función se ingresa la fecha de desafiliación de un paciente    
@@ -491,22 +496,25 @@ def vacunarAfiliado(con):
     cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion=?',(noIdentificacion,))
     #Recopilación en el array "desafiliado"
     desafiliado=cursorObj.fetchall()
-    #Acceso a la tupla del afiliado
-    desafiliado1=desafiliado[0]
-    #Acceso al dato
-    desafiliado2=desafiliado1[0]
-    #Condicional de comprobacíon de desafiliación
-    if desafiliado2 != "No":
-        #Mensaje de Advertencia
-        print("El paciente está desafiliado y no será vacunado\n")
-        menuDatos()
+    if len(desafiliado) <= 0:
+        print("El paciente no existe")
     else:
-        #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
-        cursorObj.execute('UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion=?',(noIdentificacion,))
-        contadorVacunacion(noIdentificacion)
-        #Envio de la petición a la base de datos
-        con.commit()
-        menuDatos()
+        #Acceso a la tupla del afiliado
+        desafiliado1=desafiliado[0]
+        #Acceso al dato
+        desafiliado2=desafiliado1[0]
+        #Condicional de comprobacíon de desafiliación
+        if desafiliado2 != "No":
+            #Mensaje de Advertencia
+            print("El paciente está desafiliado y no será vacunado\n")
+            menuDatos()
+        else:
+            #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
+            cursorObj.execute('UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion=?',(noIdentificacion,))
+            contadorVacunacion(noIdentificacion)
+            #Envio de la petición a la base de datos
+            con.commit()
+    menuDatos()
 
 #Función contadorVacunacion(noIdentificacion): Esta función actualiza la cantidad de vacunas utilizadas en la tabla Lotes
 def contadorVacunacion(noIdentificacion):
@@ -652,15 +660,19 @@ def consultarLote(con):
     noLote=(input("Ingrese el número de lote a consultar: "))
     noLote=noLote.ljust(10)
     noLote=noLote[:10]
+    lote="Vacio"
     #Seleccion de datos basado en el Numero_De_Lote
     cursorObj.execute('SELECT * FROM Lotes WHERE Codigo_De_Lote=?',(noLote,))
     #Recoleccion de los datos en la tupla "consultados"
     lote=cursorObj.fetchall()
-    #Impresion de la tupla correspondiente al lote
-    lote1=lote[0]
-    print("-------------------------------------------------------------------")
-    print("| Código Lote                   || {:<30} |\n| Fabricante                    || {:<30} |\n| Tipo de Vacuna                || {:<30} |\n| Cantidad Recibida             || {:<30} |\n| Cantidad Asignada             || {:<30} |\n| Cantidad Usada                || {:<30} |\n| Dosis Necesarias              || {:<30} |\n| Temperatura de Almacenamiento || {:<30} |\n| Efectividad Identificada      || {:<30} |\n| Tiempo de Protección          || {:<30} |\n| Fecha de Vencimiento          || {:<30} |\n| Imágen                        || {:<30} |".format(lote1[0],lote1[1],lote1[2],lote1[3],lote1[4],lote1[5],lote1[6],lote1[7],lote1[8],lote1[9],lote1[10],lote1[11]))
-    print("-------------------------------------------------------------------")
+    if len(lote) <= 0:
+        print("El Lote No Existe")
+    else:    
+        #Impresion de la tupla correspondiente al lote
+        lote1=lote[0]
+        print("-------------------------------------------------------------------")
+        print("| Código Lote                   || {:<30} |\n| Fabricante                    || {:<30} |\n| Tipo de Vacuna                || {:<30} |\n| Cantidad Recibida             || {:<30} |\n| Cantidad Asignada             || {:<30} |\n| Cantidad Usada                || {:<30} |\n| Dosis Necesarias              || {:<30} |\n| Temperatura de Almacenamiento || {:<30} |\n| Efectividad Identificada      || {:<30} |\n| Tiempo de Protección          || {:<30} |\n| Fecha de Vencimiento          || {:<30} |\n| Imágen                        || {:<30} |".format(lote1[0],lote1[1],lote1[2],lote1[3],lote1[4],lote1[5],lote1[6],lote1[7],lote1[8],lote1[9],lote1[10],lote1[11]))
+        print("-------------------------------------------------------------------")
     #Llamado del menú de gestión de lotes
     menuLotes()
     
@@ -824,7 +836,7 @@ def cierrePlanVacunacion(con):
         #Ingreso de año de inicio del plan de vacunación
         while True:
             year=input("Año en el que quiere cerrar el plan de vacunación: ")
-            year=year.rjust(4)
+            year=year.rjust(4,"0")
             try:
                 int(year)
                 break
@@ -834,19 +846,23 @@ def cierrePlanVacunacion(con):
         fechaFin=day+"/"+month+"/"+year
         fechaFinComprobacion = datetime.strptime(fechaFin, '%d/%m/%Y')
         fechaActual = datetime.today()
+        minMax= "Vacio"
         cursorObj.execute('SELECT Fecha_Inicio FROM Planes WHERE ID=?',(idPlan,))
         minMax=cursorObj.fetchall()
-        fechaIn=minMax[0]
-        fechaIn1=fechaIn[0]
-        fechaInComprobacion = datetime.strptime(fechaIn1, '%d/%m/%Y')
-        fechaActual = datetime.today()
-        if fechaInComprobacion <= fechaFinComprobacion or fechaFinComprobacion >= fechaActual:
-            break
+        if len(minMax) <= 0:
+            print ("El Plan no existe")
         else:
-            print("Fecha Invalida")
+            fechaIn=minMax[0]
+            fechaIn1=fechaIn[0]
+            fechaInComprobacion = datetime.strptime(fechaIn1, '%d/%m/%Y')
+            fechaActual = datetime.today()
+            if fechaInComprobacion <= fechaFinComprobacion or fechaFinComprobacion >= fechaActual:
+                break
+            else:
+                print("Fecha Invalida")
     cursorObj.execute('UPDATE Planes SET Fecha_Fin=? WHERE ID=?',(fechaFin,idPlan))
     con.commit()
-
+    menuPlanes()
 #Funcion de consulta de planes
 def consultarPlan(con):
     cursorObj = con.cursor()
@@ -858,16 +874,20 @@ def consultarPlan(con):
         except:
             #Mensaje en pantalla de un error al digitar
             print("El Número debe ser Digito")
+    planes="Vacio"
     #Seleccion de campos basado en el ID suministrado
     cursorObj.execute('SELECT * FROM Planes WHERE ID = ? ',(noId,))
     #Recoleccion de los datos en la tupla "consultados"
     planes=cursorObj.fetchall()
-    #Impresion de la tupla correspondiente al plan
-    planes1=planes[0]
-    print("---------------------------------------------")
-    print("| Consecutivo Plan  || {:<20} |\n| Edad Mínima       || {:<20} |\n| Edad Máxima       || {:<20} |\n| Fecha de Inicio   || {:<20} |\n| Fecha de Fin      || {:<20} |".format(planes1[0],planes1[1],planes1[2],planes1[3],planes1[4]))
-    print("---------------------------------------------")
-    
+    if len(planes) <= 0:
+        print("El plan no existe")
+    else:
+        #Impresion de la tupla correspondiente al plan
+        planes1=planes[0]
+        print("---------------------------------------------")
+        print("| Consecutivo Plan  || {:<20} |\n| Edad Mínima       || {:<20} |\n| Edad Máxima       || {:<20} |\n| Fecha de Inicio   || {:<20} |\n| Fecha de Fin      || {:<20} |".format(planes1[0],planes1[1],planes1[2],planes1[3],planes1[4]))
+        print("---------------------------------------------")
+        
     menuPlanes()
 
 #Función calcularPlan(con): Función que sirve para asignar un plan de vacunación a un afiliado de acuerdo a los datos registrados en la tabla de afiliados
