@@ -715,6 +715,7 @@ def crearPlan(con):
             break
     #Concatenación de la fecha de fin del plan de vacunación
     fechaFin = "24/05/2121"
+    error=False
     while True:
         while True:
             try:
@@ -997,9 +998,6 @@ def calcularProgramacion(con):
             horaIterando[0] += 1
             horaIterando[1] = "00"
         horaIterando=[str(horaIterando[0]),str(horaIterando[1])]
-    
-    
-
     #Seleccion de los datos de los pacientes
     cursorObj.execute("SELECT Numero_De_Identificacion, Ciudad_De_Residencia, Fecha_De_Desafiliacion FROM Afiliados")
     #Recopilacion en la tupla "afiliados"
