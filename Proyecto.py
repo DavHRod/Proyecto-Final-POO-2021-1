@@ -662,7 +662,7 @@ def consultarLote(con):
     noLote=noLote[:10]
     lote="Vacio"
     #Seleccion de datos basado en el Numero_De_Lote
-    cursorObj.execute('SELECT * FROM Lotes WHERE Codigo_De_Lote=?',(noLote,))
+    cursorObj.execute('SELECT * FROM Lotes WHERE Codigo_De_Lote = ?',(noLote,))
     #Recoleccion de los datos en la tupla "consultados"
     lote=cursorObj.fetchall()
     if len(lote) <= 0:
@@ -851,6 +851,7 @@ def cierrePlanVacunacion(con):
         minMax=cursorObj.fetchall()
         if len(minMax) <= 0:
             print ("El Plan no existe")
+            break
         else:
             fechaIn=minMax[0]
             fechaIn1=fechaIn[0]
