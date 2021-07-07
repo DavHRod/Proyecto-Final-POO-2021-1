@@ -636,7 +636,6 @@ def crearLote(con):
                 print("El Número debe ser Digito")
         #Concatenación de la fecha de vencimiento de la vacuna
         fechaVencimiento=day+"/"+month+"/"+year
-        print(comprobarFecha(fechaVencimiento))
         if comprobarFecha(fechaVencimiento) == "Menor":
             break
     #Imagen: proximamente
@@ -1157,8 +1156,6 @@ def comprobarFecha(fechaDada):
         elif fechaComprobar > fechaActual:
             return "Mayor"
     except ValueError:
-        #Especificacion del tipo de error
-        print("Fecha Inexistente")
         #Valor de retorno de la funcion
         return "Inexistente"
 
