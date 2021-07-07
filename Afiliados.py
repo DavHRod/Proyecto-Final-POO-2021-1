@@ -1,8 +1,4 @@
 #Importación de librerias a usar
-#sqlite3: Es una libreria integrada en python para el manejo de bases de datos generalmente de tipo local
-#utiliza comandos sql estandar y requiere el uso de un objeto tipo sql_connect
-import sqlite3
-from sqlite3 import Error
 #Validate_email: Es la libreria que permite realizar la validación de un correo electrónico, su dominio y su existencia en el dominio señalado.
 #Requiere instalación de py3DNS mediante el comando pip install py3DNS, esto con permisos de administrador activos
 from validate_email import validate_email
@@ -10,10 +6,11 @@ from validate_email import validate_email
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date
 from datetime import datetime
+from Go import goTo
 #-----DESDE AQUI MODULO DE AFILIADOS-------------------------------------------------------------------------------------------------------
 #Función afiliarPaciente: Esta función recibe los datos de un nuevo paciente a afiliar y realiza la inserción en la tabla
 
-class afiliado:
+class afiliado():
     def __init__(self):
         self.ide = 0
         self.nombre = ""
@@ -27,10 +24,11 @@ class afiliado:
         self.afiliacion = ""
         self.desafiliacion = ""
         self.vacunado = ""
-
+        irA = goTo()
     def calcEdad(self,fechaNacimiento,fechaActual):
         fechaNacimiento=datetime.strptime(fechaNacimiento, "%d/%m/%Y")
-        self.edad = fechaNacimiento - fechaActual
+        self.edad = fechaActual.year - fechaNacimiento.year
+        self.edad -= ((fechaActual.month, fechaActual.day) < (fechaNacimiento.month, fechaNacimiento.day))
         if fechaNacimiento >= fechaActual:
             return False
         else:
@@ -195,7 +193,7 @@ class afiliado:
         cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
         #Envio de la petición a la base de datos
         con.commit()
-
+        irA.principal()
     #Función consultarAfiliado: Esta función permite al usuario consultar los datos de un paciente,
     #Se debe ingresar el número de identificación del paciente para que la función busque en la tabla los datos
     def consultar(self,con):
@@ -227,7 +225,7 @@ class afiliado:
                 print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| telefono               || {:<30} |\n| correo                 || {:<30} |\n| ciudad de Residencia   || {:<30} |\n| Fecha de nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(consultados1[0],consultados1[1],consultados1[2],consultados1[3],consultados1[4],consultados1[5],consultados1[6],consultados1[7],consultados1[8],consultados1[9],consultados1[10],consultados1[11]))
                 print("------------------------------------------------------------")
                 break
-
+        goBack.datos()
     #Función desafiliarPaciente: Con esta función se ingresa la fecha de desafiliación de un paciente    
     def desafiliar(self,con):
         cursorObj = con.cursor()
@@ -326,3 +324,6 @@ class afiliado:
                 #Actualización de la cantiadad de vacunas usada basada en Cantidad_Usada
                 cursorObj.execute('UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?',(usado,codLote1))
             con.commit()
+
+
+        
