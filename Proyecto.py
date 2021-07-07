@@ -636,7 +636,7 @@ def crearLote(con):
                 print("El Número debe ser Digito")
         #Concatenación de la fecha de vencimiento de la vacuna
         fechaVencimiento=day+"/"+month+"/"+year
-        if comprobarFecha(fechaVencimiento) == "Menor":
+        if comprobarFecha(fechaVencimiento) == "Mayor":
             break
     #Imagen: proximamente
     imagen="Aún no"
@@ -739,8 +739,10 @@ def crearPlan(con):
             except:
                 print("Debe Ser Un Numero")
         fechaInicio=day+"/"+month+"/"+year
-        if comprobarFecha(fechaInicio) != "Error":
+        if comprobarFecha(fechaInicio) == "Mayor":
             break
+        else:
+            print("fecha invalida")
     #Concatenación de la fecha de fin del plan de vacunación
     fechaFin = "24/05/2121"
     error=False
@@ -810,9 +812,11 @@ def crearPlan(con):
                 intervaloActual += 1
         if error == False:
             break
-        
     datosPlanes=(idPlan,edadMin,edadMax,fechaInicio,fechaFin)
-    cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
+    try:
+        cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
+    except: 
+        print ("El Plan ya existe")
     con.commit()
     menuPlanes()
 
