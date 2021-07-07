@@ -506,11 +506,11 @@ def vacunarAfiliado(con):
             #Mensaje en pantalla de un error al digitar
             print("Escriba un número entero")
     #Selección de la fecha de desafiliacion del paciente a vacunar
-    cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion=?',(noIdentificacion,))
+    cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion=? AND Vacunado = "No"',(noIdentificacion,))
     #Recopilación en el array "desafiliado"
     desafiliado=cursorObj.fetchall()
     if len(desafiliado) <= 0:
-        print("El paciente no existe")
+        print("El paciente no existe o ya está vacunado")
     else:
         #Acceso a la tupla del afiliado
         desafiliado1=desafiliado[0]
