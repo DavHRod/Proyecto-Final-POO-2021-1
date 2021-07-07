@@ -6,7 +6,6 @@ from validate_email import validate_email
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date
 from datetime import datetime
-from Go import goTo
 #-----DESDE AQUI MODULO DE AFILIADOS-------------------------------------------------------------------------------------------------------
 #Función afiliarPaciente: Esta función recibe los datos de un nuevo paciente a afiliar y realiza la inserción en la tabla
 
@@ -24,7 +23,6 @@ class afiliado():
         self.afiliacion = ""
         self.desafiliacion = ""
         self.vacunado = ""
-        irA = goTo()
     def calcEdad(self,fechaNacimiento,fechaActual):
         fechaNacimiento=datetime.strptime(fechaNacimiento, "%d/%m/%Y")
         self.edad = fechaActual.year - fechaNacimiento.year
@@ -193,7 +191,6 @@ class afiliado():
         cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
         #Envio de la petición a la base de datos
         con.commit()
-        irA.principal()
     #Función consultarAfiliado: Esta función permite al usuario consultar los datos de un paciente,
     #Se debe ingresar el número de identificación del paciente para que la función busque en la tabla los datos
     def consultar(self,con):
