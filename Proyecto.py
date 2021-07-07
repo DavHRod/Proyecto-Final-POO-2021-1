@@ -947,8 +947,9 @@ def calcularPlan(con):
                     cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
                     con.commit()
                     break
-        menuPrincipal()
         print("Calculado")
+        menuPrincipal()
+        
     else:
         menuPrincipal()
 
@@ -985,41 +986,39 @@ def calcularProgramacion(con):
             year=input("Año de Inicio de la asignacion de citas: ")
             year=year.ljust(4,"0")
             try:
-                if int(year) > 1000:
+                if int(year) > 2020:
                     break
                 else:
-                    print("Debe ser mayor a 1000")
+                    print("Debe ser mayor a 2020")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
         #Concatenación de la fecha de inicio de la asignacion de citas
         fechaInicio= day + "/" + month + "/" + year
-        if comprobarFecha(fechaInicio) != "Error":
+        if comprobarFecha(fechaInicio) == "Mayor":
             break
+        else:
+            print("La fecha debe ser mayor a la actual")
     #Ingreso de día de de fin de la asignacion de citas
     year = "2121"
     fechaFin = day + "/" + month + "/" + year
-
     while True:
-        print("Ingrese los datos de su horario de atencion deseado")
-        horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
-        horaInicio=horaInicio.split(":")
-        try:
-            horaComprobacion=int(horaInicio[0]),int(horaInicio[1])
-            error=False
-        except (ValueError):
-            #Mensaje en pantalla de un error al digitar
-            print("Debe ser formato 00:00")
-            error=True
-        if error==False:
-            inicio = datetime.strptime(fechaInicio +" "+ str(horaInicio[0]) +":"+ str(horaInicio[1]), "%d/%m/%Y %H:%M")
-            today = datetime.today()
-            if inicio<today:
-                error=True
-                print("La fecha y hora de inicio deben ser mayores a la hora actual")
-            else:
-                error=False
+        while True:
+            print("Ingrese los datos de su horario de atencion deseado")
+            horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
+            horaInicio=horaInicio.split(":")
+            try:
+                horaComprobacion=int(horaInicio[0]),int(horaInicio[1])
+                inicio = datetime.strptime(fechaInicio +" "+ str(horaInicio[0]) +":"+ str(horaInicio[1]), "%d/%m/%Y %H:%M")
                 break
+            except :
+                #Mensaje en pantalla de un error al digitar
+                print("Debe ser formato 24hrs")
+        if inicio < datetime.today():
+            print("La fecha y hora de inicio deben ser mayores a la hora actual")
+            calcularProgramacion(con)
+        else:
+            break
     if int(horaInicio[1]) < 30 and int(horaInicio[1]) != 0:
         horaInicio[1] = 30
     elif int(horaInicio[1]) > 30:
@@ -1152,12 +1151,14 @@ def comprobarFecha(fechaDada):
     try:
         #Obtencion de la fecha actual
         fechaActual=datetime.today()
+        fechaActual = str(datetime.today().day)+"/"+str(datetime.today().month)+"/"+str(datetime.today().year)
+        fechaActual=datetime.strptime(fechaActual,"%d/%m/%Y")
         #Comprobación de existencia de la fecha dada
         fechaComprobar=datetime.strptime(fechaDada, "%d/%m/%Y")
         #Comprobación de Consistencia de la fecha
         if fechaComprobar < fechaActual:
             return "Menor"
-        elif fechaComprobar > fechaActual:
+        elif fechaComprobar >= fechaActual:
             return "Mayor"
     except ValueError:
         #Valor de retorno de la funcion
