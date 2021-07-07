@@ -5,7 +5,6 @@ import sqlite3
 from sqlite3 import Error
 #Validate_email: Es la libreria que permite realizar la validación de un correo electrónico, su dominio y su existencia en el dominio señalado.
 #Requiere instalación de py3DNS mediante el comando pip install py3DNS, esto con permisos de administrador activos
-from validate_email import validate_email
 #datetime: Libreria integrada en python 3, permite el manejo y operación de variables tipo datetime,
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date

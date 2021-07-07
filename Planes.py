@@ -1,6 +1,5 @@
 import sqlite3
 from sqlite3 import Error
-from validate_email import validate_email
 #datetime: Libreria integrada en python 3, permite el manejo y operación de variables tipo datetime,
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date
