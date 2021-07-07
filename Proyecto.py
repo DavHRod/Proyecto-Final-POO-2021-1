@@ -626,9 +626,9 @@ def crearLote(con):
         #Ingreso de año de vencimiento de la vacuna
         while True:
             year=input("Ingrese el año de vencimiento de la vacuna:")
-            year=year.rjust(4)
+            year=year.rjust(4,"0")
             try:
-                if int(year) >= 2021:
+                if int(year) >= date.today().year:
                     break
                 else:
                     print("Debe ser Mayor o Igual al Año actual")
@@ -636,8 +636,9 @@ def crearLote(con):
                 print("El Número debe ser Digito")
         #Concatenación de la fecha de vencimiento de la vacuna
         fechaVencimiento=day+"/"+month+"/"+year
-        if comprobarFecha(fechaVencimiento) == "Error":
-            break  
+        print(comprobarFecha(fechaVencimiento))
+        if comprobarFecha(fechaVencimiento) == "Menor":
+            break
     #Imagen: proximamente
     imagen="Aún no"
     datosLotes=(noLote,fabricante[0],fabricante[1],cantidadRecibida,cantidadUsada,cantidadAsignada,fabricante[2],fabricante[3],fabricante[4],fabricante[5],fechaVencimiento,imagen)
@@ -731,7 +732,7 @@ def crearPlan(con):
 
         while True:
             year=input("AÑO de inicio del plan de vacunación: ")
-            year=year.rjust(4)
+            year=year.rjust(4,"0")
             try:
                 int(year)
                 break
@@ -1152,13 +1153,14 @@ def comprobarFecha(fechaDada):
         fechaComprobar=datetime.strptime(fechaDada, "%d/%m/%Y")
         #Comprobación de Consistencia de la fecha
         if fechaComprobar < fechaActual:
-            print("Fecha Invalida")
-            return "Error"
-    except:
+            return "Menor"
+        elif fechaComprobar > fechaActual:
+            return "Mayor"
+    except ValueError:
         #Especificacion del tipo de error
         print("Fecha Inexistente")
         #Valor de retorno de la funcion
-        return "Error"
+        return "Inexistente"
 
 #Conexion con la base de datos
 con=sql_connection()
