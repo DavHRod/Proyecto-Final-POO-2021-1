@@ -415,12 +415,16 @@ def afiliarPaciente(con):
     #Concatenación fecha actual
     fechaActual=str(dayActual)+"/"+str(monthActual)+"/"+str(yearActual)
     #Tupla con todos los datos ingresados En la funcion Afiliar
-    datosPaciente=(noIdentificacion,None,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,"No","No")
-    #Insercion de los datos a la tabla de Afiliados, Nueva Fila
-    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
+    datosPaciente=(noIdentificacion,"-",nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,"-","No")
+    try:
+        #Insercion de los datos a la tabla de Afiliados, Nueva Fila
+        cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
+        con.commit()
+        calcularPlan(con)
+    except:
+        print ("El Afiliado ya existe")
     #Envio de la petición a la base de datos
-    con.commit()
-    calcularPlan(con)
+    
     menuDatos()
 
 #Función consultarAfiliado: Esta función permite al usuario consultar los datos de un paciente,
@@ -638,9 +642,12 @@ def crearLote(con):
     imagen="Aún no"
     datosLotes=(noLote,fabricante[0],fabricante[1],cantidadRecibida,cantidadUsada,cantidadAsignada,fabricante[2],fabricante[3],fabricante[4],fabricante[5],fechaVencimiento,imagen)
     #Insercion de los datos a la tabla de Lotes, Nueva Fila
-    cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
-    #Envio de la peticion a la base de datos
-    con.commit()
+    try:
+        cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
+        #Envio de la peticion a la base de datos
+        con.commit()
+    except:
+        print("El Lote ya existe")
     #Llamado del menú de gestión de lotes 
     menuLotes()
 
