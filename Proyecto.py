@@ -517,7 +517,7 @@ def vacunarAfiliado(con):
         #Acceso al dato
         desafiliado2=desafiliado1[0]
         #Condicional de comprobacíon de desafiliación
-        if desafiliado2 != "No":
+        if desafiliado2 != "-":
             #Mensaje de Advertencia
             print("El paciente está desafiliado y no será vacunado\n")
             menuDatos()
@@ -957,7 +957,7 @@ def calcularPlan(con):
 def calcularProgramacion(con):
     cursorObj=con.cursor()
     print("""Bienvenido al Creador de progamas de vacunación
-    Una vez ingresados los datos requeridos acontinución, se le asignará una cita a todos los afiliados actuales.
+    Una vez ingresados los datos requeridos acontinuación, se le asignará una cita a todos los afiliados actuales.
     Teniendo en cuenta los planes de vacunacion existentes y asignados, asi como los parametros que ingresará acontinuacion
     Recuerde que debido a la situacion COVID actual, las citas se asignaran 30 minutos una despues de la otra""")
     print("Ingrese los datos de las fechas dentro de las que quiere asignar las citas")
@@ -1048,10 +1048,12 @@ def calcularProgramacion(con):
     planes=cursorObj.fetchall()
     secuencial = 1
     loteActual = 0
-    for plan in range(1,len(planes)+1):
-        cursorObj.execute('SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = ? AND Fecha_De_Desafiliacion = "No"',(plan,))
+    for plan in range(1,len(planes)):
+        print(plan)
+        cursorObj.execute(f'SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = {plan} AND Fecha_De_Desafiliacion = "-"')
         #Recopilacion en la tupla "afiliados"
         afiliados=cursorObj.fetchall()
+        print (afiliados)
         #Fecha Inicio Plan
         cursorObj.execute("SELECT Fecha_Inicio FROM Planes WHERE ID = ? ",(plan,))
         fechaPlan=cursorObj.fetchall()
