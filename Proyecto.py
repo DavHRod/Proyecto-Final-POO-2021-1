@@ -1049,11 +1049,9 @@ def calcularProgramacion(con):
     secuencial = 1
     loteActual = 0
     for plan in range(1,len(planes)):
-        print(plan)
         cursorObj.execute(f'SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = {plan} AND Fecha_De_Desafiliacion = "-"')
         #Recopilacion en la tupla "afiliados"
         afiliados=cursorObj.fetchall()
-        print (afiliados)
         #Fecha Inicio Plan
         cursorObj.execute("SELECT Fecha_Inicio FROM Planes WHERE ID = ? ",(plan,))
         fechaPlan=cursorObj.fetchall()
@@ -1084,8 +1082,11 @@ def calcularProgramacion(con):
             else:
                 loteActual += 1
             nuevaCita=(secuencial,afiliadoActual[2],afiliadoActual[0],afiliadoActual[1],lote,fechaPlan,horaCitaActual)
-            cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
-            con.commit()
+            try:
+                cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
+                con.commit()
+            except:
+                print("Ya existen citas para este afiliado")
             #Aumento del secuencial de citas
             secuencial += 1
             #Aumento para cambio de afiliado
@@ -1147,6 +1148,7 @@ def consultarProgramaGeneral():
     #Tabla que imprime los datos de las citas agendadas
     for citas in citas:
         cita= "| {:<8} | {:<6} | {:<14} | {:<5} | {:<13} | {:<16} | {:<15} |".format(citas[0],citas[1],citas[2],citas[3],citas[4],citas[5],citas[6])
+        print (cita)
     menuCitas()
 #Funcion para comprobar la validez de una fecha dada sobre la actual
 def comprobarFecha(fechaDada):
