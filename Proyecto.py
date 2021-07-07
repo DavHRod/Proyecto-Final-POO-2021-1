@@ -347,6 +347,8 @@ def afiliarPaciente(con):
                 if int(day) < 32 and int(day) >0 :
                     #Ruptura del bucle de comprobación
                     break
+                else:
+                    print("Dia invalido")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
@@ -361,6 +363,8 @@ def afiliarPaciente(con):
                 if int(month) < 13 and int(month) >0 :
                     #Ruptura del bucle de comprobación
                     break
+                else:
+                    print("Mes invalido")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
@@ -369,12 +373,15 @@ def afiliarPaciente(con):
         while True:
             #Ingreso de año de nacimiento de un nuevo paciente
             year=input("Ingrese el año de nacimiento: ")
-            year=year.rjust(2,"0")
+            year=year.rjust(4,"0")
             #Comprobación para el tipo de dato
             try:
                 year = int(year)
-                #Ruptura del bucle de comprobación
-                break
+                if int(year) < datetime.today().year :
+                    #Ruptura del bucle de comprobación
+                    break
+                else:
+                    print("Año invalido")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
@@ -389,6 +396,8 @@ def afiliarPaciente(con):
             #Comprobación de integridad de la fecha
             if fechaNacimientoComprobacion > fechaActual:
                 print("Fecha Invalida")
+               
+            else:
                 #Ruptura del bucle de comprobación
                 break
         except:
@@ -411,7 +420,7 @@ def afiliarPaciente(con):
     cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
     #Envio de la petición a la base de datos
     con.commit()
-    calcularPlan()
+    calcularPlan(con)
     menuDatos()
 
 #Función consultarAfiliado: Esta función permite al usuario consultar los datos de un paciente,
@@ -927,10 +936,10 @@ def calcularPlan(con):
                     cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
                     con.commit()
                     break
-        menuPlanes()
+        menuPrincipal()
         print("Calculado")
     else:
-        menuPlanes()
+        menuPrincipal()
 
 #-----DESDE AQUI MODULO DE PROGRAMA DE VACUNAS-------------------------------------------------------------------------------------------------------
 def calcularProgramacion(con):
