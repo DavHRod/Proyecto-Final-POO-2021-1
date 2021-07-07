@@ -1,12 +1,12 @@
-from Go import goTo
+from Afiliados import *
 import sqlite3
 from sqlite3 import Error
 
 class main:
     def __init__(self):
         self.resp = None
-        irA = goTo()
-    def principal(self,con): 
+    def principal(self,con):
+        __navi=menu()
         #Diccionario de casos del menu principal
         casosPrincipal={1:"Datos",2:"Lotes",3:"Plan",4:"Citas",5:"Salir"}
         #Bucle de comprobación
@@ -45,6 +45,7 @@ class menu(main):
         super().__init__()
     #Funcion Menu para gestion de datos de los pacientes
     def datos(self,con):
+        afil=afiliado()
         #Diccionario de casos del menu datos
         casosDatos={1:"Afiliar",2:"Consultar",3:"Desafiliar",4:"Vacunar",5:"Volver",6:"Salir"} #Diccionario de Casos
         #Mensajes de Inicio del Menu
@@ -63,12 +64,16 @@ class menu(main):
             #Condicionales de uso del Menu Para Gestion De Datos: Llamado de las funciones según opción elegida 
             if casosDatos[self.resp] == "Afiliar":
                 afil.afiliar(con)
+                self.datos(con)
             elif casosDatos[self.resp] == "Consultar":
                 afil.consultar(con)
+                self.datos(con)
             elif casosDatos[self.resp] == "Desafiliar":
                 afil.desafiliarPaciente(con)
+                self.datos(con)
             elif casosDatos[self.resp] == "Vacunar":
                 afil.vacunar(con)
+                self.datos(con)
             elif casosDatos[self.resp]=="Volver":
                 self.principal()
             elif casosDatos[self.resp] == "Salir":
