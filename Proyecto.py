@@ -182,13 +182,13 @@ def menuLotes():
 #Funcion menu para gestion de planes de vacunacion
 def menuPlanes():
     #Diccionario de casos del menu Planes
-    casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 4:"Cerrar Plan", 5:"Regresar",6:"Salir"}
+    casosPlan={1:"Crear",2:"Consultar", 3:"Cerrar Plan", 4:"Regresar",5:"Salir"}
     #Bucle de comprobación de entrada
     while True:
         #Comprobación para el tipo de dato
         try:
             #Recepción de la respuesta
-            resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Cerrar Plan\n5.Regresar\n6.Salir\n"))
+            resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Consultar Plan por ID\n3.Cerrar Plan\n4.Regresar\n5.Salir\n"))
             #Ruptura del bucle de comprobación
             break
         except:
@@ -199,8 +199,6 @@ def menuPlanes():
         #Condicionales de uso del Menu Para Gestion De Planes: Llamado de las funciones según opción elegida 
         if casosPlan[resp] == "Crear":
             crearPlan(con)
-        elif casosPlan[resp] == "Calcular":
-            calcularPlan(con)
         elif casosPlan[resp] == "Consultar":
             consultarPlan(con)
         elif casosPlan[resp] == "Cerrar Plan":
@@ -506,7 +504,7 @@ def vacunarAfiliado(con):
             #Mensaje en pantalla de un error al digitar
             print("Escriba un número entero")
     #Selección de la fecha de desafiliacion del paciente a vacunar
-    cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion=? AND Vacunado = "No"',(noIdentificacion,))
+    cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion = ? AND Vacunado = "No"',(noIdentificacion,))
     #Recopilación en el array "desafiliado"
     desafiliado=cursorObj.fetchall()
     if len(desafiliado) <= 0:
@@ -523,8 +521,8 @@ def vacunarAfiliado(con):
             menuDatos()
         else:
             #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
-            cursorObj.execute('UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion=?',(noIdentificacion,))
-            contadorVacunacion(noIdentificacion)
+            if contadorVacunacion(noIdentificacion):
+                cursorObj.execute(f'UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion = {noIdentificacion}')
             #Envio de la petición a la base de datos
             con.commit()
     menuDatos()
@@ -534,20 +532,22 @@ def contadorVacunacion(noIdentificacion):
     cursorObj = con.cursor()
     codLote="vacio"
     #Select que obtiene los datos de la tabla de Citas
-    cursorObj.execute('SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion=?',(noIdentificacion,))
+    cursorObj.execute(f'SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion= {noIdentificacion}')
     codLote=cursorObj.fetchall()
     #Verificación de existencia de datos en la tabla de citas
     if len(codLote) == 0:
         #Mensaje de error
         print("Este Paciente No Posee Cita\n")
+        return False
     else:
         try:
             codLote=codLote[0]
             codLote1=codLote[0]
         except IndexError:
             print("No hay datos disponibles")
+            return False
         #Select que obtiene los datos de la tabla de Lotes
-        cursorObj.execute('SELECT Cantidad_Recibida, Cantidad_Usada FROM Lotes WHERE Codigo_De_Lote=?',(codLote1,))
+        cursorObj.execute(f'SELECT Cantidad_Recibida, Cantidad_Usada FROM Lotes WHERE Codigo_De_Lote= {codLote1}')
         cantReUs=cursorObj.fetchall()
         cantReUs=cantReUs[0]
         cantReUs1=cantReUs[0]
@@ -556,8 +556,9 @@ def contadorVacunacion(noIdentificacion):
         if cantReUs1>0:
             usado=cantReUs2+1
             #Actualización de la cantiadad de vacunas usada basada en Cantidad_Usada
-            cursorObj.execute('UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?',(usado,codLote1))
+            cursorObj.execute(f'UPDATE Lotes SET Cantidad_Usada = {usado} WHERE Codigo_De_Lote = {codLote1}')
         con.commit()
+        return True
     
 #-----DESDE AQUI MODULO DE LOTES-------------------------------------------------------------------------------------------------------
 
@@ -678,7 +679,7 @@ def consultarLote(con):
     noLote=noLote[:10]
     lote="Vacio"
     #Seleccion de datos basado en el Numero_De_Lote
-    cursorObj.execute('SELECT * FROM Lotes WHERE Codigo_De_Lote = ?',(noLote,))
+    cursorObj.execute(f'SELECT * FROM Lotes WHERE Codigo_De_Lote = {noLote}')
     #Recoleccion de los datos en la tupla "consultados"
     lote=cursorObj.fetchall()
     if len(lote) <= 0:
@@ -815,9 +816,11 @@ def crearPlan(con):
     datosPlanes=(idPlan,edadMin,edadMax,fechaInicio,fechaFin)
     try:
         cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
+        con.commit()
+        calcularPlan(con)
     except: 
         print ("El Plan ya existe")
-    con.commit()
+    55
     menuPlanes()
 
 #Función cierrePlanVacunacion(con): Esta función sirve para actualizar la fecha de terminación de un plan de vacunación 
@@ -867,7 +870,7 @@ def cierrePlanVacunacion(con):
         fechaFinComprobacion = datetime.strptime(fechaFin, '%d/%m/%Y')
         fechaActual = datetime.today()
         minMax= "Vacio"
-        cursorObj.execute('SELECT Fecha_Inicio FROM Planes WHERE ID=?',(idPlan,))
+        cursorObj.execute(f'SELECT Fecha_Inicio FROM Planes WHERE ID = {idPlan}')
         minMax=cursorObj.fetchall()
         if len(minMax) <= 0:
             print ("El Plan no existe")
@@ -881,7 +884,7 @@ def cierrePlanVacunacion(con):
                 break
             else:
                 print("Fecha Invalida")
-    cursorObj.execute('UPDATE Planes SET Fecha_Fin=? WHERE ID=?',(fechaFin,idPlan))
+    cursorObj.execute(f'UPDATE Planes SET Fecha_Fin = {fechaFin} WHERE ID = {idPlan}')
     con.commit()
     menuPlanes()
 #Funcion de consulta de planes
@@ -897,7 +900,7 @@ def consultarPlan(con):
             print("El Número debe ser Digito")
     planes="Vacio"
     #Seleccion de campos basado en el ID suministrado
-    cursorObj.execute('SELECT * FROM Planes WHERE ID = ? ',(noId,))
+    cursorObj.execute(f'SELECT * FROM Planes WHERE ID = {noId} ')
     #Recoleccion de los datos en la tupla "consultados"
     planes=cursorObj.fetchall()
     if len(planes) <= 0:
@@ -913,45 +916,37 @@ def consultarPlan(con):
 
 #Función calcularPlan(con): Función que sirve para asignar un plan de vacunación a un afiliado de acuerdo a los datos registrados en la tabla de afiliados
 def calcularPlan(con):
-    confirmacion=input("""Este modulo asignará un numero de plan con respecto a los planes vigentes
-    ¿Desea Ejecutar? Y/N\n""")
-    confirmacion=confirmacion.upper()
-    if confirmacion == "Y":
-        cursorObj = con.cursor()
-        #Seleccion de todos lo numeros de identificacion
-        cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
-        #Recopilacion en la tupla "identificaciones"
-        identificaciones=cursorObj.fetchall()
-        #Seleccion de Planes Existentes
-        cursorObj.execute("SELECT ID FROM Planes")
-        ids = cursorObj.fetchall()
-        identificacionActual = 0
-        idActual = 0
-        #Bucle para acceso a los datos dentro de "Afiliados"
-        for identificacionesIterando in identificaciones :
-            cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
-            nacimiento = cursorObj.fetchall()
-            edad = list(nacimiento[0])
-            edad = datetime.strptime(edad[0], "%d/%m/%Y")
-            today = datetime.today()
-            today = today.year
-            edad = today-edad.year
-            identificacionActual=identificacionesIterando[0]
-            for idIterando in ids:
-                cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
-                restricciones = cursorObj.fetchall()
-                restricciones = restricciones[0]
-                restricciones = [int(restricciones[0]),int(restricciones[1])]
-                if restricciones[0] >= edad and restricciones[1] <= edad:
-                    asignacion=(idIterando[0],identificacionActual)
-                    cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
-                    con.commit()
-                    break
-        print("Calculado")
-        menuPrincipal()
-        
-    else:
-        menuPrincipal()
+    cursorObj = con.cursor()
+    #Seleccion de todos lo numeros de identificacion
+    cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
+    #Recopilacion en la tupla "identificaciones"
+    identificaciones=cursorObj.fetchall()
+    #Seleccion de Planes Existentes
+    cursorObj.execute("SELECT ID FROM Planes")
+    ids = cursorObj.fetchall()
+    identificacionActual = 0
+    idActual = 0
+    #Bucle para acceso a los datos dentro de "Afiliados"
+    for identificacionesIterando in identificaciones :
+        cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
+        nacimiento = cursorObj.fetchall()
+        edad = list(nacimiento[0])
+        edad = datetime.strptime(edad[0], "%d/%m/%Y")
+        today = datetime.today()
+        today = today.year
+        edad = today-edad.year
+        identificacionActual=identificacionesIterando[0]
+        for idIterando in ids:
+            cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
+            restricciones = cursorObj.fetchall()
+            restricciones = restricciones[0]
+            restricciones = [int(restricciones[0]),int(restricciones[1])]
+            if restricciones[0] >= edad and restricciones[1] <= edad:
+                asignacion=(idIterando[0],identificacionActual)
+                cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
+                con.commit()
+                break
+    menuPrincipal()
 
 #-----DESDE AQUI MODULO DE PROGRAMA DE VACUNAS-------------------------------------------------------------------------------------------------------
 def calcularProgramacion(con):
