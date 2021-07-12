@@ -123,7 +123,7 @@ class menu(main):
     def planes(self,con):
         planN = plan()
         #Diccionario de casos del menu Planes
-        casosPlan={1:"Crear",2:"Consultar", 3:"Cerrar Plan", 4:"Regresar",5:"Salir"}
+        casosPlan={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
         #Bucle de comprobación de entrada
         while True:
             #Comprobación para el tipo de dato
@@ -136,16 +136,13 @@ class menu(main):
                 #Mensaje de Error
                 print("Debe ser un Numero")
         #Condicional para mantener la respuesta dentro del rango del menú
-        if self.resp > 0 and self.resp < 6:
+        if self.resp > 0 and self.resp < 5:
             #Condicionales de uso del Menu Para Gestion De Planes: Llamado de las funciones según opción elegida 
             if casosPlan[self.resp] == "Crear":
                 planN.crear(con)
                 self.planes(con)
             elif casosPlan[self.resp] == "Consultar":
                 planN.consultar(con)
-                self.planes(con)
-            elif casosPlan[self.resp] == "Cerrar Plan":
-                planN.cierre(con)
                 self.planes(con)
             elif casosPlan[self.resp] == "Regresar":
                 self.principal(con)
@@ -155,9 +152,10 @@ class menu(main):
         else:
             #Mensaje de error en caso de no estar en el intervalo
             print("Deber se una respuesta Valida")
-            self.planes()
+            self.planes(con)
     #Funcion menu para gestion de citas de vacunacion
-    def menuCitas():
+    def citas(self, con):
+        citasN = citas()
         #Diccionario de casos del menu Citas
         casosCitas={1:"Calcular Citas",2:"Consulta Individual",3:"Consulta General",4:"Regresar",5:"Salir"} 
         #Bucle de comprobacion de entrada
@@ -165,30 +163,33 @@ class menu(main):
             #Comprobación para el tipo de dato
             try:
                 #Recepción de la respuesta
-                resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Calcular Citas\n2.Consulta Individual\n3.Consulta General\n4.Regresar\n5.Salir\n")) 
+                self.resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Calcular Citas\n2.Consulta Individual\n3.Consulta General\n4.Regresar\n5.Salir\n")) 
                 #Ruptura del bucle de comprobación
                 break
             except:
                 #Mensaje de Error
                 print("Debe ser un Numero")
         #Condicional para mantener la respuesta dentro del rango del menú
-        if resp > 0 and resp < 6:
+        if self.resp > 0 and self.resp < 6:
             #Condicionales de uso del Menu Para Gestion De Citas: Llamado de las funciones según opción elegida 
-            if casosCitas[resp] == "Calcular Citas":
-                calcularProgramacion(con)
-            elif casosCitas[resp] == "Consulta Individual":
-                consultarProgramaIndividual()
-            elif casosCitas[resp] == "Consulta General":
-                consultarProgramaGeneral()
-            elif casosCitas[resp] == "Regresar":
-                menuPrincipal()
-            elif casosCitas[resp] == "Salir":
+            if casosCitas[self.resp] == "Calcular Citas":
+                citasN.calcular(con)
+                self.citas(con)
+            elif casosCitas[self.resp] == "Consulta Individual":
+                citasN.consultaIndividual(con)
+                self.citas(con)
+            elif casosCitas[self.resp] == "Consulta General":
+                citasN.consultaGeneral(con)
+                self.citas(con)
+            elif casosCitas[self.resp] == "Regresar":
+                self.principal(con)
+            elif casosCitas[self.resp] == "Salir":
                 con.close()
                 exit()
         else:
             #Mensaje de error en caso de no estar en el intervalo
             print("Deber se una respuesta Valida")
-            menuCitas()
+            self.citas(con)
 
 def sql_connection():
     try:
