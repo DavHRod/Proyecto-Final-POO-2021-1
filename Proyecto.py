@@ -181,13 +181,13 @@ def menuLotes():
 #Funcion menu para gestion de planes de vacunacion
 def menuPlanes():
     #Diccionario de casos del menu Planes
-    casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 4:"Cerrar Plan", 5:"Regresar",6:"Salir"}
+    casosPlan={1:"Crear",2:"Consultar", 3:"Cerrar Plan", 4:"Regresar",5:"Salir"}
     #Bucle de comprobación de entrada
     while True:
         #Comprobación para el tipo de dato
         try:
             #Recepción de la respuesta
-            resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Cerrar Plan\n5.Regresar\n6.Salir\n"))
+            resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Consultar Plan por ID\n3.Cerrar Plan\n4.Regresar\n5.Salir\n"))
             #Ruptura del bucle de comprobación
             break
         except:
@@ -198,8 +198,6 @@ def menuPlanes():
         #Condicionales de uso del Menu Para Gestion De Planes: Llamado de las funciones según opción elegida 
         if casosPlan[resp] == "Crear":
             crearPlan(con)
-        elif casosPlan[resp] == "Calcular":
-            calcularPlan(con)
         elif casosPlan[resp] == "Consultar":
             consultarPlan(con)
         elif casosPlan[resp] == "Cerrar Plan":
@@ -346,6 +344,8 @@ def afiliarPaciente(con):
                 if int(day) < 32 and int(day) >0 :
                     #Ruptura del bucle de comprobación
                     break
+                else:
+                    print("Dia invalido")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
@@ -360,6 +360,8 @@ def afiliarPaciente(con):
                 if int(month) < 13 and int(month) >0 :
                     #Ruptura del bucle de comprobación
                     break
+                else:
+                    print("Mes invalido")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
@@ -368,12 +370,15 @@ def afiliarPaciente(con):
         while True:
             #Ingreso de año de nacimiento de un nuevo paciente
             year=input("Ingrese el año de nacimiento: ")
-            year=year.rjust(2,"0")
+            year=year.rjust(4,"0")
             #Comprobación para el tipo de dato
             try:
                 year = int(year)
-                #Ruptura del bucle de comprobación
-                break
+                if int(year) < datetime.today().year :
+                    #Ruptura del bucle de comprobación
+                    break
+                else:
+                    print("Año invalido")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
@@ -388,6 +393,8 @@ def afiliarPaciente(con):
             #Comprobación de integridad de la fecha
             if fechaNacimientoComprobacion > fechaActual:
                 print("Fecha Invalida")
+               
+            else:
                 #Ruptura del bucle de comprobación
                 break
         except:
@@ -405,12 +412,16 @@ def afiliarPaciente(con):
     #Concatenación fecha actual
     fechaActual=str(dayActual)+"/"+str(monthActual)+"/"+str(yearActual)
     #Tupla con todos los datos ingresados En la funcion Afiliar
-    datosPaciente=(noIdentificacion,None,nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,"No","No")
-    #Insercion de los datos a la tabla de Afiliados, Nueva Fila
-    cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
+    datosPaciente=(noIdentificacion,"-",nombre,apellido,direccion,telefono,correo,ciudad,fechaNacimiento,fechaActual,"-","No")
+    try:
+        #Insercion de los datos a la tabla de Afiliados, Nueva Fila
+        cursorObj.execute("INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosPaciente)
+        con.commit()
+        calcularPlan(con)
+    except:
+        print ("El Afiliado ya existe")
     #Envio de la petición a la base de datos
-    con.commit()
-    calcularPlan()
+    
     menuDatos()
 
 #Función consultarAfiliado: Esta función permite al usuario consultar los datos de un paciente,
@@ -431,13 +442,18 @@ def consultarAfiliado(con):
             print("Escriba un número entero")
     #Selección de campos basado en la identificación de pacientes basado en el Numero_de_identificacion
     cursorObj.execute('SELECT * FROM Afiliados WHERE Numero_de_identificacion = ? ',(noIdentificacion,))
+    consultados="Vacio"
     #Recolección de los datos en la tupla "consultados"
     consultados=cursorObj.fetchall()
-    consultados1=consultados[0]
-    #Impresión de la tupla correspondiente a la información paciente en forma de tabla
-    print("------------------------------------------------------------")
-    print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| Telefono               || {:<30} |\n| Correo                 || {:<30} |\n| Ciudad de Residencia   || {:<30} |\n| Fecha de Nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(consultados1[0],consultados1[1],consultados1[2],consultados1[3],consultados1[4],consultados1[5],consultados1[6],consultados1[7],consultados1[8],consultados1[9],consultados1[10],consultados1[11]))
-    print("------------------------------------------------------------")
+    if len(consultados) <= 0:
+        print("El Paciente No Existe")
+    else:
+        consultados1=consultados[0]
+        #Impresión de la tupla correspondiente a la información paciente en forma de tabla
+        print("------------------------------------------------------------")
+        print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| Telefono               || {:<30} |\n| Correo                 || {:<30} |\n| Ciudad de Residencia   || {:<30} |\n| Fecha de Nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(consultados1[0],consultados1[1],consultados1[2],consultados1[3],consultados1[4],consultados1[5],consultados1[6],consultados1[7],consultados1[8],consultados1[9],consultados1[10],consultados1[11]))
+        print("------------------------------------------------------------")
+    
     menuDatos()
 
 #Función desafiliarPaciente: Con esta función se ingresa la fecha de desafiliación de un paciente    
@@ -487,45 +503,50 @@ def vacunarAfiliado(con):
             #Mensaje en pantalla de un error al digitar
             print("Escriba un número entero")
     #Selección de la fecha de desafiliacion del paciente a vacunar
-    cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion=?',(noIdentificacion,))
+    cursorObj.execute('SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion = ? AND Vacunado = "No"',(noIdentificacion,))
     #Recopilación en el array "desafiliado"
     desafiliado=cursorObj.fetchall()
-    #Acceso a la tupla del afiliado
-    desafiliado1=desafiliado[0]
-    #Acceso al dato
-    desafiliado2=desafiliado1[0]
-    #Condicional de comprobacíon de desafiliación
-    if desafiliado2 != "No":
-        #Mensaje de Advertencia
-        print("El paciente está desafiliado y no será vacunado\n")
-        menuDatos()
+    if len(desafiliado) <= 0:
+        print("El paciente no existe o ya está vacunado")
     else:
-        #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
-        cursorObj.execute('UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion=?',(noIdentificacion,))
-        contadorVacunacion(noIdentificacion)
-        #Envio de la petición a la base de datos
-        con.commit()
-        menuDatos()
+        #Acceso a la tupla del afiliado
+        desafiliado1=desafiliado[0]
+        #Acceso al dato
+        desafiliado2=desafiliado1[0]
+        #Condicional de comprobacíon de desafiliación
+        if desafiliado2 != "-":
+            #Mensaje de Advertencia
+            print("El paciente está desafiliado y no será vacunado\n")
+            menuDatos()
+        else:
+            #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
+            if contadorVacunacion(noIdentificacion):
+                cursorObj.execute(f'UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion = {noIdentificacion}')
+            #Envio de la petición a la base de datos
+            con.commit()
+    menuDatos()
 
 #Función contadorVacunacion(noIdentificacion): Esta función actualiza la cantidad de vacunas utilizadas en la tabla Lotes
 def contadorVacunacion(noIdentificacion):
     cursorObj = con.cursor()
     codLote="vacio"
     #Select que obtiene los datos de la tabla de Citas
-    cursorObj.execute('SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion=?',(noIdentificacion,))
+    cursorObj.execute(f'SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion= {noIdentificacion}')
     codLote=cursorObj.fetchall()
     #Verificación de existencia de datos en la tabla de citas
     if len(codLote) == 0:
         #Mensaje de error
         print("Este Paciente No Posee Cita\n")
+        return False
     else:
         try:
             codLote=codLote[0]
             codLote1=codLote[0]
         except IndexError:
             print("No hay datos disponibles")
+            return False
         #Select que obtiene los datos de la tabla de Lotes
-        cursorObj.execute('SELECT Cantidad_Recibida, Cantidad_Usada FROM Lotes WHERE Codigo_De_Lote=?',(codLote1,))
+        cursorObj.execute(f'SELECT Cantidad_Recibida, Cantidad_Usada FROM Lotes WHERE Codigo_De_Lote= {codLote1}')
         cantReUs=cursorObj.fetchall()
         cantReUs=cantReUs[0]
         cantReUs1=cantReUs[0]
@@ -534,8 +555,9 @@ def contadorVacunacion(noIdentificacion):
         if cantReUs1>0:
             usado=cantReUs2+1
             #Actualización de la cantiadad de vacunas usada basada en Cantidad_Usada
-            cursorObj.execute('UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?',(usado,codLote1))
+            cursorObj.execute(f'UPDATE Lotes SET Cantidad_Usada = {usado} WHERE Codigo_De_Lote = {codLote1}')
         con.commit()
+        return True
     
 #-----DESDE AQUI MODULO DE LOTES-------------------------------------------------------------------------------------------------------
 
@@ -604,9 +626,9 @@ def crearLote(con):
         #Ingreso de año de vencimiento de la vacuna
         while True:
             year=input("Ingrese el año de vencimiento de la vacuna:")
-            year=year.rjust(4)
+            year=year.rjust(4,"0")
             try:
-                if int(year) >= 2021:
+                if int(year) >= date.today().year:
                     break
                 else:
                     print("Debe ser Mayor o Igual al Año actual")
@@ -614,15 +636,18 @@ def crearLote(con):
                 print("El Número debe ser Digito")
         #Concatenación de la fecha de vencimiento de la vacuna
         fechaVencimiento=day+"/"+month+"/"+year
-        if comprobarFecha(fechaVencimiento) == "Error":
-            break  
+        if comprobarFecha(fechaVencimiento) == "Mayor":
+            break
     #Imagen: proximamente
     imagen="Aún no"
     datosLotes=(noLote,fabricante[0],fabricante[1],cantidadRecibida,cantidadUsada,cantidadAsignada,fabricante[2],fabricante[3],fabricante[4],fabricante[5],fechaVencimiento,imagen)
     #Insercion de los datos a la tabla de Lotes, Nueva Fila
-    cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
-    #Envio de la peticion a la base de datos
-    con.commit()
+    try:
+        cursorObj.execute("INSERT INTO Lotes VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",datosLotes)
+        #Envio de la peticion a la base de datos
+        con.commit()
+    except:
+        print("El Lote ya existe")
     #Llamado del menú de gestión de lotes 
     menuLotes()
 
@@ -651,15 +676,19 @@ def consultarLote(con):
     noLote=(input("Ingrese el número de lote a consultar: "))
     noLote=noLote.ljust(10)
     noLote=noLote[:10]
+    lote="Vacio"
     #Seleccion de datos basado en el Numero_De_Lote
-    cursorObj.execute('SELECT * FROM Lotes WHERE Codigo_De_Lote=?',(noLote,))
+    cursorObj.execute(f'SELECT * FROM Lotes WHERE Codigo_De_Lote = {noLote}')
     #Recoleccion de los datos en la tupla "consultados"
     lote=cursorObj.fetchall()
-    #Impresion de la tupla correspondiente al lote
-    lote1=lote[0]
-    print("-------------------------------------------------------------------")
-    print("| Código Lote                   || {:<30} |\n| Fabricante                    || {:<30} |\n| Tipo de Vacuna                || {:<30} |\n| Cantidad Recibida             || {:<30} |\n| Cantidad Asignada             || {:<30} |\n| Cantidad Usada                || {:<30} |\n| Dosis Necesarias              || {:<30} |\n| Temperatura de Almacenamiento || {:<30} |\n| Efectividad Identificada      || {:<30} |\n| Tiempo de Protección          || {:<30} |\n| Fecha de Vencimiento          || {:<30} |\n| Imágen                        || {:<30} |".format(lote1[0],lote1[1],lote1[2],lote1[3],lote1[4],lote1[5],lote1[6],lote1[7],lote1[8],lote1[9],lote1[10],lote1[11]))
-    print("-------------------------------------------------------------------")
+    if len(lote) <= 0:
+        print("El Lote No Existe")
+    else:    
+        #Impresion de la tupla correspondiente al lote
+        lote1=lote[0]
+        print("-------------------------------------------------------------------")
+        print("| Código Lote                   || {:<30} |\n| Fabricante                    || {:<30} |\n| Tipo de Vacuna                || {:<30} |\n| Cantidad Recibida             || {:<30} |\n| Cantidad Asignada             || {:<30} |\n| Cantidad Usada                || {:<30} |\n| Dosis Necesarias              || {:<30} |\n| Temperatura de Almacenamiento || {:<30} |\n| Efectividad Identificada      || {:<30} |\n| Tiempo de Protección          || {:<30} |\n| Fecha de Vencimiento          || {:<30} |\n| Imágen                        || {:<30} |".format(lote1[0],lote1[1],lote1[2],lote1[3],lote1[4],lote1[5],lote1[6],lote1[7],lote1[8],lote1[9],lote1[10],lote1[11]))
+        print("-------------------------------------------------------------------")
     #Llamado del menú de gestión de lotes
     menuLotes()
     
@@ -702,7 +731,7 @@ def crearPlan(con):
 
         while True:
             year=input("AÑO de inicio del plan de vacunación: ")
-            year=year.rjust(4)
+            year=year.rjust(4,"0")
             try:
                 int(year)
                 break
@@ -710,10 +739,13 @@ def crearPlan(con):
             except:
                 print("Debe Ser Un Numero")
         fechaInicio=day+"/"+month+"/"+year
-        if comprobarFecha(fechaInicio) != "Error":
+        if comprobarFecha(fechaInicio) == "Mayor":
             break
+        else:
+            print("fecha invalida")
     #Concatenación de la fecha de fin del plan de vacunación
     fechaFin = "24/05/2121"
+    error=False
     while True:
         while True:
             try:
@@ -780,10 +812,14 @@ def crearPlan(con):
                 intervaloActual += 1
         if error == False:
             break
-        
     datosPlanes=(idPlan,edadMin,edadMax,fechaInicio,fechaFin)
-    cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
-    con.commit()
+    try:
+        cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
+        con.commit()
+        calcularPlan(con)
+    except: 
+        print ("El Plan ya existe")
+    55
     menuPlanes()
 
 #Función cierrePlanVacunacion(con): Esta función sirve para actualizar la fecha de terminación de un plan de vacunación 
@@ -822,7 +858,7 @@ def cierrePlanVacunacion(con):
         #Ingreso de año de inicio del plan de vacunación
         while True:
             year=input("Año en el que quiere cerrar el plan de vacunación: ")
-            year=year.rjust(4)
+            year=year.rjust(4,"0")
             try:
                 int(year)
                 break
@@ -832,19 +868,24 @@ def cierrePlanVacunacion(con):
         fechaFin=day+"/"+month+"/"+year
         fechaFinComprobacion = datetime.strptime(fechaFin, '%d/%m/%Y')
         fechaActual = datetime.today()
-        cursorObj.execute('SELECT Fecha_Inicio FROM Planes WHERE ID=?',(idPlan,))
+        minMax= "Vacio"
+        cursorObj.execute(f'SELECT Fecha_Inicio FROM Planes WHERE ID = {idPlan}')
         minMax=cursorObj.fetchall()
-        fechaIn=minMax[0]
-        fechaIn1=fechaIn[0]
-        fechaInComprobacion = datetime.strptime(fechaIn1, '%d/%m/%Y')
-        fechaActual = datetime.today()
-        if fechaInComprobacion <= fechaFinComprobacion or fechaFinComprobacion >= fechaActual:
+        if len(minMax) <= 0:
+            print ("El Plan no existe")
             break
         else:
-            print("Fecha Invalida")
-    cursorObj.execute('UPDATE Planes SET Fecha_Fin=? WHERE ID=?',(fechaFin,idPlan))
+            fechaIn=minMax[0]
+            fechaIn1=fechaIn[0]
+            fechaInComprobacion = datetime.strptime(fechaIn1, '%d/%m/%Y')
+            fechaActual = datetime.today()
+            if fechaInComprobacion <= fechaFinComprobacion or fechaFinComprobacion >= fechaActual:
+                break
+            else:
+                print("Fecha Invalida")
+    cursorObj.execute(f'UPDATE Planes SET Fecha_Fin = {fechaFin} WHERE ID = {idPlan}')
     con.commit()
-
+    menuPlanes()
 #Funcion de consulta de planes
 def consultarPlan(con):
     cursorObj = con.cursor()
@@ -856,64 +897,61 @@ def consultarPlan(con):
         except:
             #Mensaje en pantalla de un error al digitar
             print("El Número debe ser Digito")
+    planes="Vacio"
     #Seleccion de campos basado en el ID suministrado
-    cursorObj.execute('SELECT * FROM Planes WHERE ID = ? ',(noId,))
+    cursorObj.execute(f'SELECT * FROM Planes WHERE ID = {noId} ')
     #Recoleccion de los datos en la tupla "consultados"
     planes=cursorObj.fetchall()
-    #Impresion de la tupla correspondiente al plan
-    planes1=planes[0]
-    print("---------------------------------------------")
-    print("| Consecutivo Plan  || {:<20} |\n| Edad Mínima       || {:<20} |\n| Edad Máxima       || {:<20} |\n| Fecha de Inicio   || {:<20} |\n| Fecha de Fin      || {:<20} |".format(planes1[0],planes1[1],planes1[2],planes1[3],planes1[4]))
-    print("---------------------------------------------")
-    
+    if len(planes) <= 0:
+        print("El plan no existe")
+    else:
+        #Impresion de la tupla correspondiente al plan
+        planes1=planes[0]
+        print("---------------------------------------------")
+        print("| Consecutivo Plan  || {:<20} |\n| Edad Mínima       || {:<20} |\n| Edad Máxima       || {:<20} |\n| Fecha de Inicio   || {:<20} |\n| Fecha de Fin      || {:<20} |".format(planes1[0],planes1[1],planes1[2],planes1[3],planes1[4]))
+        print("---------------------------------------------")
+        
     menuPlanes()
 
 #Función calcularPlan(con): Función que sirve para asignar un plan de vacunación a un afiliado de acuerdo a los datos registrados en la tabla de afiliados
 def calcularPlan(con):
-    confirmacion=input("""Este modulo asignará un numero de plan con respecto a los planes vigentes
-    ¿Desea Ejecutar? Y/N\n""")
-    confirmacion=confirmacion.upper()
-    if confirmacion == "Y":
-        cursorObj = con.cursor()
-        #Seleccion de todos lo numeros de identificacion
-        cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
-        #Recopilacion en la tupla "identificaciones"
-        identificaciones=cursorObj.fetchall()
-        #Seleccion de Planes Existentes
-        cursorObj.execute("SELECT ID FROM Planes")
-        ids = cursorObj.fetchall()
-        identificacionActual = 0
-        idActual = 0
-        #Bucle para acceso a los datos dentro de "Afiliados"
-        for identificacionesIterando in identificaciones :
-            cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
-            nacimiento = cursorObj.fetchall()
-            edad = list(nacimiento[0])
-            edad = datetime.strptime(edad[0], "%d/%m/%Y")
-            today = datetime.today()
-            today = today.year
-            edad = today-edad.year
-            identificacionActual=identificacionesIterando[0]
-            for idIterando in ids:
-                cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
-                restricciones = cursorObj.fetchall()
-                restricciones = restricciones[0]
-                restricciones = [int(restricciones[0]),int(restricciones[1])]
-                if restricciones[0] >= edad and restricciones[1] <= edad:
-                    asignacion=(idIterando[0],identificacionActual)
-                    cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
-                    con.commit()
-                    break
-        menuPlanes()
-        print("Calculado")
-    else:
-        menuPlanes()
+    cursorObj = con.cursor()
+    #Seleccion de todos lo numeros de identificacion
+    cursorObj.execute("SELECT Numero_de_identificacion FROM Afiliados")
+    #Recopilacion en la tupla "identificaciones"
+    identificaciones=cursorObj.fetchall()
+    #Seleccion de Planes Existentes
+    cursorObj.execute("SELECT ID FROM Planes")
+    ids = cursorObj.fetchall()
+    identificacionActual = 0
+    idActual = 0
+    #Bucle para acceso a los datos dentro de "Afiliados"
+    for identificacionesIterando in identificaciones :
+        cursorObj.execute("SELECT fecha_de_Nacimiento FROM Afiliados WHERE Numero_de_identificacion =?",identificacionesIterando)
+        nacimiento = cursorObj.fetchall()
+        edad = list(nacimiento[0])
+        edad = datetime.strptime(edad[0], "%d/%m/%Y")
+        today = datetime.today()
+        today = today.year
+        edad = today-edad.year
+        identificacionActual=identificacionesIterando[0]
+        for idIterando in ids:
+            cursorObj.execute("SELECT Edad_Max,Edad_Min FROM Planes WHERE ID = ?",idIterando)
+            restricciones = cursorObj.fetchall()
+            restricciones = restricciones[0]
+            restricciones = [int(restricciones[0]),int(restricciones[1])]
+            if restricciones[0] >= edad and restricciones[1] <= edad:
+                asignacion=(idIterando[0],identificacionActual)
+                cursorObj.execute("UPDATE Afiliados SET ID_Plan = ? WHERE Numero_De_Identificacion = ?",asignacion)
+                con.commit()
+                break
+    menuPrincipal()
 
 #-----DESDE AQUI MODULO DE PROGRAMA DE VACUNAS-------------------------------------------------------------------------------------------------------
 def calcularProgramacion(con):
     cursorObj=con.cursor()
     print("""Bienvenido al Creador de progamas de vacunación
-    Una vez ingresados los datos requeridos acontinución, se le asignará una cita a todos los afiliados actuales.
+    Una vez ingresados los datos requeridos acontinuación, se le asignará una cita a todos los afiliados actuales.
     Teniendo en cuenta los planes de vacunacion existentes y asignados, asi como los parametros que ingresará acontinuacion
     Recuerde que debido a la situacion COVID actual, las citas se asignaran 30 minutos una despues de la otra""")
     print("Ingrese los datos de las fechas dentro de las que quiere asignar las citas")
@@ -942,41 +980,39 @@ def calcularProgramacion(con):
             year=input("Año de Inicio de la asignacion de citas: ")
             year=year.ljust(4,"0")
             try:
-                if int(year) > 1000:
+                if int(year) > 2020:
                     break
                 else:
-                    print("Debe ser mayor a 1000")
+                    print("Debe ser mayor a 2020")
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
         #Concatenación de la fecha de inicio de la asignacion de citas
         fechaInicio= day + "/" + month + "/" + year
-        if comprobarFecha(fechaInicio) != "Error":
+        if comprobarFecha(fechaInicio) == "Mayor":
             break
+        else:
+            print("La fecha debe ser mayor a la actual")
     #Ingreso de día de de fin de la asignacion de citas
     year = "2121"
     fechaFin = day + "/" + month + "/" + year
-
     while True:
-        print("Ingrese los datos de su horario de atencion deseado")
-        horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
-        horaInicio=horaInicio.split(":")
-        try:
-            horaComprobacion=int(horaInicio[0]),int(horaInicio[1])
-            error=False
-        except (ValueError):
-            #Mensaje en pantalla de un error al digitar
-            print("Debe ser formato 00:00")
-            error=True
-        if error==False:
-            inicio = datetime.strptime(fechaInicio +" "+ str(horaInicio[0]) +":"+ str(horaInicio[1]), "%d/%m/%Y %H:%M")
-            today = datetime.today()
-            if inicio<today:
-                error=True
-                print("La fecha y hora de inicio deben ser mayores a la hora actual")
-            else:
-                error=False
+        while True:
+            print("Ingrese los datos de su horario de atencion deseado")
+            horaInicio= input("Hora de Inicio del horario de atención (24 hrs)(00:00) : ")
+            horaInicio=horaInicio.split(":")
+            try:
+                horaComprobacion=int(horaInicio[0]),int(horaInicio[1])
+                inicio = datetime.strptime(fechaInicio +" "+ str(horaInicio[0]) +":"+ str(horaInicio[1]), "%d/%m/%Y %H:%M")
                 break
+            except :
+                #Mensaje en pantalla de un error al digitar
+                print("Debe ser formato 24hrs")
+        if inicio < datetime.today():
+            print("La fecha y hora de inicio deben ser mayores a la hora actual")
+            calcularProgramacion(con)
+        else:
+            break
     if int(horaInicio[1]) < 30 and int(horaInicio[1]) != 0:
         horaInicio[1] = 30
     elif int(horaInicio[1]) > 30:
@@ -996,9 +1032,6 @@ def calcularProgramacion(con):
             horaIterando[0] += 1
             horaIterando[1] = "00"
         horaIterando=[str(horaIterando[0]),str(horaIterando[1])]
-    
-    
-
     #Seleccion de los datos de los pacientes
     cursorObj.execute("SELECT Numero_De_Identificacion, Ciudad_De_Residencia, Fecha_De_Desafiliacion FROM Afiliados")
     #Recopilacion en la tupla "afiliados"
@@ -1009,8 +1042,8 @@ def calcularProgramacion(con):
     planes=cursorObj.fetchall()
     secuencial = 1
     loteActual = 0
-    for plan in range(1,len(planes)+1):
-        cursorObj.execute('SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = ? AND Fecha_De_Desafiliacion = "No"',(plan,))
+    for plan in range(1,len(planes)):
+        cursorObj.execute(f'SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = {plan} AND Fecha_De_Desafiliacion = "-"')
         #Recopilacion en la tupla "afiliados"
         afiliados=cursorObj.fetchall()
         #Fecha Inicio Plan
@@ -1043,8 +1076,11 @@ def calcularProgramacion(con):
             else:
                 loteActual += 1
             nuevaCita=(secuencial,afiliadoActual[2],afiliadoActual[0],afiliadoActual[1],lote,fechaPlan,horaCitaActual)
-            cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
-            con.commit()
+            try:
+                cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
+                con.commit()
+            except:
+                print("Ya existen citas para este afiliado")
             #Aumento del secuencial de citas
             secuencial += 1
             #Aumento para cambio de afiliado
@@ -1106,23 +1142,25 @@ def consultarProgramaGeneral():
     #Tabla que imprime los datos de las citas agendadas
     for citas in citas:
         cita= "| {:<8} | {:<6} | {:<14} | {:<5} | {:<13} | {:<16} | {:<15} |".format(citas[0],citas[1],citas[2],citas[3],citas[4],citas[5],citas[6])
+        print (cita)
     menuCitas()
 #Funcion para comprobar la validez de una fecha dada sobre la actual
 def comprobarFecha(fechaDada):
     try:
         #Obtencion de la fecha actual
         fechaActual=datetime.today()
+        fechaActual = str(datetime.today().day)+"/"+str(datetime.today().month)+"/"+str(datetime.today().year)
+        fechaActual=datetime.strptime(fechaActual,"%d/%m/%Y")
         #Comprobación de existencia de la fecha dada
         fechaComprobar=datetime.strptime(fechaDada, "%d/%m/%Y")
         #Comprobación de Consistencia de la fecha
         if fechaComprobar < fechaActual:
-            print("Fecha Invalida")
-            return "Error"
-    except:
-        #Especificacion del tipo de error
-        print("Fecha Inexistente")
+            return "Menor"
+        elif fechaComprobar >= fechaActual:
+            return "Mayor"
+    except ValueError:
         #Valor de retorno de la funcion
-        return "Error"
+        return "Inexistente"
 
 #Conexion con la base de datos
 con=sql_connection()
