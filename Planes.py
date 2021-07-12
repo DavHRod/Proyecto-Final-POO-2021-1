@@ -20,7 +20,7 @@ class plan:
 
     def crear(self,con):
         cursorObj = con.cursor()
-    #Ingreso de un id para asignarlo a un plan
+        #Ingreso de un id para asignarlo a un plan
         self.idPlan=input("CONSECUTIVO del plan de vacunación: ")
         self.idPlan=self.idPlan.ljust(2)
         while True:
@@ -67,7 +67,7 @@ class plan:
             else:
                 print("fecha invalida")
         #Concatenación de la fecha de fin del plan de vacunación
-        fechaFin = "24/05/2121"
+        self.fechaFin = "24/05/2121"
         error=False
 
         while True:
@@ -138,11 +138,11 @@ class plan:
                 if error == False:
                     break
             datosPlanes=(self.idPlan,self.edadMin,self.edadMax,self.fechaInicio,self.fechaFin)
-
             try:
                 cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
                 con.commit()
                 self.calcular(con)
+                break
             except: 
                 print ("El Plan ya existe")
             

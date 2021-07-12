@@ -1,6 +1,6 @@
 from Afiliados import *
-#from Lotes import *
-#from Planes import *
+from Lotes import *
+from Planes import *
 from Citas import *
 import sqlite3
 from sqlite3 import Error
@@ -9,7 +9,7 @@ class main:
     def __init__(self):
         self.resp = None
     def principal(self,con):
-        __navi=menu()
+        navi=menu()
         #Diccionario de casos del menu principal
         casosPrincipal={1:"Datos",2:"Lotes",3:"Plan",4:"Citas",5:"Salir"}
         #Bucle de comprobación
@@ -28,13 +28,13 @@ class main:
         if self.resp > 0 and self.resp < 6:
             #Llamado de las funciones según opción elegida 
             if casosPrincipal[self.resp]=="Datos":
-                __navi.datos(con)
+                navi.datos(con)
             elif casosPrincipal[self.resp]=="Lotes":
-                __navi.lotes(con)
+                navi.lotes(con)
             elif casosPrincipal[self.resp] == "Plan":
-                __navi.planes(con)
+                navi.planes(con)
             elif casosPrincipal[self.resp] == "Citas":
-                __navi.citas(con)
+                navi.citas(con)
             elif casosPrincipal[self.resp] == "Salir":
                 con.close()
                 exit()
@@ -131,7 +131,7 @@ class menu(main):
             #Comprobación para el tipo de dato
             try:
                 #Recepción de la respuesta
-                self.resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Cerrar Plan\n5.Regresar\n6.Salir\n"))
+                self.resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Consultar Plan por ID\n3.Regresar\n4.Salir\n"))
                 #Ruptura del bucle de comprobación
                 break
             except:
