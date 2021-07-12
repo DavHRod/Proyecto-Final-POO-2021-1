@@ -1,5 +1,7 @@
 from Afiliados import *
-#from Planes import *
+from Lotes import *
+from Planes import *
+from Citas import *
 import sqlite3
 from sqlite3 import Error
 
