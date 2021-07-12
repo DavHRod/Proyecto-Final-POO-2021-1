@@ -820,7 +820,6 @@ def crearPlan(con):
         calcularPlan(con)
     except: 
         print ("El Plan ya existe")
-    55
     menuPlanes()
 
 #Función cierrePlanVacunacion(con): Esta función sirve para actualizar la fecha de terminación de un plan de vacunación 
