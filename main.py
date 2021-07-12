@@ -1,4 +1,5 @@
 from Afiliados import *
+from Planes import *
 import sqlite3
 from sqlite3 import Error
 
@@ -85,7 +86,7 @@ class menu(main):
             self.datos()
 
     #Funcion menu de gestion de lotes de vacunas
-    def menuLotes():
+    def lotes():
         #Diccionario de casos del menu Lotes
         casosLotes={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
         #Bucle de comprobación de entrada
@@ -116,7 +117,8 @@ class menu(main):
             print("Deber se una respuesta Valida")
             menuLotes()
     #Funcion menu para gestion de planes de vacunacion
-    def menuPlanes():
+    def planes(self):
+        plan=plan()
         #Diccionario de casos del menu Planes
         casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 4:"Cerrar Plan", 5:"Regresar",6:"Salir"}
         #Bucle de comprobación de entrada
@@ -124,32 +126,36 @@ class menu(main):
             #Comprobación para el tipo de dato
             try:
                 #Recepción de la respuesta
-                resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Cerrar Plan\n5.Regresar\n6.Salir\n"))
+                self.resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Plan\n2.Calcular Plan para los afiliados actuales\n3.Consultar Plan por ID\n4.Cerrar Plan\n5.Regresar\n6.Salir\n"))
                 #Ruptura del bucle de comprobación
                 break
             except:
                 #Mensaje de Error
                 print("Debe ser un Numero")
         #Condicional para mantener la respuesta dentro del rango del menú
-        if resp > 0 and resp < 7:
+        if self.resp > 0 and self.resp < 7:
             #Condicionales de uso del Menu Para Gestion De Planes: Llamado de las funciones según opción elegida 
-            if casosPlan[resp] == "Crear":
-                crearPlan(con)
-            elif casosPlan[resp] == "Calcular":
-                calcularPlan(con)
-            elif casosPlan[resp] == "Consultar":
-                consultarPlan(con)
-            elif casosPlan[resp] == "Cerrar Plan":
-                cierrePlanVacunacion(con)
-            elif casosPlan[resp] == "Regresar":
-                menuPrincipal()
-            elif casosPlan[resp] == "Salir":
+            if casosPlan[self.resp] == "Crear":
+                plan.crear(con)
+                self.planes()
+            elif casosPlan[self.resp] == "Calcular":
+                plan.calcular(con)
+                self.planes()
+            elif casosPlan[self.resp] == "Consultar":
+                plan.consultar(con)
+                self.planes()
+            elif casosPlan[self.resp] == "Cerrar Plan":
+                plan.cierre(con)
+                self.planes()
+            elif casosPlan[self.resp] == "Regresar":
+                self.principal()
+            elif casosPlan[self.resp] == "Salir":
                 con.close()
                 exit()
         else:
             #Mensaje de error en caso de no estar en el intervalo
             print("Deber se una respuesta Valida")
-            menuPlanes()
+            self.planes()
     #Funcion menu para gestion de citas de vacunacion
     def menuCitas():
         #Diccionario de casos del menu Citas
