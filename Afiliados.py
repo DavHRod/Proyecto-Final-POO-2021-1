@@ -6,6 +6,7 @@ from validate_email import validate_email
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date
 from datetime import datetime
+#from Planes import *
 #-----DESDE AQUI MODULO DE AFILIADOS-------------------------------------------------------------------------------------------------------
 #Función afiliarPaciente: Esta función recibe los datos de un nuevo paciente a afiliar y realiza la inserción en la tabla
 
@@ -28,30 +29,29 @@ class afiliado():
     def calcEdad(self, fechaNacimiento, fechaActual):
         fechaNacimiento = datetime.strptime(fechaNacimiento, "%d/%m/%Y")
         self.edad = fechaActual.year - fechaNacimiento.year
-        self.edad -= ((fechaActual.month, fechaActual.day) <
-                      (fechaNacimiento.month, fechaNacimiento.day))
+        self.edad -= ((fechaActual.month, fechaActual.day) <(fechaNacimiento.month, fechaNacimiento.day))
         if fechaNacimiento >= fechaActual:
             return False
         else:
             return True
 
-    def afiliarPaciente(self, con):
+    def afiliar(self, con):
+        #planN=plan()
         cursorObj = con.cursor()
         #Bucle de comprobacion de entrada
         while True:
             #Recepción del número de identificación
-            noIdentificacion = input(
-                "Ingrese el número de identificación del paciente: ")
+            self.ide = input("Ingrese el número de identificación del paciente: ")
             #Variable con la longitud máxima
             longitudId = 12
             #Variable con la longitud del string
-            longId = len(noIdentificacion)
+            longId = len(self.ide)
             #Condicional para comprobar la longuitud de la respuesta
             if longId <= longitudId:
-                noIdentificacion = noIdentificacion.rjust(longitudId, " ")
+                self.ide = self.ide.rjust(longitudId, " ")
                 #Comprobación para el tipo de dato
                 try:
-                    noIdentificacion = int(noIdentificacion)
+                    self.ide = int(self.ide)
                     #Ruptura del bucle de comprobación
                     break
                 except ValueError:
@@ -200,14 +200,13 @@ class afiliado():
         #Concatenación fecha actual
         fechaActual = str(dayActual)+"/"+str(monthActual)+"/"+str(yearActual)
         #Tupla con todos los datos ingresados En la funcion Afiliar
-        datosPaciente = (noIdentificacion, "-", self.nombre, self.apellido, self.direccion,
-                         self.telefono, self.correo, self.ciudad, self.fechaNacimiento, fechaActual, "-", "No")
+        datosPaciente = (self.ide, "-", self.nombre, self.apellido, self.direccion,self.telefono, self.correo, self.ciudad, self.fechaNacimiento, fechaActual, "-", "No")
         try:
             #Insercion de los datos a la tabla de Afiliados, Nueva Fila
             cursorObj.execute( "INSERT INTO Afiliados VALUES(?,?,?,?,?,?,?,?,?,?,?,?)", datosPaciente)
             #Envio de la petición a la base de datos
             con.commit()
-            self.calcular(con)
+            #planN.calcular(con)
         except:
             print("El Afiliado ya existe")
         
@@ -241,19 +240,17 @@ class afiliado():
                 consultados1 = consultados[0]
                 #Impresión de la tupla correspondiente a la información paciente en forma de tabla
                 print("------------------------------------------------------------")
-                print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| telefono               || {:<30} |\n| correo                 || {:<30} |\n| ciudad de Residencia   || {:<30} |\n| Fecha de nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(
-                    consultados1[0], consultados1[1], consultados1[2], consultados1[3], consultados1[4], consultados1[5], consultados1[6], consultados1[7], consultados1[8], consultados1[9], consultados1[10], consultados1[11]))
+                print("| No. Identificación     || {:<30} |\n| IdPlan                 || {:<30} |\n| Nombre                 || {:<30} |\n| Apellido               || {:<30} |\n| Dirección              || {:<1} |\n| telefono               || {:<30} |\n| correo                 || {:<30} |\n| ciudad de Residencia   || {:<30} |\n| Fecha de nacimiento    || {:<30} |\n| Fecha de Afiliación    || {:<30} |\n| Fecha de desafiliación || {:<30} |\n| Vacunado SI/NO         || {:<30} |".format(consultados1[0], consultados1[1], consultados1[2], consultados1[3], consultados1[4], consultados1[5], consultados1[6], consultados1[7], consultados1[8], consultados1[9], consultados1[10], consultados1[11]))
                 print("------------------------------------------------------------")
                 break
-    #Función desafiliarPaciente: Con esta función se ingresa la fecha de desafiliación de un paciente
 
+    #Función desafiliarPaciente: Con esta función se ingresa la fecha de desafiliación de un paciente
     def desafiliar(self, con):
         cursorObj = con.cursor()
         #Bucle de comprobación
         while True:
             #Recepción del número de identificación
-            self.ide = input(
-                "Ingrese el número de identificación del paciente a desafiliar: ")
+            self.ide = input("Ingrese el número de identificación del paciente a desafiliar: ")
             #Comprobación del tipo de dato
             try:
                 self.ide = int(self.ide)
@@ -261,23 +258,24 @@ class afiliado():
             except ValueError:
                 #Mensaje en pantalla de un error al digitar
                 print("Escriba un número entero")
-        #Fecha Actual
-        today = date.today()
-        #Día actual
-        dayActual = today.day
-        #Mes actual
-        monthActual = today.month
-        #Año actual
-        yearActual = today.year
-        #Concatenación fecha actual
-        fechaDesafiliacion = str(dayActual)+"/" + \
-            str(monthActual)+"/"+str(yearActual)
-        #Inserción de la fecha concatenada en la base de datos basado en el Numero_de_identificacion, columna Fecha_de_desafiliacion
-        cursorObj.execute(
-            'UPDATE Afiliados SET Fecha_De_Desafiliacion = ? WHERE Numero_de_identificacion = ?', (fechaDesafiliacion, self.ide))
-        #Envio de la petición a la base de datos
-        con.commit()
-        #Llamado del menú de gestión de datos
+        #Seleccion de la columna Facha_De_Desafilaicion basado en el ide
+        cursorObj.execute(f"SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion = {self.ide}")
+        #Obetencion en la tupla "desafiliado"
+        desafiliado = cursorObj.fetchall()
+        desafiliado = desafiliado[0]
+        desafiliado = desafiliado[0]
+        #Comprobacion de desafiliacion
+        if desafiliado == "-":
+            #Fecha Actual
+            today = date.today()
+            #Concatenación fecha actual
+            fechaDesafiliacion = str(today.day)+"/" + str(today.month)+"/"+str(today.year)
+            #Inserción de la fecha concatenada en la base de datos basado en el Numero_de_identificacion, columna Fecha_de_desafiliacion
+            cursorObj.execute(f'UPDATE Afiliados SET Fecha_De_Desafiliacion = ? WHERE Numero_de_identificacion = {self.ide}',(fechaDesafiliacion,))
+            #Envio de la petición a la base de datos
+            con.commit()
+        else:
+            print("El paciente ya está desafiliado")
 
     #Función vacunarAfiliado: Con esta función se actualiza el estado de vacunación de un afiliado en la tabla afiliado
     def vacunar(self, con):
@@ -285,11 +283,10 @@ class afiliado():
         #Bucle de comprobación
         while True:
             #Ingreso de número de identificación del paciente a vacunar
-            noIdentificacion = input(
-                "Ingrese el número de identificación del paciente a Vacunar: ")
+            self.ide = input("Ingrese el número de identificación del paciente a Vacunar: ")
             #Comprobación del tipo de dato
             try:
-                noIdentificacion = int(noIdentificacion)
+                self.ide = int(self.ide)
                 #Ruptura del bucle de comprobación
                 break
             except ValueError:
@@ -297,11 +294,11 @@ class afiliado():
                 print("Escriba un número entero")
         desafiliado = "vacio"
         #Selección de la fecha de desafiliacion del paciente a vacunar
-        cursorObj.execute(f'SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion = {noIdentificacion}')
+        cursorObj.execute(f'SELECT Fecha_De_Desafiliacion FROM Afiliados WHERE Numero_De_Identificacion = {self.ide}')
         #Recopilación en el array "desafiliado"
         desafiliado = cursorObj.fetchall()
         if len(desafiliado) <= 0:
-            print("No existe")
+            print("El paciente no existe")
 
         else:
             #Acceso a la tupla del afiliado
@@ -314,8 +311,8 @@ class afiliado():
                 print("El paciente está desafiliado y no será vacunado\n")
             else:
                 #Actualización del estado de vacunación del afiliado basado en el Numero_de_identificacion, columna "Vacunado"
-                if self.contadorVacunacion(noIdentificacion):
-                    cursorObj.execute(f'UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion = {noIdentificacion}')
+                if self.contadorVacunacion(con):
+                    cursorObj.execute(f'UPDATE Afiliados SET Vacunado="Si" WHERE Numero_de_identificacion = {self.ide}')
                 #Envio de la petición a la base de datos
                 con.commit()
 
@@ -324,19 +321,20 @@ class afiliado():
         cursorObj = con.cursor()
         codLote = "vacio"
         #Select que obtiene los datos de la tabla de Citas
-        cursorObj.execute(
-            'SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion=?', (self.ide,))
+        cursorObj.execute('SELECT Codigo_De_Lote FROM Citas WHERE Numero_De_Identificacion=?', (self.ide,))
         codLote = cursorObj.fetchall()
         #Verificación de existencia de datos en la tabla de citas
         if len(codLote) == 0:
             #Mensaje de error
             print("Este Paciente No Posee Cita\n")
+            return False
         else:
             try:
                 codLote = codLote[0]
                 codLote1 = codLote[0]
             except IndexError:
                 print("No hay datos disponibles")
+                return False
             #Select que obtiene los datos de la tabla de Lotes
             cursorObj.execute(
                 'SELECT Cantidad_Recibida, Cantidad_Usada FROM Lotes WHERE Codigo_De_Lote=?', (codLote1,))
@@ -351,3 +349,4 @@ class afiliado():
                 cursorObj.execute(
                     'UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?', (usado, codLote1))
             con.commit()
+            return True
