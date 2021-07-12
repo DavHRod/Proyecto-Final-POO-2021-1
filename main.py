@@ -1,5 +1,5 @@
-#from Afiliados import *
-from Planes import *
+from Afiliados import *
+#from Planes import *
 import sqlite3
 from sqlite3 import Error
 
@@ -70,23 +70,24 @@ class menu(main):
                 afil.consultar(con)
                 self.datos(con)
             elif casosDatos[self.resp] == "Desafiliar":
-                afil.desafiliarPaciente(con)
+                afil.desafiliar(con)
                 self.datos(con)
             elif casosDatos[self.resp] == "Vacunar":
                 afil.vacunar(con)
                 self.datos(con)
             elif casosDatos[self.resp]=="Volver":
-                self.principal()
+                self.principal(con)
             elif casosDatos[self.resp] == "Salir":
                 con.close()
                 exit()
         else:
             #Mensaje de Error
             print("\nDebe ser una opcion valida")
-            self.datos()
+            self.datos(con)
 
     #Funcion menu de gestion de lotes de vacunas
-    def lotes(self):
+    def lotes(self, con):
+        lotesN = lotes()
         #Diccionario de casos del menu Lotes
         casosLotes={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
         #Bucle de comprobación de entrada
@@ -94,33 +95,35 @@ class menu(main):
             #Comprobación para el tipo de dato
             try:
                 #Recepción de la respuesta
-                resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Lote\n2.Consultar Lote\n3.Regresar\n4.Salir\n"))
+                self.resp=int(input("\nPorfavor escoja que tarea quiere realizar\n1.Crear Lote\n2.Consultar Lote\n3.Regresar\n4.Salir\n"))
                 #Ruptura del bucle de comprobación
                 break
             except:
                 #Mensaje de Error
                 print("Debe ser un Numero")
         #Condicional para mantener la respuesta dentro del rango del menú
-        if resp > 0 and resp < 5:
+        if self.resp > 0 and self.resp < 5:
             #Condicionales de uso del Menu Para Gestion De Lotes: Llamado de las funciones según opción elegida 
-            if casosLotes[resp] == "Crear":
-                crearLote(con)
-            elif casosLotes[resp] == "Consultar":
-                consultarLote(con)
-            elif casosLotes[resp] == "Regresar":
-                menuPrincipal()
-            elif casosLotes[resp] == "Salir":
+            if casosLotes[self.resp] == "Crear":
+                lotesN.crear(con)
+                self.lotes(con)
+            elif casosLotes[self.resp] == "Consultar":
+                lotesN.consultar(con)
+                self.lotes(con)
+            elif casosLotes[self.resp] == "Regresar":
+                self.principal(con)
+            elif casosLotes[self.resp] == "Salir":
                 con.close()
                 exit()
         else:
             #Mensaje de error en caso de no estar en el intervalo
             print("Deber se una respuesta Valida")
-            menuLotes()
+            self.lotes(con)
     #Funcion menu para gestion de planes de vacunacion
     def planes(self,con):
         planN = plan()
         #Diccionario de casos del menu Planes
-        casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 4:"Cerrar Plan", 5:"Regresar",6:"Salir"}
+        casosPlan={1:"Crear",2:"Consultar", 3:"Cerrar Plan", 4:"Regresar",5:"Salir"}
         #Bucle de comprobación de entrada
         while True:
             #Comprobación para el tipo de dato
@@ -133,13 +136,10 @@ class menu(main):
                 #Mensaje de Error
                 print("Debe ser un Numero")
         #Condicional para mantener la respuesta dentro del rango del menú
-        if self.resp > 0 and self.resp < 7:
+        if self.resp > 0 and self.resp < 6:
             #Condicionales de uso del Menu Para Gestion De Planes: Llamado de las funciones según opción elegida 
             if casosPlan[self.resp] == "Crear":
                 planN.crear(con)
-                self.planes(con)
-            elif casosPlan[self.resp] == "Calcular":
-                planN.calcular(con)
                 self.planes(con)
             elif casosPlan[self.resp] == "Consultar":
                 planN.consultar(con)
