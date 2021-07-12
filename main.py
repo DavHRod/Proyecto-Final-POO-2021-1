@@ -1,6 +1,6 @@
 from Afiliados import *
-from Lotes import *
-from Planes import *
+#from Lotes import *
+#from Planes import *
 from Citas import *
 import sqlite3
 from sqlite3 import Error
@@ -89,7 +89,7 @@ class menu(main):
 
     #Funcion menu de gestion de lotes de vacunas
     def lotes(self, con):
-        lotesN = lotes()
+        lotesN = lote()
         #Diccionario de casos del menu Lotes
         casosLotes={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
         #Bucle de comprobación de entrada
