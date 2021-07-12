@@ -1,4 +1,4 @@
-from Afiliados import *
+#from Afiliados import *
 from Planes import *
 import sqlite3
 from sqlite3 import Error
@@ -28,11 +28,11 @@ class main:
             if casosPrincipal[self.resp]=="Datos":
                 __navi.datos(con)
             elif casosPrincipal[self.resp]=="Lotes":
-                __navi.Lotes()
+                __navi.lotes(con)
             elif casosPrincipal[self.resp] == "Plan":
-                __navi.Planes()
+                __navi.planes(con)
             elif casosPrincipal[self.resp] == "Citas":
-                __navi.Citas()
+                __navi.citas(con)
             elif casosPrincipal[self.resp] == "Salir":
                 con.close()
                 exit()
@@ -86,7 +86,7 @@ class menu(main):
             self.datos()
 
     #Funcion menu de gestion de lotes de vacunas
-    def lotes():
+    def lotes(self):
         #Diccionario de casos del menu Lotes
         casosLotes={1:"Crear",2:"Consultar", 3:"Regresar",4:"Salir"}
         #Bucle de comprobación de entrada
@@ -117,8 +117,8 @@ class menu(main):
             print("Deber se una respuesta Valida")
             menuLotes()
     #Funcion menu para gestion de planes de vacunacion
-    def planes(self):
-        plan=plan()
+    def planes(self,con):
+        planN = plan()
         #Diccionario de casos del menu Planes
         casosPlan={1:"Crear",2:"Calcular",3:"Consultar", 4:"Cerrar Plan", 5:"Regresar",6:"Salir"}
         #Bucle de comprobación de entrada
@@ -136,19 +136,19 @@ class menu(main):
         if self.resp > 0 and self.resp < 7:
             #Condicionales de uso del Menu Para Gestion De Planes: Llamado de las funciones según opción elegida 
             if casosPlan[self.resp] == "Crear":
-                plan.crear(con)
-                self.planes()
+                planN.crear(con)
+                self.planes(con)
             elif casosPlan[self.resp] == "Calcular":
-                plan.calcular(con)
-                self.planes()
+                planN.calcular(con)
+                self.planes(con)
             elif casosPlan[self.resp] == "Consultar":
-                plan.consultar(con)
-                self.planes()
+                planN.consultar(con)
+                self.planes(con)
             elif casosPlan[self.resp] == "Cerrar Plan":
-                plan.cierre(con)
-                self.planes()
+                planN.cierre(con)
+                self.planes(con)
             elif casosPlan[self.resp] == "Regresar":
-                self.principal()
+                self.principal(con)
             elif casosPlan[self.resp] == "Salir":
                 con.close()
                 exit()
