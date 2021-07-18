@@ -9,6 +9,7 @@ class citas:
         self.__ciudad = ""
         self.__fecha = ""
         self.__hora = ""
+        
     def calcular(self, con):
         cursorObj=con.cursor()
         print("""Bienvenido al Creador de progamas de vacunación
