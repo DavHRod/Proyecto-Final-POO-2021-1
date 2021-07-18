@@ -1,13 +1,14 @@
 from datetime import datetime
 from datetime import date
+from Afiliados import *
 class citas:
     def __init__(self):
-        self.numero= 0
-        self.plan= 0
-        self.ide=0
-        self.ciudad = ""
-        self.fecha= ""
-        self.hora=""
+        self.__numero = 0
+        self.__plan = 0
+        self.__ide = 0
+        self.__ciudad = ""
+        self.__fecha = ""
+        self.__hora = ""
     def calcular(self, con):
         cursorObj=con.cursor()
         print("""Bienvenido al Creador de progamas de vacunación
@@ -102,15 +103,15 @@ class citas:
         planes=cursorObj.fetchall()
         secuencial = 1
         loteActual = 0
-        for plan in range(1,len(planes)):
-            cursorObj.execute(f'SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = {plan} AND Fecha_De_Desafiliacion = "-"')
+        for plan in range(1,len(planes)+1):
+            cursorObj.execute('SELECT Numero_De_Identificacion, Ciudad_De_Residencia, ID_Plan FROM Afiliados WHERE ID_Plan = ? AND Fecha_De_Desafiliacion = "-"',(plan,))
             #Recopilacion en la tupla "afiliados"
             afiliados=cursorObj.fetchall()
             #Fecha Inicio Plan
             cursorObj.execute("SELECT Fecha_Inicio FROM Planes WHERE ID = ? ",(plan,))
-            fechaPlan=cursorObj.fetchall()
-            fechaPlan = fechaPlan[0]
-            fechaPlan = fechaPlan[0]
+            fecha_plan=cursorObj.fetchall()
+            fecha_plan = fecha_plan[0]
+            fecha_plan = fecha_plan[0]
             #Codigo de Lote
             afiliado = 0
             while afiliado != len(afiliados):
@@ -129,23 +130,32 @@ class citas:
                 existentes = recibidas - usadas
                 horaCitaActual=horaCitas[afiliado]
                 horaCitaActual=str(horaCitaActual[0])+":"+str(horaCitaActual[1])
-                afiliadoActual=afiliados[afiliado]
+                afiliado_actual=afiliados[afiliado]
                 if asignadas != existentes:
                     cursorObj.execute("UPDATE Lotes SET Cantidad_Asignada = ? WHERE Codigo_De_Lote = ?",(asignadas + 1,lote))
                     con.commit()
                 else:
                     loteActual += 1
-                nuevaCita=(secuencial,afiliadoActual[2],afiliadoActual[0],afiliadoActual[1],lote,fechaPlan,horaCitaActual)
+                self.__numero = secuencial
+                self.__plan = afiliado_actual[2]
+                self.__ide = afiliado_actual[0]
+                self.__ciudad = afiliado_actual[1]
+                self.__fecha = fecha_plan
+                self.__hora = horaCitaActual
+                nueva_cita=(self.__numero,self.__plan,self.__ide,self.__ciudad,lote,self.__fecha,self.__hora)
                 try:
-                    cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nuevaCita)
+                    cursorObj.execute("INSERT INTO Citas Values (?,?,?,?,?,?,?)",nueva_cita)
                     con.commit()
+                    #Aumento del secuencial de citas
+                    secuencial += 1
+                    #Aumento para cambio de afiliado
+                    afiliado += 1
                 except:
-                    print("Ya existen citas para este afiliado")
-                #Aumento del secuencial de citas
-                secuencial += 1
-                #Aumento para cambio de afiliado
-                afiliado += 1
-        #Retorno a la funcion de origen
+                    #Aumento del secuencial de citas
+                    secuencial += 1
+                    #Aumento para cambio de afiliado
+                    afiliado += 1
+                
         
     #Función consultarProgramaIndividual(): Esta función permite al usuario visualizar los datos de la cita
     #a partir de un número de identificación

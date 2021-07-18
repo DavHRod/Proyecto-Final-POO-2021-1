@@ -5,6 +5,7 @@ from validate_email import validate_email
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date
 from datetime import datetime
+from Afiliados import *
 #-----DESDE AQUI MODULO DE PLANES DE VACUNACION-------------------------------------------------------------------------------------------------------
 ##Función crearPlan(con): Permite generar un nuevo plan de vacunación y almacenar la información en la tabla de Planes
 
