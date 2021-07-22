@@ -16,7 +16,7 @@ class sql:
             con = sqlite3.connect('ProgramaDeVacunacion.db')
             return con
         except Error:
-            print("putos")
+            print(Error)
 
     def __sql_table(self):
         cursorObj = self.__con.cursor()
