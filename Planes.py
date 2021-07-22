@@ -5,6 +5,7 @@ from validate_email import validate_email
 #es usada para comprobacion y validacion de fechas bajo parametros propios
 from datetime import date
 from datetime import datetime
+from Afiliados import *
 #-----DESDE AQUI MODULO DE PLANES DE VACUNACION-------------------------------------------------------------------------------------------------------
 ##Función crearPlan(con): Permite generar un nuevo plan de vacunación y almacenar la información en la tabla de Planes
 
@@ -19,6 +20,55 @@ class plan:
 
     def crear(self,con):
         cursorObj = con.cursor()
+        #Ingreso de un id para asignarlo a un plan
+        self.idPlan=input("CONSECUTIVO del plan de vacunación: ")
+        self.idPlan=self.idPlan.ljust(2)
+        while True:
+            #Ingreso el día de de inicio del plan de vacunación
+            while True:
+                day=input("DÍA de inicio del plan de vacunación: ")
+                day=day.rjust(2,"0")
+                try:
+                    if int(day) >0 and int(day) < 32:
+                        break
+                    else:
+                        #Mensaje en pantalla de un error al digitar
+                        print("El Numero debe estar entre 1 y 31")
+                except:
+                    #Mensaje en pantalla de un error al digitar
+                    print("La entrada debe ser Digito")
+            #Ingreso de mes de inicio del plan de vacunación
+            while True:
+                month=input("MES de inicio del plan de vacunación: ")
+                month=month.rjust(2,"0")
+                try:
+                    if int(month) >0 and int(month) < 13:
+                        break
+                    else:
+                        #Mensaje en pantalla de un error al digitar
+                        print("El Numero debe estar entre 1 y 12")
+                except:
+                    #Mensaje en pantalla de un error al digitar
+                    print("El Numero debe ser Digito")
+            #Ingreso de año de inicio del plan de vacunación
+
+            while True:
+                year=input("AÑO de inicio del plan de vacunación: ")
+                year=year.rjust(4,"0")
+                try:
+                    int(year)
+                    break
+                    #Concatenación de la fecha de inicio del plan de vacunación
+                except:
+                    print("Debe Ser Un Numero")
+            self.fechaInicio=day+"/"+month+"/"+year
+            if self.comprobarFecha(self.fechaInicio) == "Mayor":
+                break
+            else:
+                print("fecha invalida")
+        #Concatenación de la fecha de fin del plan de vacunación
+        self.fechaFin = "24/05/2121"
+        error=False
 
         while True:
             while True:
@@ -88,11 +138,11 @@ class plan:
                 if error == False:
                     break
             datosPlanes=(self.idPlan,self.edadMin,self.edadMax,self.fechaInicio,self.fechaFin)
-
             try:
                 cursorObj.execute("INSERT INTO Planes VALUES(?,?,?,?,?)",datosPlanes)
                 con.commit()
                 self.calcular(con)
+                break
             except: 
                 print ("El Plan ya existe")
             
