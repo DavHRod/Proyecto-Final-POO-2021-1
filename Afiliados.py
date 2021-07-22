@@ -12,36 +12,114 @@ from Planes import *
 
 
 class afiliado:
-    def __init__(self):
-        self.__ide = 0
-        self.__id_plan="-"
-        self.__nombre = ""
-        self.__apellido = ""
-        self.__direccion = ""
-        self.__telefono = 0
-        self.__correo = ""
-        self.__ciudad = ""
-        self.__nacimiento = ""
-        self.__edad = 0
-        self.__afiliacion = ""
-        self.__desafiliacion = ""
-        self.__vacunado = ""
+    def __init__(self,ide,id_plan,nombre,apellido,direccion,telefono,correo,ciudad,nacimiento,edad,afiliacion,desafiliacion,vacunado):
+        self.__ide = ide
+        self.__id_plan = id_plan
+        self.__nombre = nombre
+        self.__apellido = apellido
+        self.__direccion = direccion
+        self.__telefono = telefono
+        self.__correo = correo
+        self.__ciudad = ciudad
+        self.__nacimiento = nacimiento
+        self.__edad = edad
+        self.__afiliacion = afiliacion
+        self.__desafiliacion = desafiliacion
+        self.__vacunado = vacunado
+        self.__calc_edad(self.__nacimiento)
+
+    def set_ide(self,ide):
+        self.__ide = ide
+    def get_ide(self):
+        return self.__ide
 
     def set_id_plan(self,id_plan):
         self.__id_plan = id_plan
-
     def get_id_plan(self):
         return self.__id_plan
 
-    def calcEdad(self, fechaNacimiento, fechaActual):
+    def set_nombre(self,nombre):
+            self.__nombre = nombre
+    def get_nombre(self):
+        return self.__nombre
+
+    def set_apellido(self,apellido):
+            self.__apellido = apellido
+    def get_apellido(self):
+        return self.__apellido
+
+    def set_direccion(self,direccion):
+            self.__direccion = direccion
+    def get_direccion(self):
+        return self.__direccion
+
+    def set_telefono(self,telefono):
+            self.__telefono = telefono
+    def get_telefono(self):
+        return self.__telefono
+
+    def set_correo(self,correo):
+            self.__correo = correo
+    def get_correo(self):
+        return self.__correo
+
+    def set_ciudad(self,ciudad):
+            self.__ciudad = ciudad
+    def get_ciudad(self):
+        return self.__ciudad
+
+    def set_nacimiento(self,nacimiento):
+            self.__nacimiento = nacimiento
+    def get_nacimiento(self):
+        return self.__nacimiento
+
+    def set_edad(self,edad):
+            self.__edad = edad
+    def get_edad(self):
+        return self.__edad
+
+    def set_afiliacion(self,afiliacion):
+            self.__afiliacion = afiliacion
+    def get_afiliacion(self):
+        return self.__afiliacion
+
+    def set_desafiliacion(self,desafiliacion):
+            self.__desafiliacion = desafiliacion
+    def get_desafiliacion(self):
+        return self.__desafiliacion
+
+    def set_vacunado(self,vacunado):
+            self.__vacunado = vacunado
+    def get_vacunado(self):
+        return self.__vacunado
+
+    def __calc_edad(self, fechaNacimiento):
         fechaNacimiento = datetime.strptime(fechaNacimiento, "%d/%m/%Y")
-        self.__edad = fechaActual.year - fechaNacimiento.year
-        self.__edad -= ((fechaActual.month, fechaActual.day) <(fechaNacimiento.month, fechaNacimiento.day))
-        if fechaNacimiento >= fechaActual:
+        actual=datetime.today().strftime("%d/%m/%Y")
+        actual=datetime.strptime(actual,"%d/%m/%Y")
+        if fechaNacimiento >= actual:
             return False
         else:
+            self.__edad = actual.year - fechaNacimiento.year
+            self.__edad -= ((actual.month, actual.day) <(fechaNacimiento.month, fechaNacimiento.day))
             return True
 
+    def to_tuple(self):
+        obj_tuple = (self.__ide,
+            self.__id_plan,
+            self.__nombre,
+            self.__apellido,
+            self.__direccion,
+            self.__telefono,
+            self.__correo,
+            self.__ciudad,
+            self.__nacimiento,
+            self.__edad,
+            self.__afiliacion,
+            self.__desafiliacion,
+            self.__vacunado)
+        return obj_tuple
+"""
     def afiliar(self, con):
         planN=plan()
         cursorObj = con.cursor()
@@ -356,3 +434,4 @@ class afiliado:
                     'UPDATE Lotes SET Cantidad_Usada=? WHERE Codigo_De_Lote=?', (usado, codLote1))
             con.commit()
             return True
+"""
