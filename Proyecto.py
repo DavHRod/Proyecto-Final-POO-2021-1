@@ -35,6 +35,7 @@ def sql_table(con):
         Correo text, 
         Ciudad_De_Residencia text,
         Fecha_De_Nacimiento text,
+        Edad text,
         Fecha_De_Afiliacion text,
         Fecha_De_Desafiliacion text,
         Vacunado text)''')

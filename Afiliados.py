@@ -7,6 +7,7 @@ from validate_email import validate_email
 from datetime import date
 from datetime import datetime
 from Planes import *
+from sql import *
 #-----DESDE AQUI MODULO DE AFILIADOS-------------------------------------------------------------------------------------------------------
 #Función afiliarPaciente: Esta función recibe los datos de un nuevo paciente a afiliar y realiza la inserción en la tabla
 
@@ -27,6 +28,7 @@ class afiliado:
         self.__desafiliacion = desafiliacion
         self.__vacunado = vacunado
         self.__calc_edad(self.__nacimiento)
+        self.__sql = sql()
 
     def set_ide(self,ide):
         self.__ide = ide
@@ -97,12 +99,13 @@ class afiliado:
         fechaNacimiento = datetime.strptime(fechaNacimiento, "%d/%m/%Y")
         actual=datetime.today().strftime("%d/%m/%Y")
         actual=datetime.strptime(actual,"%d/%m/%Y")
-        if fechaNacimiento >= actual:
-            return False
-        else:
-            self.__edad = actual.year - fechaNacimiento.year
-            self.__edad -= ((actual.month, actual.day) <(fechaNacimiento.month, fechaNacimiento.day))
-            return True
+        self.__edad = actual.year - fechaNacimiento.year
+        self.__edad -= ((actual.month, actual.day) <(fechaNacimiento.month, fechaNacimiento.day))
+            
+
+    def load_all(self):
+        tupla = self.__sql.get_table("Afiliados")
+        return tupla
 
     def to_tuple(self):
         obj_tuple = (self.__ide,

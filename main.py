@@ -9,11 +9,12 @@ from sql import *
 
 class main:
     def __init__(self):
-        sqlObj = sql()
-        self.__con = sqlObj.get_con()
+        self.sqlObj = sql()
+        self.__con = self.sqlObj.get_con()
         app = QtWidgets.QApplication([])
         application = principal_win()
         application.show()
+        self.sqlObj.close()
         sys.exit(app.exec())
         
 inicio = main()

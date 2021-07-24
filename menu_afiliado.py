@@ -46,6 +46,7 @@ class Ui_afil_menu(object):
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
         afil_menu.setPalette(palette)
+        afil_menu.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         afil_menu.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.centralwidget = QtWidgets.QWidget(afil_menu)
         self.centralwidget.setObjectName("centralwidget")
@@ -59,10 +60,10 @@ class Ui_afil_menu(object):
         font.setWeight(75)
         self.push_nuevo.setFont(font)
         self.push_nuevo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.push_nuevo.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+        self.push_nuevo.setStyleSheet("color: rgb(63, 81, 181);\n"
 "border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(46, 26, 162);\n"
+"border-color:rgb(63, 81, 181);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.push_nuevo.setObjectName("push_nuevo")
@@ -74,10 +75,11 @@ class Ui_afil_menu(object):
         font.setBold(True)
         font.setWeight(75)
         self.push_editar.setFont(font)
-        self.push_editar.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+        self.push_editar.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_editar.setStyleSheet("color: rgb(63, 81, 181);\n"
 "border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(46, 26, 162);\n"
+"border-color:rgb(63, 81, 181);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.push_editar.setObjectName("push_editar")
@@ -89,92 +91,92 @@ class Ui_afil_menu(object):
         font.setBold(True)
         font.setWeight(75)
         self.push_ver.setFont(font)
-        self.push_ver.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+        self.push_ver.setStyleSheet("color: rgb(63, 81, 181);\n"
 "border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(46, 26, 162);\n"
+"border-color:rgb(63, 81, 181);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.push_ver.setObjectName("push_ver")
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(230, 290, 211, 31))
+        self.push_regresar = QtWidgets.QPushButton(self.centralwidget)
+        self.push_regresar.setGeometry(QtCore.QRect(230, 290, 211, 31))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
         font.setPointSize(10)
         font.setBold(True)
         font.setWeight(75)
-        self.pushButton.setFont(font)
-        self.pushButton.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+        self.push_regresar.setFont(font)
+        self.push_regresar.setStyleSheet("color: rgb(63, 81, 181);\n"
 "border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(46, 26, 162);\n"
+"border-color:rgb(63, 81, 181);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
-        self.pushButton.setObjectName("pushButton")
+        self.push_regresar.setObjectName("push_regresar")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, 680, 71))
         palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Text, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.ButtonText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162, 128))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255, 128))
         brush.setStyle(QtCore.Qt.NoBrush)
         palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.PlaceholderText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Text, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.ButtonText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162, 128))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255, 128))
         brush.setStyle(QtCore.Qt.NoBrush)
         palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.PlaceholderText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Text, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.ButtonText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
+        brush = QtGui.QBrush(QtGui.QColor(233, 30, 99))
         brush.setStyle(QtCore.Qt.SolidPattern)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(46, 26, 162, 128))
+        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255, 128))
         brush.setStyle(QtCore.Qt.NoBrush)
         palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.PlaceholderText, brush)
         self.label.setPalette(palette)
@@ -184,12 +186,13 @@ class Ui_afil_menu(object):
         font.setBold(True)
         font.setWeight(75)
         self.label.setFont(font)
-        self.label.setStyleSheet("color:rgb(46, 26, 162) ;")
+        self.label.setStyleSheet("color:rgb(255,255,255);\n"
+"background-color: rgb(233, 30, 99);")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.push_editar.raise_()
         self.push_ver.raise_()
-        self.pushButton.raise_()
+        self.push_regresar.raise_()
         self.label.raise_()
         self.push_nuevo.raise_()
         afil_menu.setCentralWidget(self.centralwidget)
@@ -210,6 +213,6 @@ class Ui_afil_menu(object):
         self.push_nuevo.setText(_translate("afil_menu", "Nuevo"))
         self.push_editar.setText(_translate("afil_menu", "Editar"))
         self.push_ver.setText(_translate("afil_menu", "Ver Todos"))
-        self.pushButton.setText(_translate("afil_menu", "Regresar"))
+        self.push_regresar.setText(_translate("afil_menu", "Regresar"))
         self.label.setText(_translate("afil_menu", " MENU DE AFILIADOS"))
 import imagenes_rc
