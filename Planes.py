@@ -3,19 +3,18 @@ from sqlite3 import Error
 from validate_email import validate_email
 #datetime: Libreria integrada en python 3, permite el manejo y operación de variables tipo datetime,
 #es usada para comprobacion y validacion de fechas bajo parametros propios
-from datetime import date
-from datetime import datetime
+from sql import sql
 #-----DESDE AQUI MODULO DE PLANES DE VACUNACION-------------------------------------------------------------------------------------------------------
 ##Función crearPlan(con): Permite generar un nuevo plan de vacunación y almacenar la información en la tabla de Planes
 
 class plan:
-    def __init__(self, id_plan,fecha_inicio,fecha_fin,edad_min,edad_max,confirmacion):
+    def __init__(self, id_plan,fecha_inicio,fecha_fin,edad_min,edad_max):
         self.__id_plan = id_plan
         self.__fecha_inicio = fecha_inicio
         self.__fecha_fin = fecha_fin
         self.__edad_min = edad_min
         self.__edad_max = edad_max
-        self.__confirmacion = confirmacion
+        self.__sql = sql()
 
     #id plan
     def set_id_plan(self,id_plan):
@@ -51,17 +50,19 @@ class plan:
 
     def get_fecha_fin(self):
         return self.__edad_max
-    
-    #confirmacion
-    def set_confirmacion(self,confirmacion):
-        self.__confirmacion = confirmacion
 
-    def get_confirmacion(self):
-        return self.__confirmacion
+    def set_plan(self):
+        
+        self.__sql.guardar_tabla("Planes", self.to_tuple())
+        
 
     #tupla
     def to_tuple(self):
-        obj_tuple = (self.__id_plan, self.__fecha_inicio, self.__fecha_fin, self.__edad_min, self.__edad_max, self.__confirmacion)
+        obj_tuple = (self.__id_plan, 
+            self.__fecha_inicio, 
+            self.__fecha_fin, 
+            self.__edad_min, 
+            self.__edad_max)
         return obj_tuple
 
 

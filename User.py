@@ -1,92 +1,83 @@
 from PyQt5.QtCore import QDate
 from PyQt5.QtGui import QIntValidator
-from Afiliados import *
+from MenuPlanes import *
+from CrearPlan import *
 from PyQt5 import QtWidgets 
 from principal import Ui_principal
-from afiliadoUi import Ui_afil_win
-from menu_afiliado import Ui_afil_menu
+from sql import sql
 import sys
 class principal_win(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.afil_menu = afil_menu()
         self.ui = Ui_principal()
         self.ui.setupUi(self)
-        self.ui.push_afiliados.clicked.connect(self.show_afil_menu)
+        self.ui.push_planes.clicked.connect(self.show_planes_menu)
 
-    def show_afil_menu(self):
+
+    def show_planes_menu(self):
         self.hide()
-        self.afil_menu.show()
+        self.planes_menu = planes_menu()
+        self.planes_menu.show()
 
-class afil_menu(QtWidgets.QMainWindow):
+class planes_menu(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
-        self.a_ui = afiliado_win()
-        self.a_menu = Ui_afil_menu()
-        self.a_menu.setupUi(self)
-        self.a_menu.push_nuevo.clicked.connect(self.show_afil)
+        self.ui_menuplanes = Ui_MenuPlanesWindow()
+        self.ui_menuplanes.setupUi(self)
+        self.ui_menuplanes.pushButton_CrearPlan.clicked.connect(self.show_plan)
+        self.ui_menuplanes.pushButton_Regresar.clicked.connect(self.show_principal)
 
-    def show_afil(self):
+    def show_plan(self):
         self.hide()
-        self.a_ui.show()
-
-class afiliado_win(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.a_ui = Ui_afil_win()
-        self.a_ui.setupUi(self)
-        self.set_lines()
-        self.a_ui.line_show_date.setText(self.a_ui.calendar_nacimiento.selectedDate().toString("dd/MM/yyyy"))
-        self.a_ui.push_guardar.clicked.connect(self.btn_guardar)
-        self.a_ui.calendar_nacimiento.setMaximumDate(QDate.currentDate())
-        self.only_int = QIntValidator()
-        self.a_ui.line_ide.setValidator(self.only_int)
-        self.a_ui.line_telefono.setValidator(self.only_int)
-        self.a_ui.calendar_nacimiento.selectionChanged.connect(self.set_line_date)
+        self.planes_crear = planes_crear()
+        self.planes_crear.show()
     
+    def show_principal(self):
+        self.hide()
+        self.principal = principal_win()
+        self.principal.show()
+
+
+class planes_crear(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui_crearPlan = Ui_CrearPlanWindow()
+        self.ui_crearPlan.setupUi(self)
+        self.set_line_date()
+        self.ui_crearPlan.calendar_fechaInicio.setMinimumDate(QDate.currentDate())
+        self.ui_crearPlan.calendar_fechaInicio.selectionChanged.connect(self.set_line_date)
+        self.ui_crearPlan.pushButton_Regresar.clicked.connect(self.show_menuplanes)
+        self.ui_crearPlan.pushButton_Guardar.clicked.connect(self.btn_guardar)
+        self.sql = sql()
+
+
+    def show_menuplanes(self):
+        self.hide()
+        self.ui_crearplanes = planes_crear()
+        self.planes_menu = planes_menu()
+        self.planes_menu.show()
+
     def set_line_date(self):
-        self.a_ui.line_show_date.setText(self.a_ui.calendar_nacimiento.selectedDate().toString("dd/MM/yyyy"))    
-    
-    def set_lines(self):
-        afil = afiliado("", "", "", "", "", "", "", "", f"{datetime.today().day}/{datetime.today().month}/{datetime.today().year}", "", "", "", "")
-        self.a_ui.line_ide.setText(afil.get_ide())
-        self.a_ui.line_apellido.setText(afil.get_apellido())
-        self.a_ui.line_direccion.setText(afil.get_direccion())
-        self.a_ui.line_telefono.setText(afil.get_telefono())
-        self.a_ui.line_correo.setText(afil.get_correo())
-        self.a_ui.line_ciudad.setText(afil.get_ciudad())
-        
+        self.ui_crearPlan.lineEdit_FechaInicio.setText(self.ui_crearPlan.calendar_fechaInicio.selectedDate().toString("dd/MM/yyyy"))
+
 
     def btn_guardar(self):
-        if self.a_ui.checkBox.isChecked():
-            vacunado = "Si"
-        else:
-            vacunado = "-"
-        datos = {"ide":int(self.a_ui.line_ide.text()), 
-            "id_plan":"-", 
-            "nombre":self.a_ui.line_nombre.text(), 
-            "apellido":self.a_ui.line_apellido.text(),
-            "direccion":self.a_ui.line_direccion.text(),
-            "telefono":int(self.a_ui.line_telefono.text()),
-            "correo":self.a_ui.line_correo.text(),
-            "ciudad":self.a_ui.line_ciudad.text(),
-            "nacimiento":self.a_ui.line_show_date.text(),
-            "edad":"",
-            "afiliacion":f"{datetime.today().day}/{datetime.today().month}/{datetime.today().year}",
-            "desafiliacion":"-",
-            "vacunado": vacunado}
+        self.tabla = self.sql.cargar_tabla("Planes")
+        id = len(self.tabla) + 1
 
-        afilN = afiliado(datos["ide"],
-            datos["id_plan"],
-            datos["nombre"],
-            datos["apellido"],
-            datos["direccion"],
-            datos["telefono"],
-            datos["correo"],
-            datos["ciudad"],
-            datos["nacimiento"],
-            datos["edad"],
-            datos["afiliacion"],
-            datos["desafiliacion"],
-            datos["vacunado"])
-        print (afilN.to_tuple())
+        datos = { 
+            "ID": id,
+            "Edad_Max":int(self.ui_crearPlan.spinBox_Max.text()),
+            "Edad_Min":int(self.ui_crearPlan.spinBox_Min.text()),
+            "Fecha_Inicio":self.ui_crearPlan.lineEdit_FechaInicio.text(),
+            "Fecha_Fin":str("05/07/3000"),
+            }
+
+        PlanN = plan(datos["ID"],
+            datos["Edad_Max"],
+            datos["Edad_Min"],
+            datos["Fecha_Inicio"],
+            datos["Fecha_Fin"],
+            )
+
+        PlanN.set_plan()
