@@ -1,5 +1,6 @@
 #Modulo contenedor de la clase "Afiliado"
 from Afiliados import *
+from Planes import *
 #Modulo contenedor de las clases para la ejecucion de la interfaz grafica
 from User import *
 #from Lotes import *
