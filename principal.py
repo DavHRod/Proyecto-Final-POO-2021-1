@@ -14,69 +14,81 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_principal(object):
     def setupUi(self, principal):
         principal.setObjectName("principal")
-        principal.setWindowModality(QtCore.Qt.NonModal)
-        principal.resize(800, 600)
+        principal.resize(800, 533)
         principal.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.centralwidget = QtWidgets.QWidget(principal)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(0, 0, 801, 71))
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(120, 120, 120))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Button, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Base, brush)
-        brush = QtGui.QBrush(QtGui.QColor(0, 85, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-        self.label.setPalette(palette)
+        self.label.setGeometry(QtCore.QRect(0, -10, 321, 101))
         font = QtGui.QFont()
-        font.setPointSize(36)
+        font.setFamily("Tahoma")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
         self.label.setFont(font)
-        self.label.setStyleSheet("background-color: rgb(0, 85, 255);")
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setStyleSheet("color:rgb(255, 255, 255) ;\n"
+"border-style: solid;\n"
+"background-color:rgb(63, 81, 181) ;\n"
+"border-color:rgb(63, 81, 181) ;\n"
+"border-width: 5px;")
+        self.label.setIndent(-1)
         self.label.setObjectName("label")
         self.push_afiliados = QtWidgets.QPushButton(self.centralwidget)
-        self.push_afiliados.setGeometry(QtCore.QRect(350, 130, 75, 23))
+        self.push_afiliados.setGeometry(QtCore.QRect(290, 160, 241, 31))
+        self.push_afiliados.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_afiliados.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
+"background-color:rgb(255, 255, 255) ;\n"
+"border-color:rgb(46, 26, 162);\n"
+"border-width: 2px;\n"
+"border-radius: 10px;")
         self.push_afiliados.setObjectName("push_afiliados")
         self.push_lotes = QtWidgets.QPushButton(self.centralwidget)
-        self.push_lotes.setGeometry(QtCore.QRect(350, 170, 75, 23))
+        self.push_lotes.setGeometry(QtCore.QRect(290, 220, 241, 31))
+        self.push_lotes.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_lotes.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
+"background-color:rgb(255, 255, 255) ;\n"
+"border-color:rgb(46, 26, 162);\n"
+"border-width: 2px;\n"
+"border-radius: 10px;")
         self.push_lotes.setObjectName("push_lotes")
         self.push_planes = QtWidgets.QPushButton(self.centralwidget)
-        self.push_planes.setGeometry(QtCore.QRect(350, 210, 75, 23))
+        self.push_planes.setGeometry(QtCore.QRect(290, 280, 241, 31))
+        self.push_planes.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_planes.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
+"background-color:rgb(255, 255, 255) ;\n"
+"border-color:rgb(46, 26, 162);\n"
+"border-width: 2px;\n"
+"border-radius: 10px;")
         self.push_planes.setObjectName("push_planes")
         self.push_citas = QtWidgets.QPushButton(self.centralwidget)
-        self.push_citas.setGeometry(QtCore.QRect(350, 250, 75, 23))
+        self.push_citas.setGeometry(QtCore.QRect(290, 340, 241, 31))
+        self.push_citas.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_citas.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
+"background-color:rgb(255, 255, 255) ;\n"
+"border-color:rgb(46, 26, 162);\n"
+"border-width: 2px;\n"
+"border-radius: 10px;")
         self.push_citas.setObjectName("push_citas")
+        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.setGeometry(QtCore.QRect(320, -10, 481, 101))
+        font = QtGui.QFont()
+        font.setFamily("Tahoma")
+        font.setPointSize(14)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setStyleSheet("color:rgb(255, 255, 255) ;\n"
+"border-style: solid;\n"
+"background-color:rgb(233, 30, 99) ;\n"
+"border-color:rgb(233, 30, 99) ;\n"
+"border-width: 5px;")
+        self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.label_2.setIndent(-1)
+        self.label_2.setObjectName("label_2")
         principal.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(principal)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -91,9 +103,10 @@ class Ui_principal(object):
 
     def retranslateUi(self, principal):
         _translate = QtCore.QCoreApplication.translate
-        principal.setWindowTitle(_translate("principal", "Gestor De Vacunacion"))
-        self.label.setText(_translate("principal", "MODULOS"))
+        principal.setWindowTitle(_translate("principal", "MainWindow"))
+        self.label.setText(_translate("principal", "BIENVENIDO"))
         self.push_afiliados.setText(_translate("principal", "AFILIADOS"))
         self.push_lotes.setText(_translate("principal", "LOTES"))
         self.push_planes.setText(_translate("principal", "PLANES"))
         self.push_citas.setText(_translate("principal", "CITAS"))
+        self.label_2.setText(_translate("principal", "GESTION DE VACUNACIÓN"))

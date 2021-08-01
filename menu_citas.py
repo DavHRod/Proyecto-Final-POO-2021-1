@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'menu_afiliado.ui'
+# Form implementation generated from reading ui file 'menu_citas.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -11,11 +11,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_afil_menu(object):
-    def setupUi(self, afil_menu):
-        afil_menu.setObjectName("afil_menu")
-        afil_menu.resize(800, 600)
-        self.centralwidget = QtWidgets.QWidget(afil_menu)
+class Ui_menu_citas(object):
+    def setupUi(self, menu_citas):
+        menu_citas.setObjectName("menu_citas")
+        menu_citas.resize(800, 600)
+        self.centralwidget = QtWidgets.QWidget(menu_citas)
         self.centralwidget.setObjectName("centralwidget")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(0, 0, 801, 81))
@@ -29,28 +29,18 @@ class Ui_afil_menu(object):
 "color: rgb(255, 255, 255);")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
-        self.push_nuevo = QtWidgets.QPushButton(self.centralwidget)
-        self.push_nuevo.setGeometry(QtCore.QRect(280, 160, 241, 31))
-        self.push_nuevo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.push_nuevo.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+        self.push_calcular = QtWidgets.QPushButton(self.centralwidget)
+        self.push_calcular.setGeometry(QtCore.QRect(280, 160, 241, 31))
+        self.push_calcular.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_calcular.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
 "border-color:rgb(46, 26, 162);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
-        self.push_nuevo.setObjectName("push_nuevo")
-        self.push_editar = QtWidgets.QPushButton(self.centralwidget)
-        self.push_editar.setGeometry(QtCore.QRect(280, 230, 241, 31))
-        self.push_editar.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.push_editar.setStyleSheet("color:rgb(46, 26, 162) ;\n"
-"border-style: outset;\n"
-"background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(46, 26, 162);\n"
-"border-width: 2px;\n"
-"border-radius: 10px;")
-        self.push_editar.setObjectName("push_editar")
+        self.push_calcular.setObjectName("push_calcular")
         self.push_ver = QtWidgets.QPushButton(self.centralwidget)
-        self.push_ver.setGeometry(QtCore.QRect(280, 370, 241, 31))
+        self.push_ver.setGeometry(QtCore.QRect(280, 300, 241, 31))
         self.push_ver.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_ver.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
@@ -60,7 +50,7 @@ class Ui_afil_menu(object):
 "border-radius: 10px;")
         self.push_ver.setObjectName("push_ver")
         self.push_regresar = QtWidgets.QPushButton(self.centralwidget)
-        self.push_regresar.setGeometry(QtCore.QRect(280, 440, 241, 31))
+        self.push_regresar.setGeometry(QtCore.QRect(280, 370, 241, 31))
         self.push_regresar.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_regresar.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
@@ -70,7 +60,7 @@ class Ui_afil_menu(object):
 "border-radius: 10px;")
         self.push_regresar.setObjectName("push_regresar")
         self.push_consultar = QtWidgets.QPushButton(self.centralwidget)
-        self.push_consultar.setGeometry(QtCore.QRect(280, 300, 241, 31))
+        self.push_consultar.setGeometry(QtCore.QRect(280, 230, 241, 31))
         self.push_consultar.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_consultar.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
@@ -79,24 +69,23 @@ class Ui_afil_menu(object):
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.push_consultar.setObjectName("push_consultar")
-        afil_menu.setCentralWidget(self.centralwidget)
-        self.menubar = QtWidgets.QMenuBar(afil_menu)
+        menu_citas.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(menu_citas)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
         self.menubar.setObjectName("menubar")
-        afil_menu.setMenuBar(self.menubar)
-        self.statusbar = QtWidgets.QStatusBar(afil_menu)
+        menu_citas.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(menu_citas)
         self.statusbar.setObjectName("statusbar")
-        afil_menu.setStatusBar(self.statusbar)
+        menu_citas.setStatusBar(self.statusbar)
 
-        self.retranslateUi(afil_menu)
-        QtCore.QMetaObject.connectSlotsByName(afil_menu)
+        self.retranslateUi(menu_citas)
+        QtCore.QMetaObject.connectSlotsByName(menu_citas)
 
-    def retranslateUi(self, afil_menu):
+    def retranslateUi(self, menu_citas):
         _translate = QtCore.QCoreApplication.translate
-        afil_menu.setWindowTitle(_translate("afil_menu", "Menu Afiliados"))
-        self.label.setText(_translate("afil_menu", "AFILIADOS"))
-        self.push_nuevo.setText(_translate("afil_menu", "NUEVO"))
-        self.push_editar.setText(_translate("afil_menu", "EDITAR"))
-        self.push_ver.setText(_translate("afil_menu", "VER TODO"))
-        self.push_regresar.setText(_translate("afil_menu", "REGRESAR"))
-        self.push_consultar.setText(_translate("afil_menu", "CONSULTAR"))
+        menu_citas.setWindowTitle(_translate("menu_citas", "Menu Afiliados"))
+        self.label.setText(_translate("menu_citas", "CITAS"))
+        self.push_calcular.setText(_translate("menu_citas", "CALCULAR"))
+        self.push_ver.setText(_translate("menu_citas", "VER TODO"))
+        self.push_regresar.setText(_translate("menu_citas", "REGRESAR"))
+        self.push_consultar.setText(_translate("menu_citas", "CONSULTAR"))
