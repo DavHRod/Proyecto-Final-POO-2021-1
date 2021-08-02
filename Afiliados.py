@@ -101,11 +101,10 @@ class afiliado:
         actual=datetime.strptime(actual,"%d/%m/%Y")
         self.__edad = actual.year - fechaNacimiento.year
         self.__edad -= ((actual.month, actual.day) <(fechaNacimiento.month, fechaNacimiento.day))
-            
 
-    def load_all(self):
-        tupla = self.__sql.get_table("Afiliados")
-        return tupla
+    def set_afiliado(self):
+            self.carga = self.to_tuple()
+            self.__sql.guardar_tabla("Afiliados",self.carga)
 
     def to_tuple(self):
         obj_tuple = (self.__ide,

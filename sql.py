@@ -38,8 +38,7 @@ class sql:
                 carga_update = (carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11] )
                 self.__cursor.execute(f"UPDATE Lotes SET Fabricante = ? , Tipo_De_Vacuna = ?, Cantidad_Recibida = ? , Cantidad_Asignada = ? , Cantidad_Usada = ? , Dosis_Necesarias = ? , Temperatura_De_Almacenamiento = ? , Efectividad_Identificada = ? , Tiempo_De_Proteccion = ? , Fecha_De_Vencimiento = ?,Imagen = ? WHERE Codigo_De_Lote = {carga[0]}",carga_update)
             elif tabla == "Citas":
-                carga_update = (carga[1], carga[2], carga[3], carga[4], carga[5], carga[6])
-                self.__cursor.execute(f"UPDATE Afiliados SET ID_Plan = ? , Numero_De_Identificacion = ?, Ciudad_De_Vacunacion = ? , Codigo_De_Lote = ? , Fecha_De_Cita = ? , Hora_De_Cita = ? WHERE Numero_De_Cita = {carga[0]}",carga_update)
+                return True
         self.__con.commit()
 
     def __sql_table(self):

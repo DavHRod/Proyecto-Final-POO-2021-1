@@ -27,12 +27,29 @@ class principal_win(QtWidgets.QMainWindow):
         self.lote_menu = lote_menu()
         self.ui = Ui_principal()
         self.ui.setupUi(self)
+        self.sql = sql()
+        self.style_disable = "color: rgb(116, 116, 116);border-style: solid;background-color:rgb(255, 255, 255) ;border-color:rgb(116, 116, 116);border-width: 2px;border-radius: 10px;"
+        self.afiliados = self.sql.cargar_tabla("Afiliados")
+        self.lotes = self.sql.cargar_tabla("Lotes")
+        self.planes = self.sql.cargar_tabla("Planes")
+        self.citas = self.sql.cargar_tabla("Citas")
+        if len(self.afiliados) <= 0 or len(self.lotes) <= 0 or len(self.planes) <= 0:
+            self.ui.push_citas.setEnabled(False)
+            self.ui.push_citas.setStyleSheet(self.style_disable)
+        else:
+            self.ui.push_citas.setEnabled(True)
         self.ui.push_afiliados.clicked.connect(self.show_afil_menu)
         self.ui.push_lotes.clicked.connect(self.show_lote_menu)
 
     def show_afil_menu(self):
         self.hide()
+        self.afil_menu = afil_menu(self.afiliados, self.style_disable)
         self.afil_menu.show()
+    
+    def show_citas_menu(self):
+        self.hide()
+        self.citas_menu = citas_menu(self.afiliados,self.lotes, self.planes, self.citas, self.style_disable)
+        self.citas_menu.show()
 
     def show_lote_menu(self):
         self.hide()
@@ -43,9 +60,17 @@ class afil_menu(QtWidgets.QMainWindow):
     #Método __init__: método principal de la clase
     def __init__(self):
         super().__init__()
-        self.a_ui = afiliado_win()
+        self.style_disable = style
         self.a_menu = Ui_afil_menu()
         self.a_menu.setupUi(self)
+        self.tupla = carga
+        if len(self.tupla) == 0:
+            self.a_menu.push_ver.setDisabled(True)
+            self.a_menu.push_ver.setStyleSheet(self.style_disable)
+            self.a_menu.push_editar.setDisabled(True)
+            self.a_menu.push_editar.setStyleSheet(self.style_disable)
+            self.a_menu.push_consultar.setDisabled(True)
+            self.a_menu.push_consultar.setStyleSheet(self.style_disable)
         self.a_menu.push_nuevo.clicked.connect(self.show_afil)
 
     def show_afil(self):
@@ -103,12 +128,24 @@ class afiliado_win(QtWidgets.QMainWindow):
         self.a_ui.setupUi(self)
         self.set_lines()
         self.a_ui.line_show_date.setText(self.a_ui.calendar_nacimiento.selectedDate().toString("dd/MM/yyyy"))
-        self.a_ui.push_guardar.clicked.connect(self.btn_guardar)
         self.a_ui.calendar_nacimiento.setMaximumDate(QDate.currentDate())
         self.only_int = QIntValidator()
         self.a_ui.line_ide.setValidator(self.only_int)
         self.a_ui.line_telefono.setValidator(self.only_int)
         self.a_ui.calendar_nacimiento.selectionChanged.connect(self.set_line_date)
+        self.a_ui.push_guardar.setEnabled(self.campos_comprobacion())
+        self.a_ui.push_guardar.setStyleSheet(self.style_disable)
+        
+        self.a_ui.line_ide.textChanged.connect(self.set_enable)
+        self.a_ui.line_nombre.textChanged.connect(self.set_enable)
+        self.a_ui.line_apellido.textChanged.connect(self.set_enable)
+        self.a_ui.line_direccion.textChanged.connect(self.set_enable)
+        self.a_ui.line_correo.textChanged.connect(self.set_enable)
+        self.a_ui.line_telefono.textChanged.connect(self.set_enable)
+        self.a_ui.line_ciudad.textChanged.connect(self.set_enable)
+
+        self.a_ui.push_regresar.clicked.connect(self.show_menu)
+        self.a_ui.push_guardar.clicked.connect(self.btn_guardar)
     
     #Método set_line_date(self): ingresa la fecha del widget del calendario en el line edit de fecha
     def set_line_date(self):
@@ -123,6 +160,7 @@ class afiliado_win(QtWidgets.QMainWindow):
         self.a_ui.line_telefono.setText(afil.get_telefono())
         self.a_ui.line_correo.setText(afil.get_correo())
         self.a_ui.line_ciudad.setText(afil.get_ciudad())
+        self.a_ui.calendar_nacimiento.setSelectedDate(QDate.fromString(afil.get_nacimiento(), "dd/MM/yyyy"))
         
     #Método btn_guardar(self): envía la información ingresada en los line edits a la tabla de afiliado
     def btn_guardar(self):
@@ -142,7 +180,7 @@ class afiliado_win(QtWidgets.QMainWindow):
             "nacimiento":self.a_ui.line_show_date.text(),
             "edad":"",
             "afiliacion":f"{datetime.today().day}/{datetime.today().month}/{datetime.today().year}",
-            "desafiliacion":"-",
+            "desafiliacion":desafiliado,
             "vacunado": vacunado}
 
         afilN = afiliado(datos["ide"],
@@ -388,4 +426,181 @@ class ver_todo(QtWidgets.QMainWindow):
         self.hide()
         self.lote_menu.show()
 
+        afilN.set_afiliado()
+        self.show_menu()
 
+    def show_menu(self):
+        self.hide()
+        self.menu = afil_menu(self.carga, self.style_disable)
+        self.menu.show()
+
+class citas_menu(QtWidgets.QMainWindow):
+
+    def __init__(self, afiliados, lotes, planes, citas, style):
+        super().__init__()
+        self.lotes = lotes
+        self.planes = planes
+        self.afiliados = afiliados
+        self.citas = citas
+        self.menu = Ui_menu_citas()
+        self.menu.setupUi(self)
+        self.style_disable = style
+        self.menu.push_calcular.clicked.connect(self.show_calcular)
+        self.menu.push_regresar.clicked.connect(self.show_principal)
+        self.menu.push_ver.clicked.connect(self.show_ver_todo)
+        if len(self.citas) <= 0:
+            self.menu.push_ver.setEnabled(False)
+            self.menu.push_ver.setStyleSheet(self.style_disable)
+            self.menu.push_consultar.setEnabled(False)
+            self.menu.push_consultar.setStyleSheet(self.style_disable)
+        else:
+            self.menu.push_ver.setEnabled(True)
+            self.menu.push_consultar.setEnabled(True)
+
+
+    def show_calcular(self):
+        self.hide()
+        self.menu = citas_calcular(self.afiliados, self.lotes, self.planes, self.citas, self.style_disable)
+        self.menu.show()
+    
+    def show_ver_todo(self):
+        self.hide()
+        self.ver_todo = citas_ver_todo(self.afiliados, self.lotes, self.planes, self.citas, self.style_disable)
+        self.ver_todo.fill_tabla()
+        self.ver_todo.show()
+    def show_principal(self):
+        self.hide()
+        self.principal = principal_win()
+        self.principal.show()
+
+class citas_calcular(QtWidgets.QMainWindow):
+
+    def __init__(self, afiliados, lotes, planes, citas, style):
+        super().__init__()
+        self.afiliados = afiliados
+        self.lotes = lotes
+        self.planes = planes
+        self.afiliados = afiliados
+        self.citas = citas
+        self.style_disable = style
+        self.calcular = Ui_citas()
+        self.calcular.setupUi(self)
+        self.set_line_date()
+        self.campos_comprobar()
+        self.calcular.push_calcular.setEnabled(False)
+        self.calcular.push_calcular.clicked.connect(self.btn_calcular)
+        self.calcular.spin_hour.valueChanged.connect(self.campos_comprobar)
+        self.calcular.spin_minute.valueChanged.connect(self.campos_comprobar)
+        self.calcular.calendarWidget.setMinimumDate(QDate.currentDate())
+        self.calcular.calendarWidget.selectionChanged.connect(self.campos_comprobar)
+        self.calcular.push_regresar.clicked.connect(self.show_menu)
+
+    
+    def campos_comprobar(self):
+        self.set_line_date()
+        if datetime.strptime(self.calcular.line_show_date.text(),"%d/%m/%Y %H:%M") < datetime.today():
+            self.calcular.push_calcular.setEnabled(False)
+            self.calcular.label_date.show()
+            self.calcular.push_calcular.setStyleSheet(self.style_disable)
+        else:
+            self.calcular.push_calcular.setEnabled(True)
+            self.calcular.label_date.hide()
+            self.calcular.push_calcular.setStyleSheet("color: rgb(63, 81, 181);border-style: solid;background-color:rgb(255, 255, 255) ;border-color: rgb(63, 81, 181);border-width: 2px;border-radius: 10px;")
+        
+
+    def set_line_date(self):
+        fecha = self.calcular.calendarWidget.selectedDate().toString("dd/MM/yyyy")
+        self.hora = self.calcular.spin_hour.value()
+        self.minuto = self.calcular.spin_minute.value()
+        if self.hora >= 0 and self.hora < 10:
+            self.hora = "0" + str(self.calcular.spin_hour.value())
+        else:
+            self.hora= str(self.calcular.spin_hour.value())
+        self.calcular.line_show_date.setText(f"{fecha} {self.hora}:{self.minuto}") 
+         
+        if self.minuto >= 0 and self.minuto < 10:
+            self.minuto = "0" + str(self.calcular.spin_minute.value())
+        else:
+            self.minuto = str(self.calcular.spin_minute.value())
+        self.calcular.line_show_date.setText(f"{fecha} {self.hora}:{self.minuto}")   
+
+    def btn_calcular(self):
+        numero = 1
+        prioridad = 1
+        while prioridad <= len(self.planes):
+            for afiliado in self.afiliados:
+                if afiliado[1] == prioridad and afiliado[11] == "-" and afiliado[12] == "-":
+                    for self.lote in self.lotes:
+                        self.restantes = self.lote[3] - abs(self.lote[4] - self.lote[5])
+                        if self.restantes > 0 :
+                            break
+                    
+                    datos = {"numero":numero,
+                        "plan":afiliado[1],
+                        "ide": afiliado[0], 
+                        "ciudad": afiliado[7],
+                        "lote":self.lote[0],
+                        "fecha":self.calcular.calendarWidget.selectedDate().toString("dd/MM/yyyy"),
+                        "hora":str(self.hora + ":" + self.minuto)}
+
+                    cita = citas(datos["numero"],
+                        datos["plan"],
+                        datos["ide"],
+                        datos["ciudad"],
+                        datos["lote"],
+                        datos["fecha"],
+                        datos["hora"])
+
+                    if cita.set_cita():
+                        pass
+                    else:
+                        self.minuto = str(int(self.minuto) + int("30"))
+                        if int(self.minuto) == 60:
+                            self.minuto = "00"
+                            self.hora = str(int(self.hora) +int("01"))
+                    numero += 1
+            prioridad += 1
+        self.show_menu()
+        
+    def show_menu(self):
+        self.hide()
+        self.sql = sql()
+        self.menu = citas_menu(self.afiliados,self.lotes,self.planes, self.sql.cargar_tabla("Citas"), self.style_disable)
+        self.menu.show()
+
+class citas_ver_todo(QtWidgets.QMainWindow):
+    def __init__(self, afiliados, lotes, planes, citas, style):
+        super().__init__()
+        self.setGeometry(QRect(0,0,0,0))
+        self.afiliados = afiliados
+        self.lotes = lotes
+        self.planes = planes
+        self.afiliados = afiliados
+        self.citas = citas
+        self.style_disable = style
+        self.ver_todo = Ui_ver_todo()
+        self.ver_todo.setupUi(self)
+        self.setGeometry(QRect(250, 160, 800, 140+(40*len(self.citas))))
+        self.ver_todo.table_todos.setColumnCount(7)
+        self.ver_todo.table_todos.setHorizontalHeaderLabels(("Numero de Cita","Plan","Numero de Identificacion","Ciudad de Vacunacion","Lote Asignado","Fecha","Hora"))
+        self.ver_todo.table_todos.setGeometry(QRect(30,10, 731, 41+(40*len(self.citas))))
+        self.ver_todo.push_regresar.setGeometry(QRect(362,81+(40*len(self.citas)),75,23))
+        self.ver_todo.push_regresar.clicked.connect(self.show_menu)
+
+    def fill_tabla(self):
+        self.ver_todo.table_todos.setRowCount(len(self.citas))
+        row = 0
+        for afiliado in self.citas:
+            col = 0
+            for item in afiliado:
+                fill = QTableWidgetItem(str(item))
+                fill.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+                self.ver_todo.table_todos.setItem(row, col, fill)
+                col += 1
+            row += 1
+        self.ver_todo.table_todos.sortByColumn(0, QtCore.Qt.AscendingOrder)
+
+    def show_menu(self):
+        self.hide()
+        self.menu = citas_menu(self.afiliados,self.lotes,self.planes, self.citas, self.style_disable)
+        self.menu.show()
