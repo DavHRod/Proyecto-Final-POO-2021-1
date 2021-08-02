@@ -30,7 +30,7 @@ class Ui_MenuPlanesWindow(object):
 "color: rgb(255, 255, 255);")
         self.label_titulo.setObjectName("label_titulo")
         self.pushButton_Regresar = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_Regresar.setGeometry(QtCore.QRect(290, 450, 241, 31))
+        self.pushButton_Regresar.setGeometry(QtCore.QRect(290, 380, 241, 31))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
         font.setPointSize(8)
@@ -77,22 +77,6 @@ class Ui_MenuPlanesWindow(object):
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.pushButton_CrearPlan.setObjectName("pushButton_CrearPlan")
-        self.pushButton_EditarPlan = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_EditarPlan.setGeometry(QtCore.QRect(290, 380, 241, 31))
-        font = QtGui.QFont()
-        font.setFamily("Tahoma")
-        font.setPointSize(8)
-        font.setBold(False)
-        font.setWeight(50)
-        self.pushButton_EditarPlan.setFont(font)
-        self.pushButton_EditarPlan.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_EditarPlan.setStyleSheet("color:rgb(46, 26, 162) ;\n"
-"border-style: outset;\n"
-"background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(46, 26, 162);\n"
-"border-width: 2px;\n"
-"border-radius: 10px;")
-        self.pushButton_EditarPlan.setObjectName("pushButton_EditarPlan")
         self.pushButton_all = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_all.setGeometry(QtCore.QRect(290, 310, 241, 31))
         font = QtGui.QFont()
@@ -131,6 +115,5 @@ class Ui_MenuPlanesWindow(object):
         self.pushButton_Regresar.setText(_translate("MenuPlanesWindow", "REGRESAR"))
         self.pushButton_ConsultarPlan.setText(_translate("MenuPlanesWindow", "CONSULTAR"))
         self.pushButton_CrearPlan.setText(_translate("MenuPlanesWindow", "NUEVO"))
-        self.pushButton_EditarPlan.setText(_translate("MenuPlanesWindow", "EDITAR"))
         self.pushButton_all.setText(_translate("MenuPlanesWindow", "VER TODO"))
         self.menuMen_Planes.setTitle(_translate("MenuPlanesWindow", "Menú Planes"))

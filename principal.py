@@ -34,7 +34,7 @@ class Ui_principal(object):
         self.label.setIndent(-1)
         self.label.setObjectName("label")
         self.push_afiliados = QtWidgets.QPushButton(self.centralwidget)
-        self.push_afiliados.setGeometry(QtCore.QRect(290, 160, 241, 31))
+        self.push_afiliados.setGeometry(QtCore.QRect(290, 130, 241, 31))
         self.push_afiliados.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_afiliados.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
@@ -44,7 +44,7 @@ class Ui_principal(object):
 "border-radius: 10px;")
         self.push_afiliados.setObjectName("push_afiliados")
         self.push_lotes = QtWidgets.QPushButton(self.centralwidget)
-        self.push_lotes.setGeometry(QtCore.QRect(290, 220, 241, 31))
+        self.push_lotes.setGeometry(QtCore.QRect(290, 200, 241, 31))
         self.push_lotes.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_lotes.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
@@ -54,7 +54,7 @@ class Ui_principal(object):
 "border-radius: 10px;")
         self.push_lotes.setObjectName("push_lotes")
         self.push_planes = QtWidgets.QPushButton(self.centralwidget)
-        self.push_planes.setGeometry(QtCore.QRect(290, 280, 241, 31))
+        self.push_planes.setGeometry(QtCore.QRect(290, 270, 241, 31))
         self.push_planes.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_planes.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
@@ -89,6 +89,16 @@ class Ui_principal(object):
         self.label_2.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.label_2.setIndent(-1)
         self.label_2.setObjectName("label_2")
+        self.push_salir = QtWidgets.QPushButton(self.centralwidget)
+        self.push_salir.setGeometry(QtCore.QRect(290, 410, 241, 31))
+        self.push_salir.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.push_salir.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
+"background-color:rgb(255, 255, 255) ;\n"
+"border-color:rgb(46, 26, 162);\n"
+"border-width: 2px;\n"
+"border-radius: 10px;")
+        self.push_salir.setObjectName("push_salir")
         principal.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(principal)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -110,3 +120,4 @@ class Ui_principal(object):
         self.push_planes.setText(_translate("principal", "PLANES"))
         self.push_citas.setText(_translate("principal", "CITAS"))
         self.label_2.setText(_translate("principal", "GESTION DE VACUNACIÓN"))
+        self.push_salir.setText(_translate("principal", "SALIR"))

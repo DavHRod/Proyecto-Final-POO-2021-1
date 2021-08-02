@@ -46,7 +46,7 @@ color: rgb(255, 255, 255);</string>
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>450</y>
+      <y>380</y>
       <width>241</width>
       <height>31</height>
      </rect>
@@ -136,38 +136,6 @@ border-radius: 10px;</string>
     </property>
     <property name="text">
      <string>NUEVO</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_EditarPlan">
-    <property name="geometry">
-     <rect>
-      <x>290</x>
-      <y>380</y>
-      <width>241</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Tahoma</family>
-      <pointsize>8</pointsize>
-      <weight>50</weight>
-      <bold>false</bold>
-     </font>
-    </property>
-    <property name="cursor">
-     <cursorShape>PointingHandCursor</cursorShape>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">color:rgb(46, 26, 162) ;
-border-style: outset;
-background-color:rgb(255, 255, 255) ;
-border-color:rgb(46, 26, 162);
-border-width: 2px;
-border-radius: 10px;</string>
-    </property>
-    <property name="text">
-     <string>EDITAR</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_all">

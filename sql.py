@@ -1,11 +1,12 @@
+#--------- Importaciones de librerias a usar -----------------------------------------------------------------
 import sqlite3
 from sqlite3 import Error
 
 class sql:
-    def __init__(self):
-        self.__con = self.__sql_connection()
-        self.__cursor=self.__con.cursor()
-        self.__sql_table()
+    def __init__(self): #Método principal de la clase
+        self.__con = self.__sql_connection() #Creación de un objeto sql (para la conexión con la base de datos)
+        self.__cursor=self.__con.cursor() #Creación de un objeto cursor
+        self.__sql_table() #Creación de un objeto tabla
 
     def get_con (self):
         self.__con = self.__sql_connection()
@@ -23,7 +24,17 @@ class sql:
         self.__cursor.execute(f"SELECT {columna} FROM {tabla}")
         tupla = self.__cursor.fetchall()
         return tupla
+
+    def cargar_instancia_lote(self, primary_key, columna = "*"):
+        self.__cursor.execute(f"SELECT {columna} FROM Lotes WHERE Codigo_De_Lote = {primary_key}")
+        tupla = self.__cursor.fetchall()
+        return tupla
     
+    def cargar_instancia_planes(self, primary_key, columna = "*"):
+        self.__cursor.execute(f"SELECT {columna} FROM Planes WHERE Codigo_De_Lote = {primary_key}")
+        tupla = self.__cursor.fetchall()
+        return tupla
+
     def guardar_tabla(self, tabla, carga):
         try:
             self.__cursor.execute(f"INSERT INTO {tabla} VALUES {carga}")
