@@ -30,6 +30,7 @@ from menu_citas import Ui_menu_citas #Importe de la ventana del menú de citas
 from Afiliados import * #Importe módulo Afiliados 
 from Lotes import * #Importe módulo Lotes
 from Citas import citas #Importe módulo Citas
+from Planes import * #Importe módulo Planes
 from sql import sql #Modulo que maneja base de datos
 import sys
 
