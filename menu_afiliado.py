@@ -215,4 +215,4 @@ class Ui_afil_menu(object):
         self.push_ver.setText(_translate("afil_menu", "Ver Todos"))
         self.push_regresar.setText(_translate("afil_menu", "Regresar"))
         self.label.setText(_translate("afil_menu", " MENU DE AFILIADOS"))
-import imagenes_rc
+
