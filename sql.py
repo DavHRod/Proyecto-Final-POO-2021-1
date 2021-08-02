@@ -1,4 +1,4 @@
-#--------- Importaciones de librerias a usar -----------------------------------------------------------------
+3#--------- Importaciones de librerias a usar -----------------------------------------------------------------
 import sqlite3
 from sqlite3 import Error
 
@@ -36,8 +36,10 @@ class sql:
         return tupla
 
     def guardar_tabla(self, tabla, carga):
+        self.posible= True
         try:
             self.__cursor.execute(f"INSERT INTO {tabla} VALUES {carga}")
+            
         except:
             if tabla == "Afiliados":
                 carga_update = (carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11], carga[12] )
@@ -49,8 +51,9 @@ class sql:
                 carga_update = (carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11] )
                 self.__cursor.execute(f"UPDATE Lotes SET Fabricante = ? , Tipo_De_Vacuna = ?, Cantidad_Recibida = ? , Cantidad_Asignada = ? , Cantidad_Usada = ? , Dosis_Necesarias = ? , Temperatura_De_Almacenamiento = ? , Efectividad_Identificada = ? , Tiempo_De_Proteccion = ? , Fecha_De_Vencimiento = ?,Imagen = ? WHERE Codigo_De_Lote = {carga[0]}",carga_update)
             elif tabla == "Citas":
-                return True
+                self.posible = False
         self.__con.commit()
+        return self.posible
 
     def __sql_table(self):
         #Creación de la tabla Afiliados
