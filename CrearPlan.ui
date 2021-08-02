@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>621</width>
+    <height>493</height>
    </rect>
   </property>
   <property name="font">
@@ -28,7 +28,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>801</width>
+      <width>621</width>
       <height>101</height>
      </rect>
     </property>
@@ -48,69 +48,12 @@ color: rgb(255, 255, 255);</string>
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;CREAR PLAN DE VACUNACIÓN&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>140</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Tahoma</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Fecha de inicio</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>140</y>
-      <width>181</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Tahoma</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Edad mínima para clasificar</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>230</y>
-      <width>191</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Tahoma</family>
-      <pointsize>11</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Edad máxima para clasificar</string>
-    </property>
-   </widget>
    <widget class="QLineEdit" name="lineEdit_FechaInicio">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>150</x>
       <y>170</y>
-      <width>161</width>
+      <width>151</width>
       <height>20</height>
      </rect>
     </property>
@@ -125,6 +68,9 @@ color: rgb(255, 255, 255);</string>
 border-style: solid; 
 border-color: white white rgb(233, 30, 99) white;</string>
     </property>
+    <property name="alignment">
+     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+    </property>
     <property name="readOnly">
      <bool>true</bool>
     </property>
@@ -132,8 +78,8 @@ border-color: white white rgb(233, 30, 99) white;</string>
    <widget class="QPushButton" name="pushButton_Guardar">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>340</y>
+      <x>430</x>
+      <y>370</y>
       <width>101</width>
       <height>31</height>
      </rect>
@@ -219,9 +165,9 @@ background-color: rgb(255, 255, 255);</string>
    <widget class="QSpinBox" name="spinBox_Min">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>170</y>
-      <width>171</width>
+      <x>430</x>
+      <y>200</y>
+      <width>101</width>
       <height>22</height>
      </rect>
     </property>
@@ -229,14 +175,17 @@ background-color: rgb(255, 255, 255);</string>
      <string notr="true">border-width: 2px; 
 border-style: solid; 
 border-color: white white rgb(233, 30, 99) white;</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
    <widget class="QSpinBox" name="spinBox_Max">
     <property name="geometry">
      <rect>
-      <x>460</x>
-      <y>260</y>
-      <width>171</width>
+      <x>430</x>
+      <y>270</y>
+      <width>101</width>
       <height>22</height>
      </rect>
     </property>
@@ -244,6 +193,109 @@ border-color: white white rgb(233, 30, 99) white;</string>
      <string notr="true">border-width: 2px; 
 border-style: solid; 
 border-color: white white rgb(233, 30, 99) white;</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>150</y>
+      <width>151</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(116, 116, 116);</string>
+    </property>
+    <property name="text">
+     <string>Fecha de Inicio</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>150</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(116, 116, 116);</string>
+    </property>
+    <property name="text">
+     <string>Edad Para Clasificar</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>180</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(116, 116, 116);</string>
+    </property>
+    <property name="text">
+     <string>Mínima</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>250</y>
+      <width>101</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(116, 116, 116);</string>
+    </property>
+    <property name="text">
+     <string>Máxima</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_error">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>300</y>
+      <width>221</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>7</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(233, 30, 99);</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -252,8 +304,8 @@ border-color: white white rgb(233, 30, 99) white;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>24</height>
+     <width>621</width>
+     <height>21</height>
     </rect>
    </property>
   </widget>

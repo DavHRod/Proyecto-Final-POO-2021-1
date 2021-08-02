@@ -15,100 +15,100 @@ class Ui_MenuPlanesWindow(object):
     def setupUi(self, MenuPlanesWindow):
         MenuPlanesWindow.setObjectName("MenuPlanesWindow")
         MenuPlanesWindow.resize(800, 600)
-        MenuPlanesWindow.setStyleSheet("background-color: rgb(255, 255, 255);")
+        MenuPlanesWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MenuPlanesWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.label_titulo = QtWidgets.QLabel(self.centralwidget)
         self.label_titulo.setGeometry(QtCore.QRect(0, 0, 801, 101))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
-        font.setPointSize(26)
-        font.setBold(False)
-        font.setWeight(50)
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setWeight(75)
         self.label_titulo.setFont(font)
         self.label_titulo.setStyleSheet("background-color: rgb(63, 81, 181);\n"
 "color: rgb(255, 255, 255);")
         self.label_titulo.setObjectName("label_titulo")
         self.pushButton_Regresar = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_Regresar.setGeometry(QtCore.QRect(270, 420, 261, 41))
+        self.pushButton_Regresar.setGeometry(QtCore.QRect(290, 450, 241, 31))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
-        font.setPointSize(12)
+        font.setPointSize(8)
         font.setBold(False)
         font.setWeight(50)
         self.pushButton_Regresar.setFont(font)
         self.pushButton_Regresar.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_Regresar.setStyleSheet("color: rgb(63, 81, 181);\n"
-"border-style: solid;\n"
+        self.pushButton_Regresar.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(63, 81, 181);\n"
+"border-color:rgb(46, 26, 162);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.pushButton_Regresar.setObjectName("pushButton_Regresar")
-        self.pushButton_CalcularPlan = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_CalcularPlan.setGeometry(QtCore.QRect(270, 300, 261, 41))
-        font = QtGui.QFont()
-        font.setFamily("Tahoma")
-        font.setPointSize(12)
-        font.setBold(False)
-        font.setWeight(50)
-        self.pushButton_CalcularPlan.setFont(font)
-        self.pushButton_CalcularPlan.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_CalcularPlan.setStyleSheet("color: rgb(63, 81, 181);\n"
-"border-style: solid;\n"
-"background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(63, 81, 181);\n"
-"border-width: 2px;\n"
-"border-radius: 10px;")
-        self.pushButton_CalcularPlan.setObjectName("pushButton_CalcularPlan")
         self.pushButton_ConsultarPlan = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_ConsultarPlan.setGeometry(QtCore.QRect(270, 240, 261, 41))
+        self.pushButton_ConsultarPlan.setGeometry(QtCore.QRect(290, 240, 241, 31))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
-        font.setPointSize(12)
+        font.setPointSize(8)
         font.setBold(False)
         font.setWeight(50)
         self.pushButton_ConsultarPlan.setFont(font)
         self.pushButton_ConsultarPlan.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_ConsultarPlan.setStyleSheet("color: rgb(63, 81, 181);\n"
-"border-style: solid;\n"
+        self.pushButton_ConsultarPlan.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(63, 81, 181);\n"
+"border-color:rgb(46, 26, 162);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.pushButton_ConsultarPlan.setObjectName("pushButton_ConsultarPlan")
         self.pushButton_CrearPlan = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_CrearPlan.setGeometry(QtCore.QRect(270, 180, 261, 41))
+        self.pushButton_CrearPlan.setGeometry(QtCore.QRect(290, 170, 241, 31))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
-        font.setPointSize(12)
+        font.setPointSize(8)
         font.setBold(False)
         font.setWeight(50)
         self.pushButton_CrearPlan.setFont(font)
         self.pushButton_CrearPlan.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_CrearPlan.setStyleSheet("color: rgb(63, 81, 181);\n"
-"border-style: solid;\n"
+        self.pushButton_CrearPlan.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(63, 81, 181);\n"
+"border-color:rgb(46, 26, 162);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.pushButton_CrearPlan.setObjectName("pushButton_CrearPlan")
         self.pushButton_EditarPlan = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_EditarPlan.setGeometry(QtCore.QRect(270, 360, 261, 41))
+        self.pushButton_EditarPlan.setGeometry(QtCore.QRect(290, 380, 241, 31))
         font = QtGui.QFont()
         font.setFamily("Tahoma")
-        font.setPointSize(12)
+        font.setPointSize(8)
         font.setBold(False)
         font.setWeight(50)
         self.pushButton_EditarPlan.setFont(font)
         self.pushButton_EditarPlan.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pushButton_EditarPlan.setStyleSheet("color: rgb(63, 81, 181);\n"
-"border-style: solid;\n"
+        self.pushButton_EditarPlan.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
 "background-color:rgb(255, 255, 255) ;\n"
-"border-color:rgb(63, 81, 181);\n"
+"border-color:rgb(46, 26, 162);\n"
 "border-width: 2px;\n"
 "border-radius: 10px;")
         self.pushButton_EditarPlan.setObjectName("pushButton_EditarPlan")
+        self.pushButton_all = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_all.setGeometry(QtCore.QRect(290, 310, 241, 31))
+        font = QtGui.QFont()
+        font.setFamily("Tahoma")
+        font.setPointSize(8)
+        font.setBold(False)
+        font.setWeight(50)
+        self.pushButton_all.setFont(font)
+        self.pushButton_all.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.pushButton_all.setStyleSheet("color:rgb(46, 26, 162) ;\n"
+"border-style: outset;\n"
+"background-color:rgb(255, 255, 255) ;\n"
+"border-color:rgb(46, 26, 162);\n"
+"border-width: 2px;\n"
+"border-radius: 10px;")
+        self.pushButton_all.setObjectName("pushButton_all")
         MenuPlanesWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MenuPlanesWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 21))
@@ -128,9 +128,9 @@ class Ui_MenuPlanesWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MenuPlanesWindow.setWindowTitle(_translate("MenuPlanesWindow", "Menú Planes"))
         self.label_titulo.setText(_translate("MenuPlanesWindow", "<html><head/><body><p align=\"center\">MENU DE PLANES</p></body></html>"))
-        self.pushButton_Regresar.setText(_translate("MenuPlanesWindow", "Regresar"))
-        self.pushButton_CalcularPlan.setText(_translate("MenuPlanesWindow", "Calcular plan"))
-        self.pushButton_ConsultarPlan.setText(_translate("MenuPlanesWindow", "Consultar plan"))
-        self.pushButton_CrearPlan.setText(_translate("MenuPlanesWindow", "Crear plan"))
-        self.pushButton_EditarPlan.setText(_translate("MenuPlanesWindow", "Editar plan"))
+        self.pushButton_Regresar.setText(_translate("MenuPlanesWindow", "REGRESAR"))
+        self.pushButton_ConsultarPlan.setText(_translate("MenuPlanesWindow", "CONSULTAR"))
+        self.pushButton_CrearPlan.setText(_translate("MenuPlanesWindow", "NUEVO"))
+        self.pushButton_EditarPlan.setText(_translate("MenuPlanesWindow", "EDITAR"))
+        self.pushButton_all.setText(_translate("MenuPlanesWindow", "VER TODO"))
         self.menuMen_Planes.setTitle(_translate("MenuPlanesWindow", "Menú Planes"))

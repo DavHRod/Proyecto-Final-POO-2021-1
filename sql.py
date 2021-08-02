@@ -32,8 +32,8 @@ class sql:
                 carga_update = (carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11], carga[12] )
                 self.__cursor.execute(f"UPDATE Afiliados SET ID_Plan = ? , Nombre = ?, Apellido = ? , Direccion = ? , Telefono = ? , Correo = ? , Ciudad_De_Residencia = ? , Fecha_De_Nacimiento = ? , Edad = ? , Fecha_De_Afiliacion = ?,Fecha_De_Desafiliacion = ? , Vacunado = ? WHERE Numero_De_Identificacion = {carga[0]}",carga_update)
             elif tabla == "Planes":
-                carga_update = (carga[1], carga[2], carga[3], carga[4])
-                self.__cursor.execute(f"UPDATE Planes SET Edad_Min = ?, Edad_Max = ?, Fecha_inicio = ?, Fecha_Fin = ? WHERE ID = {carga[0]}",carga_update)
+                carga_update = (carga[1], carga[2], carga[3])
+                self.__cursor.execute(f"UPDATE Planes SET Edad_Min = ?, Edad_Max = ?, Fecha_inicio = ? WHERE ID = {carga[0]}",carga_update)
             elif tabla == "Lotes":
                 carga_update = (carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11] )
                 self.__cursor.execute(f"UPDATE Lotes SET Fabricante = ? , Tipo_De_Vacuna = ?, Cantidad_Recibida = ? , Cantidad_Asignada = ? , Cantidad_Usada = ? , Dosis_Necesarias = ? , Temperatura_De_Almacenamiento = ? , Efectividad_Identificada = ? , Tiempo_De_Proteccion = ? , Fecha_De_Vencimiento = ?,Imagen = ? WHERE Codigo_De_Lote = {carga[0]}",carga_update)
@@ -81,8 +81,7 @@ class sql:
             ID integer PRIMARY KEY, 
             Edad_Min integer, 
             Edad_Max integer,
-            Fecha_Inicio text,
-            Fecha_Fin text)''')
+            Fecha_Inicio text)''')
 
         #Creación de la tabla Citas
         self.__cursor.execute('''CREATE TABLE IF NOT EXISTS

@@ -8,12 +8,11 @@ from sql import sql
 ##Función crearPlan(con): Permite generar un nuevo plan de vacunación y almacenar la información en la tabla de Planes
 
 class plan:
-    def __init__(self, id_plan,fecha_inicio,fecha_fin,edad_min,edad_max):
+    def __init__(self, id_plan,edad_min,edad_max,fecha_inicio):
         self.__id_plan = id_plan
-        self.__fecha_inicio = fecha_inicio
-        self.__fecha_fin = fecha_fin
         self.__edad_min = edad_min
         self.__edad_max = edad_max
+        self.__fecha_inicio = fecha_inicio
         self.__sql = sql()
 
     #id plan
@@ -48,21 +47,17 @@ class plan:
     def set_edad_max(self,edad_max):
         self.__edad_max = edad_max
 
-    def get_fecha_fin(self):
-        return self.__edad_max
-
     def set_plan(self):
-        
         self.__sql.guardar_tabla("Planes", self.to_tuple())
         
 
     #tupla
     def to_tuple(self):
-        obj_tuple = (self.__id_plan, 
-            self.__fecha_inicio, 
-            self.__fecha_fin, 
+        obj_tuple = (self.__id_plan,
             self.__edad_min, 
-            self.__edad_max)
+            self.__edad_max, 
+            self.__fecha_inicio, 
+            )
         return obj_tuple
 
 

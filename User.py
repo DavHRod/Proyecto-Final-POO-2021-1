@@ -24,6 +24,7 @@ from PyQt5 import QtWidgets
 
 from sql import sql
 import sys
+
 class principal_win(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -87,17 +88,17 @@ class afil_menu(QtWidgets.QMainWindow):
 
     def show_edit(self):
         self.hide()
-        self.a_edit = afil_edit(self.tupla, self.style_disable, True)
+        self.a_edit = afil_edit(self.tupla, self.style_disable, "Afiliado")
         self.a_edit.show()
     
     def show_consulta(self):
         self.hide()
-        self.a_edit = afil_edit(self.tupla, self.style_disable, False)
+        self.a_edit = afil_edit(self.tupla, self.style_disable, "Consultar")
         self.a_edit.show()
 
     def show_ver(self):
         self.hide()
-        self.a_ver = afiliado_ver_todo(self.tupla, self.style_disable)
+        self.a_ver = afiliado_ver_todo(self.tupla, self.style_disable,"")
         self.a_ver.fill_tabla()
         self.a_ver.show()
 
@@ -107,17 +108,24 @@ class afil_menu(QtWidgets.QMainWindow):
         self.principal.show()
 
 class afil_edit(QtWidgets.QMainWindow):
-    def __init__(self, tupla, style, editar):
+    def __init__(self, tupla, style, tipo):
         super().__init__()
         self.style_disable = style
         self.a_edit = Ui_Dialog_edit()
         self.a_edit.setupUi(self)
         self.tupla = tupla
+        self.tipo = tipo
         self.fill_combo()
-        self.editar = editar
-        if not self.editar:
+        if self.tipo == "Consultar":
             self.a_edit.label.setText("Seleccione el Afiliado a Consultar")
             self.a_edit.push_aceptar.setText("Consultar")
+        elif self.tipo == "Planes":
+            self.a_edit.label.setText("Seleccione el Lote a Consultar")
+            self.a_edit.push_aceptar.setText("Consultar")
+        elif self.tipo == "Citas":
+            self.a_edit.label.setText("Seleccione la Citas a Consultar")
+            self.a_edit.push_aceptar.setText("Consultar")
+
         self.a_edit.push_aceptar.clicked.connect(self.show_vista)
         self.a_edit.push_cancelar.clicked.connect(self.show_menu)
     
@@ -128,63 +136,154 @@ class afil_edit(QtWidgets.QMainWindow):
     
     def show_vista(self):
         self.hide()
-        if self.editar:
+        if self.tipo == "Afiliado":
             self.a_ui = afiliado_win(self.tupla, self.style_disable)
             self.a_ui.set_lines(self.tupla[self.a_edit.combo_carga.currentIndex()])
             self.a_ui.show()
-        else:
-            self.a_consultar = afiliado_ver(self.tupla, self.style_disable)
+        elif self.tipo == "Consultar":
+            self.a_consultar = afiliado_ver(self.tupla, self.style_disable, "Afiliado")
             self.a_consultar.setWindowTitle("Consultar Afiliado")
             self.a_consultar.set_lines(self.tupla[self.a_edit.combo_carga.currentIndex()])
             self.a_consultar.show()
+        elif self.tipo == "Citas":
+            self.a_consultar = afiliado_ver(self.tupla, self.style_disable, "Citas")
+            self.a_consultar.setWindowTitle("Consultar Cita")
+            self.a_consultar.set_lines(self.tupla[self.a_edit.combo_carga.currentIndex()])
+            self.a_consultar.show()
+        elif self.tipo == "Planes":
+            self.a_consultar = afiliado_ver(self.tupla, self.style_disable, "Planes")
+            self.a_consultar.setWindowTitle("Consultar Plan")
+            self.a_consultar.set_lines(self.tupla[self.a_edit.combo_carga.currentIndex()])
+            self.a_consultar.show()
 
-    
     def fill_combo(self):
         index = 1
-        for x in self.tupla:
-            self.a_edit.combo_carga.insertItem(index, str(x[0]))
-            index += 1
+        if self.tipo == "Citas":
+            for x in self.tupla:
+                self.a_edit.combo_carga.insertItem(index, str(x[2]))
+                index += 1
+        else:
+            for x in self.tupla:
+                self.a_edit.combo_carga.insertItem(index, str(x[0]))
+                index += 1
 
 class afiliado_ver(QtWidgets.QMainWindow):
-    def __init__(self, carga, style):
+    def __init__(self, carga, style, tipo):
         super().__init__()
         self.consultar = Ui_view_afiliado()
         self.consultar.setupUi(self)
+        self.tipo = tipo
         self.tupla = carga
         self.style_disable = style
         self.consultar.push_regresar.clicked.connect(self.show_menu)
 
     def set_lines(self,carga):
-        self.limite = 0
-        afil = afiliado(carga[0], carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11], carga[12])
-        self.consultar.line_ide.setText(str(afil.get_ide()))
-        self.consultar.line_plan.setText(str(afil.get_id_plan()))
-        self.consultar.line_nombre.setText(afil.get_nombre())
-        self.consultar.line_apellido.setText(afil.get_apellido())
-        self.consultar.line_direccion.setText(afil.get_direccion())
-        self.consultar.line_correo.setText(afil.get_correo())
-        self.consultar.line_telefono.setText(str(afil.get_telefono()))
-        self.consultar.line_ciudad.setText(afil.get_ciudad())
-        self.consultar.line_nacimiento.setText(afil.get_nacimiento())
-        self.consultar.line_edad.setText(str(afil.get_edad()))
-        self.consultar.line_afiliacion.setText(afil.get_afiliacion())
-        self.consultar.line_vacunado.setText(afil.get_vacunado())
-        self.consultar.line_desafiliacion.setText(afil.get_desafiliacion())
-    
+        if self.tipo == "Afiliado":
+            self.limite = 0
+            afil = afiliado(carga[0], carga[1], carga[2], carga[3], carga[4], carga[5], carga[6], carga[7], carga[8], carga[9], carga[10], carga[11], carga[12])
+            self.consultar.line_ide.setText(str(afil.get_ide()))
+            self.consultar.line_plan.setText(str(afil.get_id_plan()))
+            self.consultar.line_nombre.setText(afil.get_nombre())
+            self.consultar.line_apellido.setText(afil.get_apellido())
+            self.consultar.line_direccion.setText(afil.get_direccion())
+            self.consultar.line_correo.setText(afil.get_correo())
+            self.consultar.line_telefono.setText(str(afil.get_telefono()))
+            self.consultar.line_ciudad.setText(afil.get_ciudad())
+            self.consultar.line_nacimiento.setText(afil.get_nacimiento())
+            self.consultar.line_edad.setText(str(afil.get_edad()))
+            self.consultar.line_afiliacion.setText(afil.get_afiliacion())
+            self.consultar.line_vacunado.setText(afil.get_vacunado())
+            self.consultar.line_desafiliacion.setText(afil.get_desafiliacion())
+        elif self.tipo == "Citas":
+            self.limite = 0
+            self.consultar.label.setText("CONSULTAR CITA")
+            self.consultar.line_correo.setGeometry(QRect(220,330,151,20))
+            self.consultar.line_telefono.setGeometry(QRect(410,330,151,20))
+            self.consultar.label_correo.setGeometry(QRect(220,310,151,20))
+            self.consultar.label_telefono.setGeometry(QRect(410,310,151,20))
+            cita = citas(carga[0],carga[1],carga[2],carga[3],carga[4],carga[5],carga[6])
+            self.consultar.label_ide.setText("Numero De Cita")
+            self.consultar.line_ide.setText(str(cita.get_numero()))
+            self.consultar.label_plan.setText("Plan Asignado")
+            self.consultar.line_plan.setText(str(cita.get_id_plan()))
+            self.consultar.label_nombre.setText("Numero De Identificación")
+            self.consultar.line_nombre.setText(str(cita.get_ide()))
+            self.consultar.label_apellido.setText("Ciudad De Cita")
+            self.consultar.line_apellido.setText(str(cita.get_ciudad()))
+            self.consultar.label_direccion.setText("Lote Asignado")
+            self.consultar.line_direccion.setText(str(cita.get_lote()))
+            self.consultar.label_correo.setText("Fecha De Cita")
+            self.consultar.line_correo.setText(str(cita.get_fecha()))
+            self.consultar.label_telefono.setText("Hora De Cita")
+            self.consultar.line_telefono.setText(str(cita.get_hora()))
+            self.consultar.label_ciudad.hide()
+            self.consultar.line_ciudad.hide()
+            self.consultar.label_nacimiento.hide()
+            self.consultar.line_nacimiento.hide()
+            self.consultar.label_edad.hide()
+            self.consultar.line_edad.hide()
+            self.consultar.label_afiliacion.hide()
+            self.consultar.line_afiliacion.hide()
+            self.consultar.label_vacunacion.hide()
+            self.consultar.line_vacunado.hide()
+            self.consultar.label_desafil.hide()
+            self.consultar.line_desafiliacion.hide()
+        elif self.tipo == "Planes":
+            self.limite = 0
+            self.consultar.label.setText("CONSULTAR PLANES")
+            self.consultar.line_nombre.setGeometry(QRect(220,260,151,20))
+            self.consultar.line_apellido.setGeometry(QRect(410,260,151,20))
+            self.consultar.label_nombre.setGeometry(QRect(220,240,151,20))
+            self.consultar.label_apellido.setGeometry(QRect(410,240,151,20))
+            self.consultar.label_ide.setText("ID")
+            self.consultar.line_ide.setText(str(carga[0]))
+            self.consultar.label_plan.setText("Edad Mínima")
+            self.consultar.line_plan.setText(str(carga[1]))
+            self.consultar.label_nombre.setText("Edad Máxima")
+            self.consultar.line_nombre.setText(str(carga[2]))
+            self.consultar.label_apellido.setText("Fecha De Inicio")
+            self.consultar.line_apellido.setText(str(carga[3]))
+            self.consultar.label_direccion.hide()
+            self.consultar.line_direccion.hide()
+            self.consultar.label_correo.hide()
+            self.consultar.line_correo.hide()
+            self.consultar.label_telefono.hide()
+            self.consultar.line_telefono.hide()
+            self.consultar.label_ciudad.hide()
+            self.consultar.line_ciudad.hide()
+            self.consultar.label_nacimiento.hide()
+            self.consultar.line_nacimiento.hide()
+            self.consultar.label_edad.hide()
+            self.consultar.line_edad.hide()
+            self.consultar.label_afiliacion.hide()
+            self.consultar.line_afiliacion.hide()
+            self.consultar.label_vacunacion.hide()
+            self.consultar.line_vacunado.hide()
+            self.consultar.label_desafil.hide()
+            self.consultar.line_desafiliacion.hide()
+
     def show_menu(self):
         self.hide()
         self.menu = afil_menu(self.tupla, self.style_disable)
         self.menu.show()
 
 class afiliado_ver_todo(QtWidgets.QMainWindow):
-    def __init__(self, carga, style):
+    def __init__(self, carga, style, tipo):
         super().__init__()
         self.ver_todo = Ui_ver_todo()
         self.ver_todo.setupUi(self)
+        self.carga = carga
         self.style_disable = style
+        self.tipo = tipo
         self.setGeometry(QRect(270, 160, 800, 160+(40*len(carga))))
         self.ver_todo.table_todos.setHorizontalHeaderLabels(("N° ID","Plan","Nombre","Apellido","Direccion","Telefono","Correo","Ciudad de Residencia","Nacimiento","Edad","Fecha de Afiliacion","Fecha de Desafiliacion","Vacunado"))
-        self.carga = carga
+        if self.tipo == "Citas":
+            self.ver_todo.table_todos.setHorizontalHeaderLabels(("N° Cita","Plan","N° de Identificación","Ciudad de Vacunación","Lote","Fecha de Cita", "Hora de Cita"))
+            self.ver_todo.table_todos.setColumnCount(7)
+        elif self.tipo == "Planes":
+            self.ver_todo.table_todos.setHorizontalHeaderLabels(("ID","Edad Mínima","Edad Máxima","Fecha de Inicio"))
+            self.ver_todo.table_todos.setColumnCount(4)
+        self.fill_tabla()
         self.ver_todo.table_todos.setGeometry(QRect(30,10, 731, 41+(40*len(carga))))
         self.ver_todo.push_regresar.setGeometry(QRect(362,81+(40*len(carga)),75,23))
         self.ver_todo.push_regresar.clicked.connect(self.show_menu)
@@ -268,7 +367,7 @@ class afiliado_win(QtWidgets.QMainWindow):
     def set_line_date(self):
         self.a_ui.line_show_date.setText(self.a_ui.calendar_nacimiento.selectedDate().toString("dd/MM/yyyy"))    
     
-    def set_lines(self,carga):
+    def set_lines(self,carga ):
         self.limite = 0
         self.a_ui.label_ide.destroy()
         self.a_ui.check_desafiliado.show()
@@ -283,6 +382,8 @@ class afiliado_win(QtWidgets.QMainWindow):
         self.a_ui.line_telefono.setText(str(afil.get_telefono()))
         self.a_ui.line_correo.setText(afil.get_correo())
         self.a_ui.line_ciudad.setText(afil.get_ciudad())
+        if afil.get_vacunado() == "Si":
+            self.a_ui.checkBox.setChecked(True)
         self.a_ui.calendar_nacimiento.setSelectedDate(QDate.fromString(afil.get_nacimiento(), "dd/MM/yyyy"))
         
 
@@ -331,6 +432,115 @@ class afiliado_win(QtWidgets.QMainWindow):
         self.menu = afil_menu(self.carga, self.style_disable)
         self.menu.show()
 
+class planes_menu(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.ui_menuplanes = Ui_MenuPlanesWindow()
+        self.ui_menuplanes.setupUi(self)
+        self.ui_menuplanes.pushButton_CrearPlan.clicked.connect(self.show_plan)
+        self.ui_menuplanes.pushButton_ConsultarPlan.clicked.connect(self.show_consultar)
+        self.ui_menuplanes.pushButton_all.clicked.connect(self.show_all)
+        self.ui_menuplanes.pushButton_Regresar.clicked.connect(self.show_principal)
+
+    def show_plan(self):
+        self.hide()
+        self.planes_crear = planes_crear()
+        self.planes_crear.show()
+
+    def show_consultar(self):
+        self.hide()
+        self.carga = sql()
+        self.carga = self.carga.cargar_tabla("Planes")
+        self.consultar = afil_edit(self.carga,"0","Planes")
+        self.consultar.show()
+
+    def show_all(self):
+        self.hide()
+        self.carga = sql()
+        self.carga = self.carga.cargar_tabla("Planes")
+        self.all = afiliado_ver_todo(self.carga,"","Planes")
+        self.all.show()
+
+    def show_principal(self):
+        self.hide()
+        self.principal = principal_win()
+        self.principal.show()
+
+
+class planes_crear(QtWidgets.QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.tabla = sql()
+        self.tabla = self.tabla.cargar_tabla("Planes")
+        self.ui_crearPlan = Ui_CrearPlanWindow()
+        self.ui_crearPlan.setupUi(self)
+        if len(self.tabla) > 0:
+            self.mins = []
+            self.maxs = []
+            for plan in self.tabla:
+                self.mins.append(plan[1])
+                self.maxs.append(plan[2])
+            self.rangos = []
+            for edades in range(len(self.mins)):
+                self.rangos.append(range(self.mins[edades], self.maxs[edades]+1))
+        self.set_line_date()
+        self.comprobar()
+        self.ui_crearPlan.calendar_fechaInicio.setMinimumDate(QDate.currentDate())
+        self.ui_crearPlan.calendar_fechaInicio.selectionChanged.connect(self.set_line_date)
+        self.ui_crearPlan.pushButton_Regresar.clicked.connect(self.show_menu)
+        self.ui_crearPlan.spinBox_Min.valueChanged.connect(self.comprobar)
+        self.ui_crearPlan.spinBox_Max.valueChanged.connect(self.comprobar)
+        self.ui_crearPlan.pushButton_Guardar.clicked.connect(self.btn_guardar)
+        self.sql = sql()
+
+    def comprobar(self):
+        if (self.ui_crearPlan.spinBox_Min.value() + 1) >= self.ui_crearPlan.spinBox_Max.value():
+            self.ui_crearPlan.spinBox_Max.setValue(self.ui_crearPlan.spinBox_Min.value()+1)
+        self.ui_crearPlan.spinBox_Max.setMinimum(self.ui_crearPlan.spinBox_Min.value()+1)
+        
+    def set_line_date(self):
+        self.ui_crearPlan.lineEdit_FechaInicio.setText(self.ui_crearPlan.calendar_fechaInicio.selectedDate().toString("dd/MM/yyyy"))
+
+    def comprobar_cruce(self):
+        self.cruce = False
+        if not (len(self.tabla) <= 0):
+            rango_in = range(self.ui_crearPlan.spinBox_Min.value(), self.ui_crearPlan.spinBox_Max.value() + 1)
+            for existente in self.rangos:
+                for x in rango_in:
+                    if x in existente:
+                        self.cruce = True
+                        return existente
+                if self.cruce == True:
+                    break
+        
+
+    def btn_guardar(self):
+        self.tabla = self.sql.cargar_tabla("Planes")
+        self.rango_err = self.comprobar_cruce()
+        if not self.cruce:
+            id = len(self.tabla) + 1
+            datos = { 
+                "ID": id,
+                "Edad_Min":int(self.ui_crearPlan.spinBox_Min.text()),
+                "Edad_Max":int(self.ui_crearPlan.spinBox_Max.text()),
+                "Fecha_Inicio":self.ui_crearPlan.lineEdit_FechaInicio.text(),
+                }
+
+            PlanN = plan(datos["ID"],
+                datos["Edad_Min"],
+                datos["Edad_Max"],
+                datos["Fecha_Inicio"]
+                )
+            PlanN.set_plan()
+            self.show_menu()
+        else:
+            self.ui_crearPlan.label_error.setText("La Edad Presenta Cruce " + str(self.rango_err))
+            
+    def show_menu(self):
+        self.hide()
+        self.planes_menu = planes_menu()
+        self.planes_menu.show()
+
 class citas_menu(QtWidgets.QMainWindow):
 
     def __init__(self, afiliados, lotes, planes, citas, style):
@@ -345,6 +555,7 @@ class citas_menu(QtWidgets.QMainWindow):
         self.menu.push_calcular.clicked.connect(self.show_calcular)
         self.menu.push_regresar.clicked.connect(self.show_principal)
         self.menu.push_ver.clicked.connect(self.show_ver_todo)
+        self.menu.push_consultar.clicked.connect(self.show_consultar)
         if len(self.citas) <= 0:
             self.menu.push_ver.setEnabled(False)
             self.menu.push_ver.setStyleSheet(self.style_disable)
@@ -365,6 +576,12 @@ class citas_menu(QtWidgets.QMainWindow):
         self.ver_todo = citas_ver_todo(self.afiliados, self.lotes, self.planes, self.citas, self.style_disable)
         self.ver_todo.fill_tabla()
         self.ver_todo.show()
+    
+    def show_consultar(self):
+        self.hide()
+        self.consultar = afil_edit(self.citas,self.style_disable,"Citas")
+        self.consultar.show()
+
     def show_principal(self):
         self.hide()
         self.principal = principal_win()
@@ -501,66 +718,3 @@ class citas_ver_todo(QtWidgets.QMainWindow):
         self.hide()
         self.menu = citas_menu(self.afiliados,self.lotes,self.planes, self.citas, self.style_disable)
         self.menu.show()
-
-class planes_menu(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.ui_menuplanes = Ui_MenuPlanesWindow()
-        self.ui_menuplanes.setupUi(self)
-        self.ui_menuplanes.pushButton_CrearPlan.clicked.connect(self.show_plan)
-        self.ui_menuplanes.pushButton_Regresar.clicked.connect(self.show_principal)
-
-    def show_plan(self):
-        self.hide()
-        self.planes_crear = planes_crear()
-        self.planes_crear.show()
-    
-    def show_principal(self):
-        self.hide()
-        self.principal = principal_win()
-        self.principal.show()
-
-
-class planes_crear(QtWidgets.QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.ui_crearPlan = Ui_CrearPlanWindow()
-        self.ui_crearPlan.setupUi(self)
-        self.set_line_date()
-        self.ui_crearPlan.calendar_fechaInicio.setMinimumDate(QDate.currentDate())
-        self.ui_crearPlan.calendar_fechaInicio.selectionChanged.connect(self.set_line_date)
-        self.ui_crearPlan.pushButton_Regresar.clicked.connect(self.show_menuplanes)
-        self.ui_crearPlan.pushButton_Guardar.clicked.connect(self.btn_guardar)
-        self.sql = sql()
-
-
-    def show_menuplanes(self):
-        self.hide()
-        self.ui_crearplanes = planes_crear()
-        self.planes_menu = planes_menu()
-        self.planes_menu.show()
-
-    def set_line_date(self):
-        self.ui_crearPlan.lineEdit_FechaInicio.setText(self.ui_crearPlan.calendar_fechaInicio.selectedDate().toString("dd/MM/yyyy"))
-
-
-    def btn_guardar(self):
-        self.tabla = self.sql.cargar_tabla("Planes")
-        id = len(self.tabla) + 1
-
-        datos = { 
-            "ID": id,
-            "Edad_Max":int(self.ui_crearPlan.spinBox_Max.text()),
-            "Edad_Min":int(self.ui_crearPlan.spinBox_Min.text()),
-            "Fecha_Inicio":self.ui_crearPlan.lineEdit_FechaInicio.text(),
-            "Fecha_Fin":str("05/07/3000"),
-            }
-
-        PlanN = plan(datos["ID"],
-            datos["Edad_Max"],
-            datos["Edad_Min"],
-            datos["Fecha_Inicio"],
-            datos["Fecha_Fin"],
-            )
-
-        PlanN.set_plan()

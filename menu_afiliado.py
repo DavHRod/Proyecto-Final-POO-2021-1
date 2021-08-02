@@ -31,6 +31,11 @@ class Ui_afil_menu(object):
         self.label.setObjectName("label")
         self.push_nuevo = QtWidgets.QPushButton(self.centralwidget)
         self.push_nuevo.setGeometry(QtCore.QRect(280, 160, 241, 31))
+        font = QtGui.QFont()
+        font.setFamily("Tahoma")
+        font.setBold(False)
+        font.setWeight(50)
+        self.push_nuevo.setFont(font)
         self.push_nuevo.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.push_nuevo.setStyleSheet("color:rgb(46, 26, 162) ;\n"
 "border-style: outset;\n"
